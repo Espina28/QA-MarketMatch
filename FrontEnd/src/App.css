@@ -1,0 +1,20 @@
+/*here are the fonts*/
+/* :root {
+
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+ .nav-item:hover{
+  background-color: rgb(232, 232, 232);
+  cursor: pointer;
+ }
+
+ .padding-color-outer {
+    padding: 2rem;
+    background-color: rgba(112, 5, 5, 1);
+ }
+ 
