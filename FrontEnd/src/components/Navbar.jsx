@@ -1,48 +1,42 @@
-import * as React from 'react';
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-
-import '../App.css' /*<---- custom css*/
+import Grid from '@mui/material/Grid';
+import { Link } from 'react-router-dom'; // Use Link from react-router-dom
+import '../App.css'; // Custom CSS
 
 export default function Navbar() {
     return (
-        <AppBar position="static" sx={{ backgroundColor: 'white', padding: '', boxShadow: 'none' }}>
-                <Grid container >
-                    <Grid>  
-                        <Toolbar>
-                            <Link href="https://www.facebook.com/CITUniversity">
-                                <img src="/images/cit-logo.png" alt="Logo" style={{ height: '60px' }} />
-                            </Link>
-                        </Toolbar>
+        <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 'none' }}>
+            <Toolbar>
+                <Grid container alignItems="center" justifyContent="space-between">
+                    {/* CIT University logo */}
+                    <Grid item>
+                        <a href="https://www.facebook.com/CITUniversity">
+                            <img src="/images/cit-logo.png" alt="Logo" style={{ height: '60px' }} />
+                        </a>
                     </Grid>
-                    <Grid container spacing={3} direction="row" sx={{ marginLeft: 'auto', marginRight: '2rem', alignItems: 'center' }}>
-                        <Grid className="nav-item" sx={{padding: '.5rem', borderRadius: '10px'}}> 
-                            <Link underline="none">
-                                <Typography variant="h6" sx={{color: 'black'}}>Home</Typography>
+
+                    {/* Navigation Links aligned to the right */}
+                    <Grid item>
+                        <Grid container alignItems="center" justifyContent="flex-end">
+                            <Link to="/" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
+                                <Typography variant="h6" sx={{ color: 'black' }}>Home</Typography>
                             </Link>
-                        </Grid>
-                        <Grid className="nav-item">
-                            <Link underline="none">
-                                <Typography variant="h6" sx={{color: 'black'}}>Home</Typography>
+                            <Link to="/order-history" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
+                                <Typography variant="h6" sx={{ color: 'black' }}>MyAccount</Typography>
                             </Link>
-                        </Grid>
-                        <Grid className="nav-item">
-                            <Link underline="none">
-                                <Typography variant="h6" sx={{color: 'black'}}>Home</Typography>
+                            <Link to="/sell-product" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
+                                <Typography variant="h6" sx={{ color: 'black' }}>Sell Product</Typography>
                             </Link>
-                        </Grid>
-                        <Grid className="nav-item">
-                            <Link underline="none">
-                                <Typography variant="h6" sx={{color: 'black'}}>My Account</Typography>
+                            <Link to="/buy-product" style={{ textDecoration: 'none' }}>
+                                <Typography variant="h6" sx={{ color: 'black' }}>Buy Product</Typography>
                             </Link>
                         </Grid>
                     </Grid>
                 </Grid>
+            </Toolbar>
         </AppBar>
     );
 }
