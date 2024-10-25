@@ -70,7 +70,7 @@ export default function UploadProduct() {
                                         border: '2px dashed grey',
                                         borderRadius: 2,
                                         height: 280,
-                                        width: 475,
+                                        width: 380,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
@@ -86,7 +86,7 @@ export default function UploadProduct() {
                                 </Box>
                             </Grid>
                         </Grid>
-                            <Grid spacing={2} sx={{ width: '1300px' }}>
+                            <Grid spacing={2} sx={{ width: '1200px' }}>
                                 <Grid item>
                                     <TextField fullWidth label="Description" variant="outlined" multiline rows={4} />
                                 </Grid>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './signup.css';
+import { Link } from 'react-router-dom';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -108,7 +109,7 @@ const Signup = () => {
       <div className="logo-container">
         <img src="logo.png" alt="Cebu Institute of Technology - University Logo" className="logo" />
         <p className="university-title">CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY MARKET MATCH</p>
-        <button className="login-button">LOGIN</button>
+        <Link to='/login'><button className="login-button">LOGIN</button></Link>
       </div>
     </div>
   );
