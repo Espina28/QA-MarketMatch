@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    studentID: '',
-    firstName: '',
-    lastName: '',
-    course: '',
+    firstname: '',
+    lastname: '',
+    address: '',
+    phonenumber: '',
+    student_Id: '',
     email: '',
-    password: ''
+    password: '',
+    user_Type: ''
   });
 
   const handleChange = (e) => {
@@ -24,13 +26,44 @@ const Signup = () => {
     return Object.values(formData).every(field => field.trim() !== '');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isFormComplete()) {
-      // Proceed to next page or handle successful signup
-      console.log('Form submitted:', formData);
-      // Optionally, clear the storage after submission
-      localStorage.removeItem('signupData');
+      try {
+        const response = await fetch('http://localhost:8080/api/user/postUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Form submitted:', data);
+
+          // Clear the form and local storage after successful submission
+          setFormData({
+            firstname: '',
+            lastname: '',
+            address: '',
+            phonenumber: '',
+            student_Id: '',
+            email: '',
+            password: '',
+            user_Type: ''
+          });
+          localStorage.removeItem('signupData');
+
+          alert('Signup successful!');
+        } else {
+          alert('Failed to sign up. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
     } else {
       alert('Please fill in all fields before proceeding.');
     }
@@ -56,34 +89,42 @@ const Signup = () => {
         <form className="signup-form" onSubmit={handleSubmit}>
           <input
             type="text"
-            name="studentID"
+            name="student_Id"
             placeholder="Student ID no."
             className="signup-input"
-            value={formData.studentID}
+            value={formData.student_Id}
             onChange={handleChange}
           />
           <input
             type="text"
-            name="firstName"
+            name="firstname"
             placeholder="First Name"
             className="signup-input"
-            value={formData.firstName}
+            value={formData.firstname}
             onChange={handleChange}
           />
           <input
             type="text"
-            name="lastName"
+            name="lastname"
             placeholder="Last Name"
             className="signup-input"
-            value={formData.lastName}
+            value={formData.lastname}
             onChange={handleChange}
           />
           <input
             type="text"
-            name="course"
-            placeholder="Course"
+            name="address"
+            placeholder="Address"
             className="signup-input"
-            value={formData.course}
+            value={formData.address}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="phonenumber"
+            placeholder="Phone Number"
+            className="signup-input"
+            value={formData.phonenumber}
             onChange={handleChange}
           />
           <input
@@ -100,6 +141,14 @@ const Signup = () => {
             placeholder="Password"
             className="signup-input"
             value={formData.password}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="user_Type"
+            placeholder="User Type"
+            className="signup-input"
+            value={formData.user_Type}
             onChange={handleChange}
           />
           <button type="submit" className="signup-button">SIGN UP</button>
