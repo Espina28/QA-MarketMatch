@@ -19,6 +19,7 @@ function App() {
           <Route path="/sell-product" element={<UploadProduct />} /> {/* Upload Product route */}
           <Route path="/signup" element={<Signup />} /> {/* Order History route */}
           <Route path="/login" element={<Login />} /> {/* Order History route */}
+          <Route path="/order-history" element={<OrderHistory />} /> {/* Order History route */}
         </Routes>
       </div>
     </Router>
