@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../../public/css/signup.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const navigate = useNavigate(); // Initialize navigate hook
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -43,7 +44,6 @@ const Signup = () => {
           const data = await response.json();
           console.log('Form submitted:', data);
 
-          // Clear the form and local storage after successful submission
           setFormData({
             firstname: '',
             lastname: '',
@@ -57,6 +57,7 @@ const Signup = () => {
           localStorage.removeItem('signupData');
 
           alert('Signup successful!');
+          navigate('/homepage'); // Redirect to Homepage after signup
         } else {
           alert('Failed to sign up. Please try again.');
         }
@@ -70,7 +71,6 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    // Load form data from local storage if available
     const savedData = localStorage.getItem('signupData');
     if (savedData) {
       setFormData(JSON.parse(savedData));
@@ -78,7 +78,6 @@ const Signup = () => {
   }, []);
 
   useEffect(() => {
-    // Save form data to local storage whenever it changes
     localStorage.setItem('signupData', JSON.stringify(formData));
   }, [formData]);
 
