@@ -24,8 +24,8 @@ export default function Navbar() {
                             <Link to="/" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Home</Typography>
                             </Link>
-                            <Link to="/order-history" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
-                                <Typography variant="h6" sx={{ color: 'black' }}>MyAccount</Typography>
+                            <Link to="/my-account" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
+                                <Typography variant="h6" sx={{ color: 'black' }}>My Account</Typography>
                             </Link>
                             <Link to="/sell-product" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Sell Product</Typography>

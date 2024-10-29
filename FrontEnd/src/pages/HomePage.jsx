@@ -56,7 +56,7 @@ export default function HomePage() {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: '#800000', // Dark maroon background
+              backgroundColor: '#800000',
               padding: '2rem',
               height: '100%',
             }}
