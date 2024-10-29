@@ -54,7 +54,7 @@ This project is currently under development. Contributions, bug reports, and sug
 🧑‍💻 Contributors:
 - Aeron Clyde Espina
 - Ivan Jay Adoptante
-- Crystal Mark Dave
+- Dave Mark Crystal
 - Ehrica Jynne Espada
 - Miklos Kaiser Bolarde
 
