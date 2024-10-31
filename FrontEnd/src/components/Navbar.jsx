@@ -30,7 +30,7 @@ export default function Navbar() {
                             <Link to="/sell-product" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Sell Product</Typography>
                             </Link>
-                            <Link to="/buy-product" style={{ textDecoration: 'none' }}>
+                            <Link to="/product-detail/1" style={{ textDecoration: 'none' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Buy Product</Typography>
                             </Link>
                         </Grid>
