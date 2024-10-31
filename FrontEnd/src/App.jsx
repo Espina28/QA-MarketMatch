@@ -20,8 +20,9 @@ function App() {
           <Route path="/sell-product" element={<UploadProduct />} /> {/* Upload Product route */}
           <Route path="/signup" element={<Signup />} /> {/* Order History route */}
           <Route path="/login" element={<Login />} /> {/* Order History route */}
-          <Route path="/order-history" element={<OrderHistory />} /> {/* Order History route */}
+          <Route path="/my-order-history" element={<OrderHistory />} /> {/* Order History route */}
           <Route path="/product-detail/:productId" element={<ProductDetail />} /> {/* Product Detail route */}
+          <Route path="/my-account" element={<MyAccount/>}/> {/*My account route */}
         </Routes>
       </div>
     </Router>

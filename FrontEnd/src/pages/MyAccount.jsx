@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, TextField, Button, Typography, Container, Box } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
-import Navbar from '../components/Navbar'; // Import Navbar
+import Navbar from '../components/Navbar';
 import '../App.css';
 
 function MyAccount() {
