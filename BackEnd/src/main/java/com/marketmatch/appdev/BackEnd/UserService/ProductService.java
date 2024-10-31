@@ -2,6 +2,7 @@ package com.marketmatch.appdev.BackEnd.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import javax.naming.NameNotFoundException;
 
@@ -27,9 +28,19 @@ public class ProductService {
     }
 
     //READ
-    public List<ProductEntity> readProducts() {
-        return prodrepo.findAll();
+    public ProductEntity readProducts(int productId) {
+        try {
+            Optional<ProductEntity> productOptional = prodrepo.findById(productId);
+            if (productOptional.isPresent()) {
+                return productOptional.get(); 
+            } else {
+                throw new RuntimeException("Product not found with ID: " + productId); 
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving product: " + e.getMessage(), e); 
+        }
     }
+
 
     //UPDATE
     @SuppressWarnings("finally")
@@ -46,7 +57,7 @@ public class ProductService {
             product.setProductTimeCreated(productName.getProductTimeCreated());
             return prodrepo.save(product);
         } catch(NoSuchElementException nex){
-            throw new NameNotFoundException("User " + productId + " not found");
+            throw new NameNotFoundException("Product " + productId + " not found");
         }finally {
             return prodrepo.save(product);
         }

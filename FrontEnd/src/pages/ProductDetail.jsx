@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState , useEffect} from 'react';
 import Navbar from '../components/Navbar';
+import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -7,9 +8,26 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Card } from '@mui/material';
+import axios from 'axios';
 import '../App.css'; // Custom CSS
 
 export default function ProductLayout() {
+    const [products, setProducts] = useState([]);
+    const { productId } = useParams();
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/user/getProducts/' + productId)
+            .then(response => {
+                setProducts(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the products!', error);
+            });
+    }, []);
+
+    const imageUrl = products.image ? `data:image/jpeg;base64,${products.image}` : '';
+
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>
 
@@ -21,15 +39,7 @@ export default function ProductLayout() {
                         <Grid container direction={'column'} spacing={3}>
                             {/* Product Image */}
                             <Grid item xs={12} md={6}>
-                                <Box
-                                    sx={{
-                                        width: '630px',
-                                        height: '400px',
-                                        backgroundColor: '#E0E0E0',
-                                        border: '1px solid #00BFFF',
-                                        borderRadius: '8px',
-                                    }}
-                                />
+                                 {imageUrl && <img src={imageUrl} alt="Product" style={{ width: '630px', height: '400px', backgroundColor: '#E0E0E0', border: '1px solid #00BFFF', borderRadius: '8px' }} />}
                             </Grid>
                             {/* Similar Products */}
                             <Grid container spacing={10}>
@@ -84,13 +94,13 @@ export default function ProductLayout() {
                         </Grid>
                         {/* Product Details */}
                         <Grid item xs={12} md={6}>
-                            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Name of Product</Typography>
+                            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{products.productName}</Typography>
                             <Typography variant="h5" sx={{ color: '#7D0C0E', fontWeight: 'bold', marginTop: 2 }}>
-                                PRICE
+                                P{products.productPrice}
                             </Typography>
                             <Divider sx={{ margin: '10px 0', borderColor: 'black' }} />
                             <Typography variant="body1" paragraph width={'600px'}>
-                                Product Description - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
+                                {products.productDescription}
                             </Typography>
                             
                             <Divider sx={{ margin: '10px 0', borderColor: 'black' ,marginTop: '45%'}} />

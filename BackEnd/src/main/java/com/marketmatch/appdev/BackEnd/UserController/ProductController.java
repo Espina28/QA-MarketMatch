@@ -33,9 +33,9 @@ public class ProductController {
     }
 
     // READ
-    @GetMapping("/getProducts")
-    public List<ProductEntity> getProducts() {
-        return productService.readProducts();
+    @GetMapping("/getProducts/{productId}")
+    public ProductEntity getProducts(@PathVariable int productId) {
+        return productService.readProducts(productId);
     }
 
     // UPDATE

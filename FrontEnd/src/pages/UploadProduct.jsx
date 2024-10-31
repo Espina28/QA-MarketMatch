@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import SideBar from '../components/SideBar';
 import Grid from '@mui/material/Grid2';
-import { IconButton } from '@mui/material';
+import { IconButton, imageListClasses } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
@@ -38,16 +38,31 @@ export default function UploadProduct() {
         productStock: '',
         productStatus: '',
         productDescription: '',
+        image: null,
         productTimeCreated: new Date().toISOString(),
     });
+    const [image, setImage] = useState(null);
 
     const handleChange = (e) => {
-        setProduct({
-            ...product,
-            [e.target.name]: e.target.value,
-        });
+        if (e.target.type === 'file') {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                setImage(reader.result);
+                const imageData = reader.result.replace(/^data:image\/[a-z]+;base64,/, ''); // Remove the prefix
+                setProduct({
+                    ...product,
+                    image: imageData, // Set only the Base64 data
+                });
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setProduct({
+                ...product,
+                [e.target.name]: e.target.value,
+            });
+        }
     };
-
     const handleSave = async () => {
         try {
             await axios.post('http://localhost:8080/api/user/postProduct', product, {
@@ -61,7 +76,6 @@ export default function UploadProduct() {
             alert('Error saving product!');
         }
     };
-
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
             <Grid>
@@ -108,11 +122,27 @@ export default function UploadProduct() {
                                             gap: 1,
                                         }}
                                     >
-                                        <IconButton color="primary" aria-label="upload image" component="label">
-                                            <input hidden accept="image/*" type="file" />
-                                            <CloudUploadIcon sx={{ fontSize: 50 }} />
-                                        </IconButton>
-                                        <Typography variant="body2">Upload an image</Typography>
+                                        {image ? ( // Conditionally render the image
+                                            <Box
+                                                component="img"
+                                                src={image}
+                                                alt="Uploaded"
+                                                sx={{
+                                                    maxHeight: '100%',
+                                                    maxWidth: '100%',
+                                                    borderRadius: 2,
+                                                    marginTop: 1,
+                                                }}
+                                            />
+                                        ):(
+                                            <Box sx={{ textAlign: 'center', marginTop: 1 }}>
+                                                <IconButton color="primary" aria-label="upload image" component="label">
+                                                <input hidden accept="image/*" type="file" onChange={handleChange}/>
+                                                <CloudUploadIcon sx={{ fontSize: 50 }} />
+                                                </IconButton>
+                                                <Typography variant="body2">Upload an image</Typography>
+                                            </Box>
+                                        )}
                                     </Box>
                                 </Grid>
                             </Grid>

@@ -1,4 +1,5 @@
 package com.marketmatch.appdev.BackEnd.UserEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,13 +17,16 @@ public class ProductEntity {
     private String productStock;
     private String productStatus;
     private String productTimeCreated;
+
+    @Column(name = "image",columnDefinition = "longblob")
+    private byte[] image;
     
     public ProductEntity() {
         super();
     }
 
     public ProductEntity(int productId, String productName, String productDescription, String productPrice,
-            String productStock, String productStatus, String productTimeCreated) {
+            String productStock, String productStatus, String productTimeCreated, byte[] image) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -30,6 +34,7 @@ public class ProductEntity {
         this.productStock = productStock;
         this.productStatus = productStatus;
         this.productTimeCreated = productTimeCreated;
+        this.image = image;
     }
     public int getProductId() {
         return productId;
@@ -73,7 +78,13 @@ public class ProductEntity {
     public void setProductTimeCreated(String productTimeCreated) {
         this.productTimeCreated = productTimeCreated;
     }
-
+    public byte[] getImage() {
+        return image;
+    }
+      
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
     
 
 }

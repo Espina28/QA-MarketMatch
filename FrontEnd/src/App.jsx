@@ -20,6 +20,7 @@ function App() {
           <Route path="/signup" element={<Signup />} /> {/* Order History route */}
           <Route path="/login" element={<Login />} /> {/* Order History route */}
           <Route path="/order-history" element={<OrderHistory />} /> {/* Order History route */}
+          <Route path="/product-detail/:productId" element={<ProductDetail />} /> {/* Product Detail route */}
         </Routes>
       </div>
     </Router>

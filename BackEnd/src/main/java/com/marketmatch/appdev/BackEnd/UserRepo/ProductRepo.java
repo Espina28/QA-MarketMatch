@@ -7,5 +7,5 @@ import com.marketmatch.appdev.BackEnd.UserEntity.ProductEntity;
 
 @Repository
 public interface ProductRepo extends JpaRepository<ProductEntity, Integer> {
-    public ProductEntity findByproductName(String productName);
+    public ProductEntity findByproductId(int productId);
 }
