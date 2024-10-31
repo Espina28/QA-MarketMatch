@@ -14,8 +14,10 @@ public class UserEntity {
 @GeneratedValue(strategy = GenerationType.IDENTITY)	
 private int userId;
 
-//
 //private Image image;
+
+@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+private BuyerEntity buyer;
 private String Firstname;
 private String Lastname;
 private String Address;
