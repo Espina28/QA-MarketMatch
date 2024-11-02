@@ -1,6 +1,6 @@
-package com.marketmatch.appdev.finalproject.BuyerEntity;
+package com.marketmatch.appdev.BackEnd.UserEntity;
 
-import com.marketmatch.appdev.finalproject.UserEntity.UserEntity;
+import com.marketmatch.appdev.BackEnd.UserEntity.UserEntity;
 import jakarta.persistence.*;
 
 @Entity
