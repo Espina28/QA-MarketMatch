@@ -1,6 +1,7 @@
 package com.marketmatch.appdev.BackEnd.UserEntity;
 
 
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +29,7 @@ public class ProductEntity {
     private byte[] image;
     
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cartID")
+    @JoinColumn(name="cart")
     private CartEntity cart;
 
     public ProductEntity() {

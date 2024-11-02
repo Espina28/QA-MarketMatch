@@ -1,6 +1,5 @@
 package com.marketmatch.appdev.BackEnd.UserService;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 

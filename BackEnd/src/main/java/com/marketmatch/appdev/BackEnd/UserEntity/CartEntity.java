@@ -19,33 +19,52 @@ public class CartEntity{
     private String dateAdded;
     private int quantity;
 
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ProductEntity> products;
 
-    public CartEntity(){
+    public CartEntity() {
         super();
     }
-    public CartEntity(int cartID,String dateAdded, int quantity){
-        this.cartID=cartID;
-        this.dateAdded=dateAdded;
-        this.quantity=quantity;
+
+    public CartEntity(int cartID, String dateAdded, int quantity, List<ProductEntity> products) {
+        this.cartID = cartID;
+        this.dateAdded = dateAdded;
+        this.quantity = quantity;
+        this.products = products;
     }
 
-    public int getCartID(){
+    public int getCartID() {
         return cartID;
     }
-    public void setCartID(int cartID){
-        this.cartID=cartID;
+
+    public void setCartID(int cartID) {
+        this.cartID = cartID;
     }
-    public String getDateAdded(){
+
+    public String getDateAdded() {
         return dateAdded;
     }
-    public void setDateAdded(String dateAdded){
-        this.dateAdded=dateAdded;
+
+    public void setDateAdded(String dateAdded) {
+        this.dateAdded = dateAdded;
     }
-    public int getQuantity(){
+
+    public int getQuantity() {
         return quantity;
     }
-    public void setQuantity(int quantity){
-        this.quantity=quantity;
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
+
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
+    }
+
+    
 
 }

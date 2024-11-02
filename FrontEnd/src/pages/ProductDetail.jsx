@@ -28,6 +28,22 @@ export default function ProductLayout() {
 
     const imageUrl = products.image ? `data:image/jpeg;base64,${products.image}` : '';
 
+    const handleAddToCart = () => {
+        const cartPayload = {
+            dateAdded: new Date().toISOString(),
+            quantity: 1, // Set desired quantity
+        };
+    
+        axios.post('http://localhost:8080/api/cart/postCart', cartPayload)
+            .then(response => {
+                console.log(response.data);
+                alert("Product added to cart successfully!");
+            })
+            .catch(error => {
+                console.error("Error adding product to cart", error);
+            });
+    };
+
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>
 
@@ -111,7 +127,7 @@ export default function ProductLayout() {
                                         <Button variant="contained" sx={{ backgroundColor: 'black', color: 'white',padding: '15px 50px' }}>Buy Now</Button>
                                     </Grid>
                                     <Grid item>
-                                        <Button variant="outlined" sx={{padding: '15px 50px' }}>Add to Cart</Button>
+                                        <Button variant="outlined" onClick={handleAddToCart} sx={{padding: '15px 50px' }}>Add to Cart</Button>
                                     </Grid>
                                 </Grid>
                                 <Grid container direction={'row'}>

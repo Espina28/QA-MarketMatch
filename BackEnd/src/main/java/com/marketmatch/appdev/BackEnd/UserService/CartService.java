@@ -33,6 +33,7 @@ public class CartService {
         return cartRepo.findById(id).map(cart -> {
             cart.setDateAdded(newCartDetails.getDateAdded());
             cart.setQuantity(newCartDetails.getQuantity());
+            cart.setProducts(newCartDetails.getProducts());
             return cartRepo.save(cart);
         }).orElseThrow(() -> new NoSuchElementException("Cart record with ID " + id + " not found"));
     }
