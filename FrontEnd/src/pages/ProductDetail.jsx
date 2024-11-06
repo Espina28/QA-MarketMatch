@@ -16,7 +16,12 @@ export default function ProductLayout() {
     const { productId } = useParams();
 
     useEffect(() => {
-        axios.get('http://localhost:8080/api/user/getProducts/' + productId)
+        axios.get('http://localhost:8080/api/user/getProducts/' + productId,{
+            auth: {
+                username: 'user@gmailcom',
+                password: '1'
+            }
+        })
             .then(response => {
                 setProducts(response.data);
                 console.log(response.data);
@@ -32,6 +37,17 @@ export default function ProductLayout() {
         const cartPayload = {
             dateAdded: new Date().toISOString(),
             quantity: 1, // Set desired quantity
+            productDetails: [
+                {
+                    productName: products.productName,
+                    productDescription: products.productDescription,
+                    productPrice: products.productPrice,
+                    productStock: products.productStock,
+                    productStatus: products.productStatus,
+                    productTimeCreated: products.productTimeCreated,
+                    image: products.image,
+                }
+            ]
         };
     
         axios.post('http://localhost:8080/api/cart/postCart', cartPayload)

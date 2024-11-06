@@ -69,6 +69,10 @@ export default function UploadProduct() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                auth: {
+                    username: 'user@gmailcom',
+                    password: '1'
+                }
             });
             alert('Product saved successfully!');
         } catch (error) {

@@ -73,7 +73,7 @@ const Cart = () => {
     }, []);
 
     const handleRemoveFromCart = (productId) => {
-        axios.delete(`http://localhost:8080/api/cart/removeFromCart/${productId}`)
+        axios.delete(`http://localhost:8080/api/cart/deleteCart/` + productId)
             .then(() => {
                 setCartItems(cartItems.filter(item => item.id !== productId)); // Update state
             })

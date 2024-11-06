@@ -3,10 +3,19 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom'; // Use Link from react-router-dom
+import { useAuth } from './AuthContext';
+import { Link, useNavigate } from 'react-router-dom'; // Use Link from react-router-dom
 import '../App.css'; // Custom CSS
 
 export default function Navbar() {
+    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const logoutUser = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
         <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 'none' }}>
             <Toolbar>
@@ -30,9 +39,22 @@ export default function Navbar() {
                             <Link to="/sell-product" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Sell Product</Typography>
                             </Link>
-                            <Link to="/product-detail/1" style={{ textDecoration: 'none' }}>
+                            <Link to="/product-detail/1" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Buy Product</Typography>
                             </Link>
+                            {isAuthenticated ? (
+                                <Typography
+                                    onClick={logoutUser}
+                                    variant="h6"
+                                    sx={{ color: 'black', cursor: 'pointer', marginRight: '1.5rem' }}
+                                >
+                                    Logout
+                                </Typography>
+                            ) : (
+                                <Link to="/login" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
+                                    <Typography variant="h6" sx={{ color: 'black' }}>Login</Typography>
+                                </Link>
+                            )}
                         </Grid>
                     </Grid>
                 </Grid>

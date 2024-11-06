@@ -57,7 +57,7 @@ const Signup = () => {
           localStorage.removeItem('signupData');
 
           alert('Signup successful!');
-          navigate('/homepage'); // Redirect to Homepage after signup
+          navigate('/login'); // Redirect to Homepage after signup
         } else {
           alert('Failed to sign up. Please try again.');
         }

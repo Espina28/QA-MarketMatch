@@ -9,24 +9,31 @@ import MyAccount from './pages/MyAccount';
 import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import MyPurchase from './pages/Cart'; // Import MyPurchase component
+import MyPurchase from './pages/Cart';
+import NotFound from './pages/NotFound';
+import { AuthProvider } from './components/AuthContext';
+import ProtectedRoutes from './components/ProtectedRoutes';
 
 function App() {
   return (
     <Router>
-      <div>
+      <AuthProvider>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/sell-product" element={<UploadProduct />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/my-order-history" element={<OrderHistory />} />
-          <Route path="/product-detail/:productId" element={<ProductDetail />} />
-          <Route path="/my-account" element={<MyAccount />} />
-          <Route path="/cart" element={<MyPurchase />} /> {/* My Purchase route */}
+          <Route path="/" element={<Welcome />} />
+          
+          <Route path="/sell-product" element={<ProtectedRoutes><UploadProduct /></ProtectedRoutes>} />
+          <Route path="/my-order-history" element={<ProtectedRoutes><OrderHistory /></ProtectedRoutes>} />
+          <Route path="/product-detail/:productId" element={<ProtectedRoutes><ProductDetail /></ProtectedRoutes>} />
+          <Route path="/my-account" element={<ProtectedRoutes><MyAccount /></ProtectedRoutes>} />
+          <Route path="/cart" element={<ProtectedRoutes><MyPurchase /></ProtectedRoutes>} />
+          
+          <Route path="*" element={<NotFound />} />
+
         </Routes>
-      </div>
+      </AuthProvider>
     </Router>
   );
 }
