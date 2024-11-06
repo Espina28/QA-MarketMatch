@@ -29,7 +29,7 @@ public class ProductEntity {
     private byte[] image;
     
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="cart")
+    @JoinColumn(name="cartid")
     private CartEntity cart;
 
     public ProductEntity() {
@@ -37,7 +37,7 @@ public class ProductEntity {
     }
 
     public ProductEntity(int productId, String productName, String productDescription, String productPrice,
-            String productStock, String productStatus, String productTimeCreated, byte[] image) {
+            String productStock, String productStatus, String productTimeCreated, byte[] image, CartEntity cart) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -46,6 +46,7 @@ public class ProductEntity {
         this.productStatus = productStatus;
         this.productTimeCreated = productTimeCreated;
         this.image = image;
+        this.cart = cart;
     }
     public int getProductId() {
         return productId;
@@ -96,6 +97,11 @@ public class ProductEntity {
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+    public void setCart(CartEntity cart) {
+        this.cart = cart;
+    }
+    
     
 
 }

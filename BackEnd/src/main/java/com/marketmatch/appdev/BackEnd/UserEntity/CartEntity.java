@@ -7,7 +7,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
     
 
 @Entity
@@ -18,6 +20,11 @@ public class CartEntity{
 
     private String dateAdded;
     private int quantity;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    private UserEntity user;
+
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductEntity> products;
