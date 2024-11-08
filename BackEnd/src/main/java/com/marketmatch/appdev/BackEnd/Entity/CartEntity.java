@@ -1,4 +1,4 @@
-package com.marketmatch.appdev.BackEnd.UserEntity;
+package com.marketmatch.appdev.BackEnd.Entity;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;

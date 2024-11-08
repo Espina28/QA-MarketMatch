@@ -1,12 +1,12 @@
-package com.marketmatch.appdev.BackEnd.UserController;
+package com.marketmatch.appdev.BackEnd.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.BuyerEntity;
-import com.marketmatch.appdev.BackEnd.UserService.BuyerService;
+import com.marketmatch.appdev.BackEnd.Entity.BuyerEntity;
+import com.marketmatch.appdev.BackEnd.Service.BuyerService;
 
 import java.util.List;
 

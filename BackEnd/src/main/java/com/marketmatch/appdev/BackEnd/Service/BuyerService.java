@@ -1,10 +1,10 @@
-package com.marketmatch.appdev.BackEnd.UserService;
+package com.marketmatch.appdev.BackEnd.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.BuyerEntity;
-import com.marketmatch.appdev.BackEnd.UserRepo.BuyerRepo;
+import com.marketmatch.appdev.BackEnd.Entity.BuyerEntity;
+import com.marketmatch.appdev.BackEnd.Repository.BuyerRepo;
 
 import java.util.List;
 

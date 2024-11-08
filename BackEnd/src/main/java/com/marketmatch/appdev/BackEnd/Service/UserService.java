@@ -1,4 +1,4 @@
-package com.marketmatch.appdev.BackEnd.UserService;
+package com.marketmatch.appdev.BackEnd.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,8 +10,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.UserEntity;
-import com.marketmatch.appdev.BackEnd.UserRepo.UserRepo;
+import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
+import com.marketmatch.appdev.BackEnd.Repository.UserRepo;
 
 
 @Service

@@ -1,9 +1,9 @@
-package com.marketmatch.appdev.BackEnd.UserService;
+package com.marketmatch.appdev.BackEnd.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.CartEntity;
-import com.marketmatch.appdev.BackEnd.UserRepo.CartRepo;
+import com.marketmatch.appdev.BackEnd.Entity.CartEntity;
+import com.marketmatch.appdev.BackEnd.Repository.CartRepo;
 
 import java.util.List;
 import java.util.NoSuchElementException;

@@ -1,4 +1,4 @@
-package com.marketmatch.appdev.BackEnd.UserController;
+package com.marketmatch.appdev.BackEnd.Controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.ProductEntity;
-import com.marketmatch.appdev.BackEnd.UserService.ProductService;
+import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
+import com.marketmatch.appdev.BackEnd.Service.ProductService;
 
 @CrossOrigin(origins = "http://localhost:5173")
 

@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.UserEntity;
+import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
 
 public class UserPrincipal implements UserDetails {
 

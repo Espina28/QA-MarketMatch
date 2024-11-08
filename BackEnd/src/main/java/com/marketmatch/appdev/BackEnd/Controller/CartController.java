@@ -1,10 +1,10 @@
-package com.marketmatch.appdev.BackEnd.UserController;
+package com.marketmatch.appdev.BackEnd.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.CartEntity;
-import com.marketmatch.appdev.BackEnd.UserService.CartService;
+import com.marketmatch.appdev.BackEnd.Entity.CartEntity;
+import com.marketmatch.appdev.BackEnd.Service.CartService;
 
 import java.util.List;
 

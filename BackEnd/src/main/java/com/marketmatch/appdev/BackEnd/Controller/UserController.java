@@ -1,4 +1,4 @@
-package com.marketmatch.appdev.BackEnd.UserController;
+package com.marketmatch.appdev.BackEnd.Controller;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marketmatch.appdev.BackEnd.UserEntity.LoginRequest;
-import com.marketmatch.appdev.BackEnd.UserEntity.UserEntity;
-import com.marketmatch.appdev.BackEnd.UserService.UserService;
+import com.marketmatch.appdev.BackEnd.Entity.LoginRequest;
+import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
+import com.marketmatch.appdev.BackEnd.Service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 

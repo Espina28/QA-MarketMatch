@@ -1,4 +1,4 @@
-package com.marketmatch.appdev.BackEnd.UserService;
+package com.marketmatch.appdev.BackEnd.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -8,8 +8,8 @@ import javax.naming.NameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.marketmatch.appdev.BackEnd.UserRepo.ProductRepo;
-import com.marketmatch.appdev.BackEnd.UserEntity.ProductEntity;
+import com.marketmatch.appdev.BackEnd.Repository.ProductRepo;
+import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 
 @Service
 public class ProductService {
