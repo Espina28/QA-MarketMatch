@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
-import OrderHistory from './pages/OrderHistory';
+import Orders from './pages/Orders';
 import UploadProduct from './pages/UploadProduct';
 import ProductDetail from './pages/ProductDetail';
 import MyAccount from './pages/MyAccount';
@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={<Welcome />} />
           
           <Route path="/sell-product" element={<ProtectedRoutes><UploadProduct /></ProtectedRoutes>} />
-          <Route path="/my-order-history" element={<ProtectedRoutes><OrderHistory /></ProtectedRoutes>} />
+          <Route path="/my-order-history" element={<ProtectedRoutes><Orders /></ProtectedRoutes>} />
           <Route path="/product-detail/:productId" element={<ProtectedRoutes><ProductDetail /></ProtectedRoutes>} />
           <Route path="/my-account" element={<ProtectedRoutes><MyAccount /></ProtectedRoutes>} />
           <Route path="/cart" element={<ProtectedRoutes><MyPurchase /></ProtectedRoutes>} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useLocation } from 'react';
 import { Grid, TextField, Button, Typography, Container, Box } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
@@ -12,7 +12,7 @@ function MyAccount() {
     address: "",
     email: "",
     phone: ""
-  });
+  }); 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 

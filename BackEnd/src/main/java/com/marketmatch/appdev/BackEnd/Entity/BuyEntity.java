@@ -10,10 +10,8 @@ public class BuyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int buyId;
-
     private int quantity;
     private String orderDate;
-//    private String orderRecieved;
     private double total;
 
     @JsonBackReference("buyer-reference")
@@ -25,8 +23,6 @@ public class BuyEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-
-
 
 
     public int getBuyId() {
@@ -42,7 +38,7 @@ public class BuyEntity {
     }
 
     public void setQuantity(int quantity) {
-        quantity = quantity;
+        this.quantity = quantity;
     }
 
     public String getOrderDate() {
@@ -52,14 +48,6 @@ public class BuyEntity {
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
-
-//    public String getOrderRecieved() {
-//        return orderRecieved;
-//    }
-//
-//    public void setOrderRecieved(String orderRecieved) {
-//        this.orderRecieved = orderRecieved;
-//    }
 
     public double getTotal() {
         return total;
