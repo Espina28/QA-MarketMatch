@@ -10,7 +10,6 @@ import {useEffect} from 'react';
 function MyAccount() {
 
   const location = useLocation();
-
   const [userData, setUserData] = useState({
     firstName: "",
     LastName: "",
@@ -21,6 +20,22 @@ function MyAccount() {
   }); 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    // Safely check if location.state and location.state.userData are defined
+    if (location.state && location.state.userData) {
+      setUserData(location.state.userData);
+    }else{
+      console.log("nothing")
+    }
+  }, [location]); 
+
+  useEffect(() => {
+    if (userData) {
+      console.log('Updated userData:', userData); // This will log after the state is updated
+    }
+  }, [userData]); 
+
 
   useEffect(() => {
 

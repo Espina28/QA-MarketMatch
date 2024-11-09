@@ -56,18 +56,18 @@ public String deleteUser(@PathVariable int id) {
 }
 
 @PostMapping("/login")
-public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest,HttpSession session) {
+public ResponseEntity<UserEntity> login(@RequestBody LoginRequest loginRequest,HttpSession session) {
     try{
-		boolean isAuth = userv.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-		if (isAuth) {
+		UserEntity userData = userv.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+		if (userData != null) {
 			session.setAttribute("email", loginRequest.getEmail());
-			return ResponseEntity.ok("Login Successful");
+			return ResponseEntity.ok(userData);
 		}
 		else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Failed");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
 	}catch(Exception e) {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login Failed");
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	}
 }
 

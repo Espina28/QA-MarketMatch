@@ -23,7 +23,6 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Welcome />} />
-
           <Route path="/home" element={<HomePage/>}/>
           
           {/* <Route path="/sell-product" element={<ProtectedRoutes><UploadProduct /></ProtectedRoutes>} />
@@ -38,7 +37,6 @@ function App() {
           <Route path="/product-detail/:productId" element={<ProductDetail />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/cart" element={<MyPurchase />} />
-          
           <Route path="*" element={<NotFound />} />
 
         </Routes>

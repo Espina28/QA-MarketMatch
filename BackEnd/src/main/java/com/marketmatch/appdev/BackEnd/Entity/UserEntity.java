@@ -1,16 +1,12 @@
 package com.marketmatch.appdev.BackEnd.Entity;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.*;
 
 //import java.awt.Image;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 
 @Entity
+@Table(name = "tbl_user")
 public class UserEntity {
 
 @Id

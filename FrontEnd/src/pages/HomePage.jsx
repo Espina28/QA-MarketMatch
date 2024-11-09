@@ -1,6 +1,7 @@
-import React from 'react';
+import {React,useState, useEffect, useRef} from 'react';
 import { Container, Grid, Typography, Box } from '@mui/material';
 import Navbar from '../components/Navbar';
+import { useLocation } from 'react-router-dom';
 
 const placeholderProducts = [
   { name: 'Product 1', image: 'https://via.placeholder.com/400x300?text=Product+1' },
@@ -12,9 +13,35 @@ const placeholderProducts = [
 ];
 
 export default function HomePage() {
+
+  const location = useLocation()
+  // const [userData, setUserData] = useState(null);
+  const userData = useRef();
+
+  useEffect(() => {
+    // Safely check if location.state and location.state.userData are defined
+    if (location.state && location.state.userData) {
+      // setUserData(location.state.userData);
+      userData.current = location.state.userData
+    }else{
+      console.log("location state is: ", location.state)
+    }
+  }, [location]); 
+
+  useEffect(() => {
+    if (userData) {
+      console.log('Updated userData:', userData); // This will log after the state is updated
+    }
+  }, [userData]); 
+
   return (
     <div>
-      <Navbar />
+      <Navbar 
+        state={{ 
+          userData: location.state ? location.state.userData : null
+        }} 
+      />
+
       {/* Main Content */}
       <Container maxWidth={false} disableGutters sx={{ backgroundColor: '#800000' }}>
         <Grid container sx={{ height: '85vh', backgroundColor: '#fff' }}>

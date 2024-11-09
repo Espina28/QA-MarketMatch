@@ -1,6 +1,6 @@
  import React, { useState , useEffect} from 'react';
 import Navbar from '../components/Navbar';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -12,8 +12,24 @@ import axios from 'axios';
 import '../App.css'; // Custom CSS
 
 export default function ProductLayout() {
+    const location = useLocation();
+    const [userData, setUserData] = useState();
+    
     const [products, setProducts] = useState([]);
     const { productId } = useParams();
+
+    useEffect(() => {
+        // Safely check if location.state and location.state.userData are defined
+        if (location.state && location.state.userData) {
+          setUserData(location.state.userData);
+        }
+      }, [location]); 
+    
+      useEffect(() => {
+        if (userData) {
+          console.log('Updated userData:', userData); // This will log after the state is updated
+        }
+      }, [userData]); 
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/user/getProducts/' + productId,{

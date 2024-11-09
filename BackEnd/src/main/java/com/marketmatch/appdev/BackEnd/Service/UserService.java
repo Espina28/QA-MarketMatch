@@ -89,7 +89,7 @@ public class UserService {
 		}
 
 	//Authenticate
-	public boolean authenticate(String email, String password) {
+	public UserEntity authenticate(String email, String password) {
 		UserEntity user = urepo.findByEmail(email);
 			if (user == null) {
 				throw new BadCredentialsException("email not found");
@@ -101,7 +101,7 @@ public class UserService {
 			if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
 				throw new BadCredentialsException("password is incorrect");
 			}
-		return true;
+		return user;
 	}
 
 	

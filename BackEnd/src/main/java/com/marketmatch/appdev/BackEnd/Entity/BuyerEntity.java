@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "tbl_buyer")
 public class BuyerEntity {
 
     @Id

@@ -11,22 +11,38 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import {useState, useEffect} from 'react'
 import axios from "axios"
+import { useLocation } from 'react-router-dom'
 
 export default function Orders(){
 
     const [products, setProducts] = useState(null);
+    const location = useLocation();
+    const [userData, setUserData] = useState();
 
-    useEffect(()=>{  
-        axios.get("http://localhost:8080/api/product/buyer/purchase", {
-            params: {
-                buyerPk: 2   //<---change this
-            }
-        }).then((response) => {
-            setProducts(response.data);
-        }).catch((error)=>{
-            console.error("Error fetching products:", error);
-        });
-    },[])
+    useEffect(() => {
+        // Safely check if location.state and location.state.userData are defined
+        if (location.state && location.state.userData) {
+          setUserData(location.state.userData);
+        }
+      }, [location]); 
+    
+      useEffect(() => {
+        if (userData) {
+          console.log('Updated userData:', userData); // This will log after the state is updated
+        }
+      }, [userData]); 
+
+    // useEffect(()=>{  
+    //     axios.get("http://localhost:8080/api/product/buyer/purchase", {
+    //         params: {
+    //             buyerPk: 2   //<---change this
+    //         }
+    //     }).then((response) => {
+    //         setProducts(response.data);
+    //     }).catch((error)=>{
+    //         console.error("Error fetching products:", error);
+    //     });
+    // },[])
 
 
     return (

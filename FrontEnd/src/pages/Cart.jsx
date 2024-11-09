@@ -4,9 +4,26 @@ import SideBar from '../components/SideBar';
 import '../App.css';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { useLocation } from 'react-router-dom';
 
 const CartItem = ({ product, onRemoveFromCart }) => {
     const [quantity, setQuantity] = useState(product.quantity || 1); // Initialize with product's quantity
+
+    const location = useLocation();
+    const [userData, setUserData] = useState();
+
+    useEffect(() => {
+        // Safely check if location.state and location.state.userData are defined
+        if (location.state && location.state.userData) {
+          setUserData(location.state.userData);
+        }
+      }, [location]); 
+    
+      useEffect(() => {
+        if (userData) {
+          console.log('Updated userData:', userData); // This will log after the state is updated
+        }
+      }, [userData]); 
 
     return (
         <Grid container sx={{ border: '1px solid black', borderRadius: 1, padding: 2, marginBottom: 2, position: 'relative' }}>
