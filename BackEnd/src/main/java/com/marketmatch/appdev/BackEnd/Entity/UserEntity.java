@@ -28,7 +28,6 @@ private String Phonenumber;
 private String Student_Id;
 private String email;
 private String Password;
-private String user_Type;
 	
 
 //cons
@@ -116,22 +115,4 @@ public void setPassword(String password) {
 	Password = password;
 }
 
-
-public String getUser_Type() {
-	return user_Type;
-}
-
-
-public void setUser_Type(String user_Type) {
-	this.user_Type = user_Type;
-}
-
-
-
-
-
-
-
-	
-	
 }

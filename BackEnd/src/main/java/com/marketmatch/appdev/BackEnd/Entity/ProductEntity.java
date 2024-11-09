@@ -2,14 +2,11 @@ package com.marketmatch.appdev.BackEnd.Entity;
 
 
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 
 @Entity
@@ -32,6 +29,15 @@ public class ProductEntity {
     @JoinColumn(name="cartid")
     private CartEntity cart;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private  SellerEntity sellerid;
+
+    @JsonManagedReference("product-reference")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<BuyEntity> bought;
+
     public ProductEntity() {
         super();
     }
@@ -48,6 +54,27 @@ public class ProductEntity {
         this.image = image;
         this.cart = cart;
     }
+
+    public CartEntity getCart() {
+        return cart;
+    }
+
+    public SellerEntity getSellerid() {
+        return sellerid;
+    }
+
+    public void setSellerid(SellerEntity sellerid) {
+        this.sellerid = sellerid;
+    }
+
+    public List<BuyEntity> getBought() {
+        return bought;
+    }
+
+    public void setBought(List<BuyEntity> bought) {
+        this.bought = bought;
+    }
+
     public int getProductId() {
         return productId;
     }

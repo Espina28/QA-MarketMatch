@@ -7,5 +7,5 @@ import com.marketmatch.appdev.BackEnd.Entity.CartEntity;
 
 @Repository
 public interface CartRepo extends JpaRepository<CartEntity, Integer> {
-    public CartEntity findByCartID(int cartID);
+    CartEntity findByCartID(int cartID);
 }

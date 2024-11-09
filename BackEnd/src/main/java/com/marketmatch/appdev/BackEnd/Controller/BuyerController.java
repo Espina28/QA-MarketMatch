@@ -41,7 +41,7 @@ public class BuyerController {
         }
 
         // Update buyer details
-        existingBuyer.setTotalProductBought(buyer.getTotalProductBought());
+        existingBuyer.setTotalTransaction(buyer.getTotalTransaction());
         // Optionally, update any other fields as needed
 
         BuyerEntity updatedBuyer = bserv.saveBuyer(existingBuyer);

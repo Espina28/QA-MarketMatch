@@ -62,9 +62,8 @@ public class UserService {
 			user.setStudent_Id(newUserDetails.getStudent_Id());
 			user.setEmail(newUserDetails.getEmail());
 			user.setPassword(newUserDetails.getPassword());
-			user.setUser_Type(newUserDetails.getUser_Type());
-			
-			
+
+
 			
 		}catch(NoSuchElementException nex) {
 			throw new NameNotFoundException("User " + id + " not found");
