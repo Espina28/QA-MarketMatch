@@ -1,29 +1,36 @@
-import React, { useState, useEffect,useLocation } from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Grid, TextField, Button, Typography, Container, Box } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
 import Navbar from '../components/Navbar';
 import '../App.css';
+import {useEffect} from 'react';
 
 function MyAccount() {
+
+  const location = useLocation();
+
   const [userData, setUserData] = useState({
-    name: "",
+    firstName: "",
+    LastName: "",
     studentId: "",
     address: "",
     email: "",
-    phone: ""
+    phone: "",
   }); 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
-    axios.get(`/api/user/1`) // Replace with your actual endpoint
-      .then(response => {
-        setUserData(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching user data:", error);
-      });
+
+    // axios.get(`/api/user/1`) // Replace with your actual endpoint
+    //   .then(response => {
+    //     setUserData(response.data);
+    //   })
+    //   .catch(error => {
+    //     console.error("Error fetching user data:", error);
+    //   });
   }, []);
 
   const handleSave = (e) => {
@@ -37,8 +44,11 @@ function MyAccount() {
   };
 
   return (
-    <Container maxWidth={false} disableGutters sx={{ height: '100vh', marginTop: '64px' }}>
-      <Grid container direction="row" spacing={6} sx={{ height: '91.9%', padding: 4 }} className="padding-color-outer">
+    <Container  maxWidth={false} disableGutters sx={{ height: '100vh', display:'flex', flexDirection:'column' }}>
+      <Grid>
+        <Navbar/>
+      </Grid>
+      <Grid container direction="row" spacing={6} sx={{ height: '91.9%', padding: 4, marginTop: '1rem' }} className="padding-color-outer">
         {/* Sidebar */}
         <Grid item md={3} sx={{ maxWidth: '100%', padding: 3}}>
           <SideBar />

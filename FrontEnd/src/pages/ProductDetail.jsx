@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+ import React, { useState , useEffect} from 'react';
 import Navbar from '../components/Navbar';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
@@ -61,9 +61,10 @@ export default function ProductLayout() {
     };
 
     return (
-        <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>
-
-
+        <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0, display: 'flex',flexDirection:'column' }}>
+            <Grid>
+                <Navbar/>
+            </Grid>
             {/* Main Content */}
             <Grid container direction="row" wrap="nowrap" sx={{ height: '100%', backgroundColor: '#7D0C0E', padding: 2 }}>
                 <Grid item md={1} sx={{ backgroundColor: 'white', padding: 4, borderRadius: '8px', height: '100%', width: '100%' }}>

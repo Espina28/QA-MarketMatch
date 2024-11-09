@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import axios from 'axios';
 import {useAuth} from '../components/AuthContext';
 import {Link} from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -24,7 +25,7 @@ const Login = () => {
       console.log(response);
       if(response.status===200){
         login();
-        navigate('/');  
+        navigate('/home');  
       }else{
         const errorData = response.data;
         setError(errorData);

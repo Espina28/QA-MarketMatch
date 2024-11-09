@@ -3,6 +3,7 @@ import { Container, Grid, Typography, Box, Button, Select, MenuItem } from '@mui
 import SideBar from '../components/SideBar';
 import '../App.css';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const CartItem = ({ product, onRemoveFromCart }) => {
     const [quantity, setQuantity] = useState(product.quantity || 1); // Initialize with product's quantity
@@ -84,6 +85,9 @@ const Cart = () => {
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
+            <Grid>
+                <Navbar/>
+            </Grid>
             <Grid container sx={{ height: '100%' }} className="padding-color-outer">
                 <Grid item md={2.61} sx={{ border: '2px solid black', marginRight: 5.94 }}>
                     <SideBar />

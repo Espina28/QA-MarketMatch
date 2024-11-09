@@ -14,6 +14,7 @@ const placeholderProducts = [
 export default function HomePage() {
   return (
     <div>
+      <Navbar />
       {/* Main Content */}
       <Container maxWidth={false} disableGutters sx={{ backgroundColor: '#800000' }}>
         <Grid container sx={{ height: '85vh', backgroundColor: '#fff' }}>
@@ -21,7 +22,7 @@ export default function HomePage() {
           <Grid
             item
             md={6}
-            sx={{
+            sx={{ 
               backgroundColor: '#ccc',
               display: 'flex',
               justifyContent: 'center',

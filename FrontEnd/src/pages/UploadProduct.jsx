@@ -28,8 +28,8 @@ const UnderlinedText = styled(Typography)({
         backgroundColor: 'black',
         transform: 'scaleX(1)',
         transformOrigin: 'bottom left',
-    },
-});
+        },
+    });
 
 export default function UploadProduct() {
     const [product, setProduct] = useState({
@@ -83,6 +83,7 @@ export default function UploadProduct() {
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
             <Grid>
+                <Navbar/>
             </Grid>
             <Grid container direction={'row'} spacing={6} sx={{ height: '101.5%' }} className="padding-color-outer">
                 <Grid item md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>

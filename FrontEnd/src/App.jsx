@@ -18,17 +18,26 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Welcome />} />
+
+          <Route path="/home" element={<HomePage/>}/>
           
-          <Route path="/sell-product" element={<ProtectedRoutes><UploadProduct /></ProtectedRoutes>} />
+          {/* <Route path="/sell-product" element={<ProtectedRoutes><UploadProduct /></ProtectedRoutes>} />
           <Route path="/my-order-history" element={<ProtectedRoutes><Orders /></ProtectedRoutes>} />
           <Route path="/product-detail/:productId" element={<ProtectedRoutes><ProductDetail /></ProtectedRoutes>} />
           <Route path="/my-account" element={<ProtectedRoutes><MyAccount /></ProtectedRoutes>} />
-          <Route path="/cart" element={<ProtectedRoutes><MyPurchase /></ProtectedRoutes>} />
+          <Route path="/cart" element={<ProtectedRoutes><MyPurchase /></ProtectedRoutes>} /> */}
+
+          {/*For testing purposes only*/}
+          <Route path="/sell-product" element={<UploadProduct />} />  
+          <Route path="/my-order-history" element={<Orders />} />
+          <Route path="/product-detail/:productId" element={<ProductDetail />} />
+          <Route path="/my-account" element={<MyAccount />} />
+          <Route path="/cart" element={<MyPurchase />} />
           
           <Route path="*" element={<NotFound />} />
 

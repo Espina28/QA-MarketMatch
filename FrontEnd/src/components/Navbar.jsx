@@ -10,7 +10,6 @@ import '../App.css'; // Custom CSS
 export default function Navbar() {
     const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
-
     const logoutUser = () => {
         logout();
         navigate('/login');
