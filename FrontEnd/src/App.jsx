@@ -13,6 +13,7 @@ import MyPurchase from './pages/Cart';
 import NotFound from './pages/NotFound';
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoutes from './components/ProtectedRoutes';
+import MyProducts from './pages/MyProduct';
 
 function App() {
   return (
@@ -33,11 +34,13 @@ function App() {
 
           {/*For testing purposes only*/}
           <Route path="/sell-product" element={<UploadProduct />} />  
-          <Route path="/my-order-history" element={<Orders />} />
+          <Route path="/myOrder" element={<Orders />} />
           <Route path="/product-detail/:productId" element={<ProductDetail />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/cart" element={<MyPurchase />} />
+          <Route path="/myProducts" element={<MyProducts />} />
           <Route path="*" element={<NotFound />} />
+          
 
         </Routes>
       </AuthProvider>

@@ -10,10 +10,15 @@ export default function MyProducts(){
     return (
         <Container maxWidth={false} disableGutters  sx={{height: '100vh'}} >
             <Grid sx={{paddingTop: 1, paddingBottom: 1}}>
+                <Navbar/>
             </Grid>
             <Grid className="padding-color-outer" container direction={'row'}  spacing={3} wrap='nowrap' sx={{height: '100%'}}>
                 <Grid size={{md: 4}}>
-                    <SideBar/>
+                <SideBar 
+                    state={{ 
+                    userData: location.state ? location.state.userData : null
+                    }} 
+                />
                 </Grid>
                 <Grid size={{md: 8}} container direction={'column'} sx={{width: 'auto', backgroundColor: 'white', padding: 4}}>
                     <Grid>

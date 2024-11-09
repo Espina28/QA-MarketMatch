@@ -66,7 +66,11 @@ function MyAccount() {
       <Grid container direction="row" spacing={6} sx={{ height: '91.9%', padding: 4, marginTop: '1rem' }} className="padding-color-outer">
         {/* Sidebar */}
         <Grid item md={3} sx={{ maxWidth: '100%', padding: 3}}>
-          <SideBar />
+          <SideBar 
+            state={{ 
+              userData: location.state ? location.state.userData : null
+            }} 
+          />
         </Grid>
 
         {/* Profile Content */}
@@ -74,10 +78,10 @@ function MyAccount() {
           <Typography variant="h4" gutterBottom>My Profile</Typography>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              <Typography variant="subtitle1"><strong>Name:</strong> {userData.name}</Typography>
+              <Typography variant="subtitle1"><strong>Name:</strong> {`${userData.firstname} ${userData.lastname}`}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="subtitle1"><strong>Student ID:</strong> {userData.studentId}</Typography>
+              <Typography variant="subtitle1"><strong>Student ID:</strong> {userData.student_Id}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="subtitle1"><strong>Address:</strong></Typography>

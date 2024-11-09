@@ -52,7 +52,11 @@ export default function Orders(){
             </Grid>
             <Grid className="padding-color-outer" container direction={'row'}  spacing={3} wrap='nowrap' sx={{height: '100%'}}>
                 <Grid size={{md: 4}}  sx={{maxWidth: '100%', border: '2px solid black'}}>
-                    <SideBar/>
+                <SideBar 
+                    state={{ 
+                    userData: location.state ? location.state.userData : null
+                    }} 
+                />
                 </Grid>
                 <Grid size={{md: 8}} container direction={'column'} sx={{backgroundColor: 'white', padding: 4}}>
                     <Grid>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Person2Icon from '@mui/icons-material/Person2';
 import SellIcon from '@mui/icons-material/Sell';
@@ -13,6 +13,41 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 export default function SideBar() {
+
+    const userData = useRef();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Safely check if location.state and location.state.userData are defined
+        if (location.state && location.state.userData) {
+          userData.current = location.state.userData;
+        }
+      }, [location]);
+    
+      useEffect(() => {
+        if (userData.current) {
+          console.log('Updated userData:', userData.current); // This will log after the state is updated
+        }
+      }, [userData]);
+
+    function navigateSidebar(pathname){
+        switch(pathname){
+            case '/myProducts':
+                navigate('/myProducts', {state: { userData: userData.current || 'test test' }})
+                break;
+            case '/myOrder':
+                navigate('/myOrder', {state: { userData: userData.current || 'test test' }})
+                break;
+            case '/myTransactons':
+                navigate('/myProducts', {state: { userData: userData.current || 'test test' }})
+                break;
+            case '/cart':
+                navigate('/cart', {state: { userData: userData.current || 'test test' }})
+                break;
+        }
+    }
+
     return (
         <Grid container justifyContent={'center'} sx={{ background: 'white', paddingTop: '4rem', paddingRight: '2rem', paddingLeft: '2rem', height: '100%' }} >
             <Grid container direction={'column'} >
@@ -25,7 +60,7 @@ export default function SideBar() {
                     </Grid>
                     <Grid container direction={'column'}>
                         <Grid sx={{ marginTop: 2 }}>
-                            <Typography variant='h6'>The Quick Brown Fox Jr.</Typography>
+                            <Typography variant='h6'>{userData.current?`${userData.current.firstname} ${userData.current.lastname}`:"Name Unavailable"}</Typography>
                         </Grid>
                         <Grid container direction={'row'} justifyContent={'start'}>
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
@@ -44,19 +79,38 @@ export default function SideBar() {
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <ShoppingCartIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
-                            <Typography component={Link} to="/my-product-section" sx={{ textDecoration: 'none', color: 'black' }}>My Product Section</Typography>
+                            <Typography
+                                sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}
+                                onClick={() => navigateSidebar("/myProducts")}
+                            >
+                                My Products
+                            </Typography>
                         </Grid>
                         <Grid container direction={'row'}>
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <DescriptionIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
-                            <Typography component={Link} to="/my-order-history" sx={{ textDecoration: 'none', color: 'black' }}>My Order History</Typography>
+                            <Typography sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer'  }}
+                            onClick={()=> navigateSidebar("/myOrder")}
+                            >My Orders</Typography>
                         </Grid>
+
                         <Grid container direction={'row'}>
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <SellIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
-                            <Typography component={Link} to="/my-purchase" sx={{ textDecoration: 'none', color: 'black' }}>My Purchase</Typography>
+                            <Typography to="/my-purchase" sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer'  }}
+                            onClick={()=>{alert("NO UI AVAILABLE FOR THIS COMPONENT")}}
+                            >Transaction</Typography>
+                        </Grid>
+
+                        <Grid container direction={'row'}>
+                            <IconButton color="inherit" sx={{ paddingTop: 0 }}>
+                                <SellIcon sx={{ fontSize: 25, color: 'grey'}} />
+                            </IconButton>
+                            <Typography sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer'  }}
+                            onClick={()=> navigateSidebar("/cart")}
+                            >Cart</Typography>
                         </Grid>
                     </Stack>
                 </Grid>

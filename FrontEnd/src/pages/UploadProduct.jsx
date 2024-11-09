@@ -104,7 +104,11 @@ export default function UploadProduct() {
             </Grid>
             <Grid container direction={'row'} spacing={6} sx={{ height: '101.5%' }} className="padding-color-outer">
                 <Grid  md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>
-                    <SideBar />
+                <SideBar 
+                    state={{ 
+                    userData: location.state ? location.state.userData : null
+                    }} 
+                />
                 </Grid>
                 <Grid  md={8} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
                     <Box textAlign="center" mb={3}>
