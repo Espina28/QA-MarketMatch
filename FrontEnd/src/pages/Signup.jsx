@@ -3,7 +3,7 @@ import '../../public/css/signup.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();    
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -12,6 +12,7 @@ const Signup = () => {
     student_Id: '',
     email: '',
     password: '',
+    user_Type: ''
   });
 
   const handleChange = (e) => {
@@ -50,12 +51,12 @@ const Signup = () => {
             phonenumber: '',
             student_Id: '',
             email: '',
-            password: '',
+            password: ''
           });
           localStorage.removeItem('signupData');
 
           alert('Signup successful!');
-          navigate('/login'); // Redirect to Homepage after signup
+          navigate('/homepage'); 
         } else {
           alert('Failed to sign up. Please try again.');
         }
@@ -117,7 +118,7 @@ const Signup = () => {
             onChange={handleChange}
           />
           <input
-            type="text"
+            type="number"
             name="phonenumber"
             placeholder="Phone Number"
             className="signup-input"
