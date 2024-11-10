@@ -1,6 +1,8 @@
 package com.marketmatch.appdev.BackEnd.Controller;
 
 
+import com.marketmatch.appdev.BackEnd.DTO.Account;
+import com.marketmatch.appdev.BackEnd.DTO.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +31,16 @@ public class ProductController {
     @PostMapping("/postProduct")
     public ProductEntity postProduct(@RequestBody ProductEntity product) {
         return productService.createProduct(product);
+    }
+
+    //as User create a product it signals that it became a seller
+    // therefore it needs the UserEntity to create Seller and the Product Details
+    //to connect everything via Foreign Keys
+    @PostMapping("/create")
+    public ProductEntity createProduct(@RequestBody ProductRequest product){
+        System.out.println(product);
+//        return productService.createProducts(product);
+        return null;
     }
 
     // READ

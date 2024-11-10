@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import javax.naming.NameNotFoundException;
 
+import com.marketmatch.appdev.BackEnd.DTO.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +22,12 @@ public class UserService {
 	UserRepo urepo;
 
 	@Autowired
+	BuyerService buyer_serv;
+
+	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 	
 
 	public UserService(UserRepo urepo, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -30,12 +36,30 @@ public class UserService {
 	}
 
 	//CRUD METHODS
+	//add user
+	//DTO filter outs the data that is only need in frontend,
+	//crucial data like primary key and password will not be included
+	public Account addUserRecord(UserEntity details){
+		UserEntity newUser = urepo.save(details);
+		newUser.setPassword(bCryptPasswordEncoder.encode(details.getPassword()));
+		newUser.setBuyer(buyer_serv.createNewBuyer(newUser));
 
-	//add
-	public UserEntity addUserRecord(UserEntity user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		return urepo.save(user);
+		Account account = new Account();
+		account.setFirstname(newUser.getFirstname());
+		account.setLastname(newUser.getLastname());
+		account.setEmail(newUser.getEmail());
+		account.setAddress(newUser.getAddress());
+		account.setPhoneNumber(newUser.getPhonenumber());
+		account.setStudentId(newUser.getStudent_Id());
+
+		return account;
 	}
+
+//	//add
+//	public UserEntity addUserRecord(UserEntity user) {
+//		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//		return urepo.save(user);
+//	}
 
 	//read
 	public List<UserEntity> readUsers(){
@@ -89,19 +113,27 @@ public class UserService {
 		}
 
 	//Authenticate
-	public UserEntity authenticate(String email, String password) {
+	public Account authenticate(String email, String password) {
 		UserEntity user = urepo.findByEmail(email);
-			if (user == null) {
-				throw new BadCredentialsException("email not found");
-			}
-			System.out.println("User found: " + user.getEmail());
-			if(!user.getEmail().equals(email)){
-				throw new BadCredentialsException("email not found");
-			}
-			if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-				throw new BadCredentialsException("password is incorrect");
-			}
-		return user;
+
+		Account account = new Account();
+		account.setFirstname(user.getFirstname());
+		account.setLastname(user.getLastname());
+		account.setEmail(user.getEmail());
+		account.setAddress(user.getAddress());
+		account.setPhoneNumber(user.getPhonenumber());
+		account.setStudentId(user.getStudent_Id());
+		if (user == null) {
+			throw new BadCredentialsException("email not found");
+		}
+		System.out.println("User found: " + user.getEmail());
+		if(!user.getEmail().equals(email)){
+			throw new BadCredentialsException("email not found");
+		}
+		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+			throw new BadCredentialsException("password is incorrect");
+		}
+		return account;
 	}
 
 	

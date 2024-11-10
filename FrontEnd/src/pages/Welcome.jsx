@@ -6,7 +6,7 @@ const Welcome = () => {
   return (
     <div className="signin-container">
       <header className="header-container">
-        <img src="logo2.png" alt="Logo" className="logo2" />
+        <img src="logo.png" alt="Logo" className="logo2" />
         <h1 className="title">CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY MARKET MATCH</h1>
       </header>
       <div className="content">

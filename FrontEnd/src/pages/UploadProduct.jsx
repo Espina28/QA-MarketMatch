@@ -82,15 +82,18 @@ export default function UploadProduct() {
     };
     const handleSave = async () => {
         try {
-            await axios.post('http://localhost:8080/api/user/postProduct', product, {
+            await axios.post('http://localhost:8080/api/user/create', {
+                email: userData.email,
+                product: product
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 auth: {
-                    username: 'user@gmailcom',
+                    username: 'user@gmail.com',
                     password: '1'
                 }
-            });
+            });         
             alert('Product saved successfully!');
         } catch (error) {
             console.error(error);

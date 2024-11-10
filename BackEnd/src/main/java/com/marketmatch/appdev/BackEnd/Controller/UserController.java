@@ -2,6 +2,7 @@ package com.marketmatch.appdev.BackEnd.Controller;
 
 import java.util.List;
 
+import com.marketmatch.appdev.BackEnd.DTO.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +32,12 @@ public class UserController {
 
 @Autowired
 UserService userv;
-	
+
+
 @PostMapping("/postUser")
-public ResponseEntity<UserEntity> postCourse(@RequestBody UserEntity user) {
-	UserEntity newUser = userv.addUserRecord(user);
-	return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+public ResponseEntity<Account> postCourse(@RequestBody UserEntity user) {
+	Account account = userv.addUserRecord(user);
+	return ResponseEntity.status(HttpStatus.CREATED).body(account);
 }
 
 
@@ -56,9 +58,9 @@ public String deleteUser(@PathVariable int id) {
 }
 
 @PostMapping("/login")
-public ResponseEntity<UserEntity> login(@RequestBody LoginRequest loginRequest,HttpSession session) {
+public ResponseEntity<Account> login(@RequestBody LoginRequest loginRequest,HttpSession session) {
     try{
-		UserEntity userData = userv.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+		Account userData = userv.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 		if (userData != null) {
 			session.setAttribute("email", loginRequest.getEmail());
 			return ResponseEntity.ok(userData);

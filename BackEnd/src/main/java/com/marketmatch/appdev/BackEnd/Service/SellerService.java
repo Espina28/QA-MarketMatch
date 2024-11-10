@@ -4,6 +4,8 @@ package com.marketmatch.appdev.BackEnd.Service;
 import com.marketmatch.appdev.BackEnd.Entity.SellerEntity;
 import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
 import com.marketmatch.appdev.BackEnd.Repository.SellerRepo;
+import com.marketmatch.appdev.BackEnd.Repository.UserRepo;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ public class SellerService {
     @Autowired
     SellerRepo seller_repo;
 
+    @Autowired
+    UserRepo user_repo;
+
     public SellerService(){
         super();
     }
@@ -24,6 +29,7 @@ public class SellerService {
     public List<SellerEntity> getAllSeller(){
         return seller_repo.findAll();
     }
+
 
     public SellerEntity createNewSeller(UserEntity details){
         SellerEntity seller = new SellerEntity();

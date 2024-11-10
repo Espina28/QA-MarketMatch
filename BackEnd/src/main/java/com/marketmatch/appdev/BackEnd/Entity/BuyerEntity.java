@@ -14,25 +14,16 @@ public class BuyerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int buyerId;
 
+    private int totalTransaction;
+
     @JsonBackReference
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private UserEntity user;
-    private int totalTransaction;
 
     @JsonManagedReference("buyer-reference")
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     private List<BuyEntity> bought;
-
-    public BuyerEntity() {
-    }
-
-    public BuyerEntity(int buyerId, UserEntity user, int totalTransaction, List<BuyEntity> bought) {
-        this.buyerId = buyerId;
-        this.user = user;
-        this.totalTransaction = totalTransaction;
-        this.bought = bought;
-    }
 
     public int getBuyerId() {
         return buyerId;

@@ -25,7 +25,7 @@ const Login = () => {
       console.log(response);
       if(response.status===200){
         login();
-        navigate('/home', {state: {"userData": response.data}} );  
+        navigate('/homepage', {state: {"userData": response.data}} );  
       }else{
         const errorData = response.data;
         setError(errorData);

@@ -9,8 +9,6 @@ public class Account {
     private String phoneNumber;
     private String address;
     private String email;
-    private int totalTransaction;
-    private int products_sold;
 
     public String getStudentId() {
         return studentId;
@@ -44,21 +42,6 @@ public class Account {
         this.email = email;
     }
 
-    public int getTotalTransaction() {
-        return totalTransaction;
-    }
-
-    public void setTotalTransaction(int totalTransaction) {
-        this.totalTransaction = totalTransaction;
-    }
-
-    public int getProducts_sold() {
-        return products_sold;
-    }
-
-    public void setProducts_sold(int products_sold) {
-        this.products_sold = products_sold;
-    }
 
     public String getPhoneNumber() {
         return phoneNumber;

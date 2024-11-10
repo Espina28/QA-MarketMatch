@@ -11,8 +11,7 @@ const Signup = () => {
     phonenumber: '',
     student_Id: '',
     email: '',
-    password: '',
-    user_Type: ''
+    password: ''
   });
 
   const handleChange = (e) => {
