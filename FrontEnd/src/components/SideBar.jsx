@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Person2Icon from '@mui/icons-material/Person2';
@@ -14,36 +14,37 @@ import Typography from '@mui/material/Typography';
 
 export default function SideBar() {
 
-    const userData = useRef();
+    const [userData, setUserData] = useState();
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
         // Safely check if location.state and location.state.userData are defined
         if (location.state && location.state.userData) {
-          userData.current = location.state.userData;
+        //   userData.current = location.state.userData;
+        setUserData(location.state.userData)    
         }
       }, [location]);
     
       useEffect(() => {
-        if (userData.current) {
-          console.log('Updated userData:', userData.current); // This will log after the state is updated
+        if (userData) {
+          console.log('Updated userData:', userData); // This will log after the state is updated
         }
       }, [userData]);
 
     function navigateSidebar(pathname){
         switch(pathname){
             case '/myProducts':
-                navigate('/myProducts', {state: { userData: userData.current || 'test test' }})
+                navigate('/myProducts', {state: { userData: userData || 'test test' }})
                 break;
             case '/myOrder':
-                navigate('/myOrder', {state: { userData: userData.current || 'test test' }})
+                navigate('/myOrder', {state: { userData: userData || 'test test' }})
                 break;
             case '/myTransactons':
-                navigate('/myProducts', {state: { userData: userData.current || 'test test' }})
+                navigate('/myProducts', {state: { userData: userData || 'test test' }})
                 break;
             case '/cart':
-                navigate('/cart', {state: { userData: userData.current || 'test test' }})
+                navigate('/cart', {state: { userData: userData || 'test test' }})
                 break;
         }
     }
@@ -60,9 +61,9 @@ export default function SideBar() {
                     </Grid>
                     <Grid container direction={'column'}>
                         <Grid sx={{ marginTop: 2 }}>
-                            <Typography variant='h6'>{userData.current?`${userData.current.firstname} ${userData.current.lastname}`:"Name Unavailable"}</Typography>
+                            <Typography variant='h6'>{userData!=null?`${userData.firstname} ${userData.lastname}`:"Name Unavailable"}</Typography>
                         </Grid>
-                        <Grid container direction={'row'} justifyContent={'start'}>
+                        <Grid container direction={'row'} justifyContent={'start'}> 
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <CreateIcon sx={{ fontSize: 20, color: 'grey'}} />
                             </IconButton>
