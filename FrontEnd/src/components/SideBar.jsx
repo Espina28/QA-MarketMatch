@@ -67,7 +67,7 @@ export default function SideBar() {
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <CreateIcon sx={{ fontSize: 20, color: 'grey'}} />
                             </IconButton>
-                            <Typography alignContent={'start'}>Edit Profile</Typography>
+                            <Typography alignContent={'start'}>Edit Profile Photo</Typography>
                         </Grid>
                     </Grid>
                 </Grid>
