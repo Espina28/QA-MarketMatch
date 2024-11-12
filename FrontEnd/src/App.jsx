@@ -19,7 +19,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        {/* <Navbar /> */}
+        
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
