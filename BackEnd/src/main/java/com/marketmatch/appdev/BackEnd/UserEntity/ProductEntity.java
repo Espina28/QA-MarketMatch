@@ -28,16 +28,16 @@ public class ProductEntity {
     @Column(name = "image",columnDefinition = "longblob")
     private byte[] image;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="cartid")
-    private CartEntity cart;
+    private CartEntity cartid;
 
     public ProductEntity() {
         super();
     }
 
     public ProductEntity(int productId, String productName, String productDescription, String productPrice,
-            String productStock, String productStatus, String productTimeCreated, byte[] image, CartEntity cart) {
+            String productStock, String productStatus, String productTimeCreated, byte[] image) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -46,7 +46,6 @@ public class ProductEntity {
         this.productStatus = productStatus;
         this.productTimeCreated = productTimeCreated;
         this.image = image;
-        this.cart = cart;
     }
     public int getProductId() {
         return productId;
@@ -99,8 +98,14 @@ public class ProductEntity {
     }
 
     public void setCart(CartEntity cart) {
-        this.cart = cart;
+        this.cartid = cart;
     }
+
+    public void setCartid(CartEntity cartid) {
+        this.cartid = cartid;
+    }
+
+
     
     
 

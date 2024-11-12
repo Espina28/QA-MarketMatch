@@ -7,40 +7,41 @@ import {useAuth} from '../components/AuthContext';
 import {Link} from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
-  const { login } = useAuth();
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('');
-    try{
-      const response = await axios.post('http://localhost:8080/api/user/login', {
-        email,
-        password
-      }, { withCredentials: true });
-      console.log(response);
-      if(response.status===200){
-        login();
-        navigate('/');  
-      }else{
-        const errorData = response.data;
-        setError(errorData);
-      }
-    }catch(error){
-      setError('Invalid credentials');
+  const[input, setInput] = useState(
+    {
+      email: '',
+      password: ''
     }
+  );
+  const {login} = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log(input);
+    try {
+      await login(input);
+      navigate('/');
+    } catch (error) {
+      setError("Invalid email or password");
+    }
+  }
+  const handleInput = (e) => {
+    const {name, value} = e.target
+    setInput((prevInput) => ({
+      ...prevInput,
+      [name]: value
+
+    }));
   }
   return (
     <div className="login-page">
       <div className="login-form-container">
         <h2 className="login-title">Log in</h2>
         <form className="login-form">
-          <input type="text" placeholder="Email" className="login-input" onChange={(e) => setEmail(e.target.value)}/>
-          <input type="password" placeholder="Password" className="login-input" onChange={(e) => setPassword(e.target.value)}/>
-          <button type="submit" className="login-button" onClick={handleSubmit}>LOGIN</button>
+          <input type="text" placeholder="Email" className="login-input" name="email" onChange={handleInput}/>
+          <input type="password" placeholder="Password" className="login-input" name="password" onChange={handleInput}/>
+          <button type="submit" className="login-button" onClick={handleLogin}>LOGIN</button>
         </form>
         <Typography variant="body2" align="center">
           <span style={{ color: 'gold' }}>Don't have an account?</span> 

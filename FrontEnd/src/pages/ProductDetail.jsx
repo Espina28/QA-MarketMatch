@@ -17,10 +17,11 @@ export default function ProductLayout() {
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/user/getProducts/' + productId,{
-            auth: {
-                username: 'user@gmailcom',
-                password: '1'
-            }
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
         })
             .then(response => {
                 setProducts(response.data);
@@ -34,31 +35,40 @@ export default function ProductLayout() {
     const imageUrl = products.image ? `data:image/jpeg;base64,${products.image}` : '';
 
     const handleAddToCart = () => {
-        const cartPayload = {
-            dateAdded: new Date().toISOString(),
-            quantity: 1, // Set desired quantity
-            productDetails: [
-                {
-                    productName: products.productName,
-                    productDescription: products.productDescription,
-                    productPrice: products.productPrice,
-                    productStock: products.productStock,
-                    productStatus: products.productStatus,
-                    productTimeCreated: products.productTimeCreated,
-                    image: products.image,
-                }
-            ]
-        };
-    
-        axios.post('http://localhost:8080/api/cart/postCart', cartPayload)
-            .then(response => {
+        console.log("Product to add to cart:", products);
+        if (products) {
+            const cartId = localStorage.getItem("id"); // Retrieve cart ID from session
+            const quantity = 1; // Set desired quantity
+        
+            const productsToAdd = {
+              productId: products.productId,
+              productName: products.productName,
+              productDescription: products.productDescription,
+              productPrice: products.productPrice,
+              productStock: products.productStock,
+              productStatus: products.productStatus,
+              productTimeCreated: products.productTimeCreated,
+              image: products.image,
+              quantity: quantity
+            };
+            axios.post(`http://localhost:8080/api/cart/addProduct/`+cartId, productsToAdd, {
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+              },
+            })
+              .then(response => {
                 console.log(response.data);
                 alert("Product added to cart successfully!");
-            })
-            .catch(error => {
+              })
+              .catch(error => {
                 console.error("Error adding product to cart", error);
-            });
-    };
+              });
+          } else {
+            console.log("Products data is not yet available. Please try again.");
+          }
+      };
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>

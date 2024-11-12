@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../public/css/signup.css';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Signup = () => {
   const navigate = useNavigate(); // Initialize navigate hook
@@ -42,7 +43,19 @@ const Signup = () => {
 
         if (response.ok) {
           const data = await response.json();
+          const userId = data.userId;
           console.log('Form submitted:', data);
+          const cartPayload = {
+            dateAdded: new Date().toISOString(),
+            quantity: 0,
+            user: {userId: userId},
+        };
+        console.log(cartPayload);
+        const cartResponse = await axios.post(`http://localhost:8080/api/cart/postCart/`+userId, cartPayload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
           setFormData({
             firstname: '',
@@ -58,6 +71,9 @@ const Signup = () => {
 
           alert('Signup successful!');
           navigate('/login'); // Redirect to Homepage after signup
+
+          //create cart for user
+
         } else {
           alert('Failed to sign up. Please try again.');
         }

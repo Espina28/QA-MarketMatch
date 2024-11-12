@@ -65,15 +65,17 @@ export default function UploadProduct() {
     };
     const handleSave = async () => {
         try {
-            await axios.post('http://localhost:8080/api/user/postProduct', product, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                auth: {
-                    username: 'user@gmailcom',
-                    password: '1'
+            await axios.post(
+                'http://localhost:8080/api/user/postProduct',
+                product,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    },
                 }
-            });
+            );
             alert('Product saved successfully!');
         } catch (error) {
             console.error(error);

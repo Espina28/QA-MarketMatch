@@ -126,6 +126,14 @@ public void setUser_Type(String user_Type) {
 	this.user_Type = user_Type;
 }
 
+public int getUserId() {
+	return userId;
+}
+
+public BuyerEntity getBuyer() {
+	return buyer;
+}
+
 
 
 

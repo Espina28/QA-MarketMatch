@@ -1,11 +1,12 @@
 package com.marketmatch.appdev.BackEnd.UserEntity;
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -15,7 +16,6 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class CartEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cartID;
 
     private String dateAdded;
@@ -26,7 +26,7 @@ public class CartEntity{
     private UserEntity user;
 
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cartid", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductEntity> products;
 
     public CartEntity() {
@@ -40,6 +40,7 @@ public class CartEntity{
         this.products = products;
     }
 
+    
     public int getCartID() {
         return cartID;
     }
@@ -70,6 +71,10 @@ public class CartEntity{
 
     public void setProducts(List<ProductEntity> products) {
         this.products = products;
+    }
+
+    public UserEntity getUser() {
+        return user;
     }
 
     

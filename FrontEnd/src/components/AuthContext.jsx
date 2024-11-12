@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -6,19 +7,55 @@ export const useAuth = () => useContext(AuthContext);
 
 
 export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem("token")|| '');
+    const [id, setId] = useState(localStorage.getItem("id")|| '');
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         return localStorage.getItem("isAuthenticated") === "true";
     })
-    const login = () => {
-        setIsAuthenticated(true);
-        localStorage.setItem("isAuthenticated", 'true');
+    const login = async (data) => {
+        try{
+            const response = await axios.post('http://localhost:8080/api/user/login',data);
+            if(response.status === 200||response.status === 201){
+                localStorage.setItem("isAuthenticated", true);
+                setUser(response.data.user);
+                setToken(response.data);
+                localStorage.setItem("token", response.data);
+                setIsAuthenticated(true);
+                    try{
+                        const id = await axios.post(`http://localhost:8080/api/user/setIDsession`,data,{
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        });
+                        if(id.status === 200||id.status === 201){
+                            setId(id.data);
+                            localStorage.setItem("id", id.data);
+                        }
+                    }catch(error){
+                        console.log(error);
+                    }
+                return
+            }else{
+                throw new Error(response.data);
+                console.log("error");
+            }
+        }catch(error){
+            console.log(error);
+        }
     }
     const logout = () => {
+        setUser(null);
+        setToken('');
+        setId('');
+        localStorage.removeItem("id");
+        localStorage.removeItem("token");
+        localStorage.setItem("isAuthenticated", false);
         setIsAuthenticated(false);
-        localStorage.removeItem("isAuthenticated");
     }
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout , token, user}}>
             {children}
         </AuthContext.Provider>
     )

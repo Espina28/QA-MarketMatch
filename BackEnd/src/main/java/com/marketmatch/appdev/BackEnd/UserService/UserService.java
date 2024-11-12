@@ -105,5 +105,8 @@ public class UserService {
 		return true;
 	}
 
+	public UserEntity getUserByEmail(String email) {
+        return urepo.findByEmail(email);
+    }
 	
 }
