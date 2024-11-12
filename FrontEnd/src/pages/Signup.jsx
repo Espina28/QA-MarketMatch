@@ -79,6 +79,10 @@ const Signup = () => {
     localStorage.setItem('signupData', JSON.stringify(formData));
   }, [formData]);
 
+
+  const handleLogoClick = () => {
+    navigate('/'); 
+  };
   return (
     <div className="signup-page">
       <div className="signup-form-container">
@@ -145,7 +149,13 @@ const Signup = () => {
       </div>
 
       <div className="logo-container">
-        <img src="logo.png" alt="Cebu Institute of Technology - University Logo" className="logo" />
+      <img 
+          src="logo.png" 
+          alt="Cebu Institute of Technology - University Logo" 
+          className="logo" 
+          onClick={handleLogoClick}  // Add onClick handler here
+        />
+        
         <p className="university-title">CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY MARKET MATCH</p>
         <Link to='/login'><button className="login-button">LOGIN</button></Link>
       </div>

@@ -34,6 +34,11 @@ const Login = () => {
       setError('Invalid credentials');
     }
   }
+
+
+  const handleLogoClick = () => {
+    navigate('/'); 
+  };
   return (
     <div className="login-page">
       <div className="login-form-container">
@@ -55,7 +60,12 @@ const Login = () => {
       </div>
 
       <div className="logo-container">
-        <img src="logo.png" alt="Cebu Institute of Technology - University Logo" className="logo" />
+      <img 
+          src="logo.png" 
+          alt="Cebu Institute of Technology - University Logo" 
+          className="logo" 
+          onClick={handleLogoClick}  // Add onClick handler here
+        />
         <p className="university-title">CEBU INSTITUTE TECHNOLOGY - UNIVERSITY MARKET MATCH</p>
       </div>
     </div>
