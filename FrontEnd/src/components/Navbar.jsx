@@ -33,8 +33,8 @@ export default function Navbar() {
 
   function navigatePage(pathname) {
     switch (pathname) {
-      case '/home':
-        navigate('/home', { state: { userData: userData.current || 'test test' } });
+      case '/homepage':
+        navigate('/homepage', { state: { userData: userData.current || 'test test' } });
         break;
     case '/my-account':
         navigate('/my-account', { state: { userData: userData.current || 'test test' } });
@@ -64,7 +64,7 @@ export default function Navbar() {
               <Typography
                 variant="h6"
                 style={{ textDecoration: 'none', marginRight: '1.5rem', color: 'black', cursor: 'pointer' }}
-                onClick={() => navigatePage('/home')} // Pass as a function reference
+                onClick={() => navigatePage('/homepage')} // Pass as a function reference
               >
                 Home
               </Typography>
