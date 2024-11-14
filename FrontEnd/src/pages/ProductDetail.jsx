@@ -72,7 +72,7 @@ export default function ProductLayout() {
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>
-
+            <Navbar />
 
             {/* Main Content */}
             <Grid container direction="row" wrap="nowrap" sx={{ height: '100%', backgroundColor: '#7D0C0E', padding: 2 }}>

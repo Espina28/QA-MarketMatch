@@ -9,4 +9,5 @@ import com.marketmatch.appdev.BackEnd.UserEntity.UserEntity;
 @Repository
 public interface UserRepo extends JpaRepository<UserEntity, Integer> {
 	public UserEntity findByEmail(String email);
+	public UserEntity findByuserId(int id);
 }

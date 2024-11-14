@@ -41,6 +41,9 @@ public class UserService {
 	public List<UserEntity> readUsers(){
 		return urepo.findAll();
 	}
+	public UserEntity getUserById(int id) {
+		return urepo.findByuserId(id);
+	}
 
 	//update
 	@SuppressWarnings("finally")
@@ -50,7 +53,7 @@ public class UserService {
 		
 		try {
 			//student baryabol
-			user = urepo.findById(id).get();
+			user = urepo.findByuserId(id);
 			
 			
 			//settingnimplementation
@@ -72,7 +75,13 @@ public class UserService {
 			return urepo.save(user);
 		}
 
-	}//end of update method
+	}
+
+	public void updatePassword(int id, String password) {
+		UserEntity user = urepo.findById(id).orElseThrow();
+		user.setPassword(bCryptPasswordEncoder.encode(password));
+		urepo.save(user);
+	}
 
 	//delete	
 	@SuppressWarnings({ "unused" })

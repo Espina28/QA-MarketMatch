@@ -1,5 +1,6 @@
 package com.marketmatch.appdev.BackEnd.UserService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public class ProductService {
     
     //CREATE
     public ProductEntity createProduct(ProductEntity product) {
+        System.out.println(product);
         return prodrepo.save(product);
     }
 
@@ -38,6 +40,9 @@ public class ProductService {
         } catch (Exception e) {
             throw new RuntimeException("Error retrieving product: " + e.getMessage(), e); 
         }
+    }
+    public List<ProductEntity> readAllProducts() {
+       return prodrepo.findAll();
     }
 
 

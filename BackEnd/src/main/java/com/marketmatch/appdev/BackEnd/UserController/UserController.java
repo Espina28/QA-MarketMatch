@@ -59,11 +59,22 @@ public List<UserEntity> getUser(){
 	return userv.readUsers();
 }
 
+@GetMapping("/getUserbyId")
+public UserEntity getMethodName(@RequestParam int id) {
+    return userv.getUserById(id);
+}
+
+
 @PutMapping("/updateUser")
 public UserEntity updateUser( @RequestParam  int id, @RequestBody UserEntity user) {
 	return userv.putUserDetails(id,user);
 }
 
+@PutMapping("/updatePassword")
+public ResponseEntity<String> updatePassword(@RequestParam int id, @RequestParam String password) {
+    userv.updatePassword(id, password);
+    return ResponseEntity.ok("Password updated successfully!");
+}
 
 @DeleteMapping("/deleteUser")
 public String deleteUser(@PathVariable int id) {

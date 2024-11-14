@@ -21,7 +21,7 @@ const Login = () => {
     console.log(input);
     try {
       await login(input);
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       setError("Invalid email or password");
     }

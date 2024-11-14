@@ -1,19 +1,34 @@
-import React from 'react';
-import { Container, Grid, Typography, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import { Container,Grid,Box,Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import ScrollableContainer from '../components/ScrollableContainer';
+import axios from 'axios';
 
-const placeholderProducts = [
-  { name: 'Product 1', image: 'https://via.placeholder.com/400x300?text=Product+1' },
-  { name: 'Product 2', image: 'https://via.placeholder.com/400x300?text=Product+2' },
-  { name: 'Product 3', image: 'https://via.placeholder.com/400x300?text=Product+3' },
-  { name: 'Product 4', image: 'https://via.placeholder.com/400x300?text=Product+4' },
-  { name: 'Product 5', image: 'https://via.placeholder.com/400x300?text=Product+5' },
-  { name: 'Product 6', image: 'https://via.placeholder.com/400x300?text=Product+6' },
-];
+const HomePage = () => {
+  const [products, setProducts] = useState([]);
 
-export default function HomePage() {
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/user/getAllProducts', {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      },
+    })
+      .then(response => {
+        setProducts(response.data);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the products!', error);
+      });
+  }, []);
+
   return (
     <div>
+      <Navbar/>
+
       {/* Main Content */}
       <Container maxWidth={false} disableGutters sx={{ backgroundColor: '#800000' }}>
         <Grid container sx={{ height: '85vh', backgroundColor: '#fff' }}>
@@ -21,7 +36,7 @@ export default function HomePage() {
           <Grid
             item
             md={6}
-            sx={{
+            sx={{ 
               backgroundColor: '#ccc',
               display: 'flex',
               justifyContent: 'center',
@@ -81,9 +96,11 @@ export default function HomePage() {
             </Typography>
 
             {/* Grid of Products Inside MARKET MATCH */}
-            <Grid container spacing={2} sx={{ zIndex: 2 }}>
-              {placeholderProducts.map((product, index) => (
+            <ScrollableContainer>
+              <Grid container spacing={2} sx={{ zIndex: 2 }}>
+                {products.map((product, index) => (
                 <Grid item xs={4} key={index}>
+                <Link to={`/product-detail/${product.productId}`}>
                   <Box
                     sx={{
                       position: 'relative',
@@ -94,8 +111,8 @@ export default function HomePage() {
                     }}
                   >
                     <img
-                      src={product.image}
-                      alt={product.name}
+                      src={product.image? `data:image/jpeg;base64,${product.image}` : ''}
+                      alt={products.name}
                       style={{
                         width: '100%',
                         height: '100%',
@@ -116,12 +133,16 @@ export default function HomePage() {
                       {product.name}
                     </Typography>
                   </Box>
-                </Grid>
-              ))}
-            </Grid>
+                </Link>
+              </Grid>
+                ))}
+              </Grid>
+            </ScrollableContainer>
           </Grid>
         </Grid>
       </Container>
     </div>
   );
-}
+};
+
+export default HomePage;

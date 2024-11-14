@@ -1,6 +1,8 @@
 package com.marketmatch.appdev.BackEnd.UserController;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +38,12 @@ public class ProductController {
     public ProductEntity getProducts(@PathVariable int productId) {
         return productService.readProducts(productId);
     }
+
+    @GetMapping("/getAllProducts")
+    public List<ProductEntity> getAllProducts() {
+        return productService.readAllProducts();
+    }
+
 
     // UPDATE
     @PutMapping("/putProduct/{productId}")

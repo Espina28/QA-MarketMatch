@@ -84,6 +84,7 @@ export default function UploadProduct() {
     };
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
+            <Navbar />
             <Grid>
             </Grid>
             <Grid container direction={'row'} spacing={6} sx={{ height: '101.5%' }} className="padding-color-outer">

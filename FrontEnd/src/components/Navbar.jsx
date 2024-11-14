@@ -13,7 +13,7 @@ export default function Navbar() {
 
     const logoutUser = () => {
         logout();
-        navigate('/login');
+        navigate('/');
     };
 
     return (
@@ -30,7 +30,7 @@ export default function Navbar() {
                     {/* Navigation Links aligned to the right */}
                     <Grid item>
                         <Grid container alignItems="center" justifyContent="flex-end">
-                            <Link to="/" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
+                            <Link to="/home" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
                                 <Typography variant="h6" sx={{ color: 'black' }}>Home</Typography>
                             </Link>
                             <Link to="/my-account" style={{ textDecoration: 'none', marginRight: '1.5rem' }}>
