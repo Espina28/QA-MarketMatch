@@ -22,7 +22,7 @@ function NotFound() {
 
 
   const handleGoBack = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   return (

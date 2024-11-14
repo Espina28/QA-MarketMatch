@@ -1,5 +1,9 @@
 package com.marketmatch.appdev.BackEnd.UserEntity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +16,10 @@ public class BuyerEntity {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private UserEntity user;
+
+    @JsonManagedReference("buyer-reference")
+    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
+    private List<BuyEntity> bought;
 
     private int totalProductBought;
 

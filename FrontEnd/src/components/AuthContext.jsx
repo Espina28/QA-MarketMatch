@@ -14,37 +14,39 @@ export const AuthProvider = ({ children }) => {
         return localStorage.getItem("isAuthenticated") === "true";
     })
     const login = async (data) => {
-        try{
-            const response = await axios.post('http://localhost:8080/api/user/login',data);
-            if(response.status === 200||response.status === 201){
-                localStorage.setItem("isAuthenticated", true);
-                setUser(response.data.user);
-                setToken(response.data);
-                localStorage.setItem("token", response.data);
-                setIsAuthenticated(true);
-                    try{
-                        const id = await axios.post(`http://localhost:8080/api/user/setIDsession`,data,{
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + localStorage.getItem('token')
-                            }
-                        });
-                        if(id.status === 200||id.status === 201){
-                            setId(id.data);
-                            localStorage.setItem("id", id.data);
-                        }
-                    }catch(error){
-                        console.log(error);
-                    }
-                return
-            }else{
-                throw new Error(response.data);
-                console.log("error");
+        try {
+          const response = await axios.post('http://localhost:8080/api/user/login', data);
+          if (response.status === 200 || response.status === 201) {
+            localStorage.setItem("isAuthenticated", true);
+            setUser(response.data.user);
+            setToken(response.data);
+            localStorage.setItem("token", response.data);
+            setIsAuthenticated(true);
+            try {
+              const id = await axios.post(`http://localhost:8080/api/user/setIDsession`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+              });
+              if (id.status === 200 || id.status === 201) {
+                setId(id.data);
+                localStorage.setItem("id", id.data);
+              } else {
+                return "Failed to set ID session";
+              }
+            } catch (error) {
+              console.log(error);
+              return "Failed to set ID session";
             }
-        }catch(error){
-            console.log(error);
+          } else {
+            return response.data;
+          }
+        } catch (error) {
+          console.log(error);
+          return "Invalid email or password";
         }
-    }
+      }
     const logout = () => {
         setUser(null);
         setToken('');

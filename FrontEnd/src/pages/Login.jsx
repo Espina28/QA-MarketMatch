@@ -20,12 +20,16 @@ const Login = () => {
     e.preventDefault();
     console.log(input);
     try {
-      await login(input);
-      navigate('/home');
+      const response = await login(input);
+      if (response) {
+        setError(response);
+      } else {
+        navigate('/home');
+      }
     } catch (error) {
       setError("Invalid email or password");
     }
-  }
+  };
   const handleInput = (e) => {
     const {name, value} = e.target
     setInput((prevInput) => ({

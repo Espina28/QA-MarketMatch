@@ -59,7 +59,7 @@ public class CartService {
         cart.setProducts(products);
         
        
-        product.setCart(cart);
+        product.setCartid(cart);
         
         
         cart = cartRepo.save(cart);

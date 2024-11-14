@@ -1,5 +1,7 @@
 package com.marketmatch.appdev.BackEnd.UserEntity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 
 //import java.awt.Image;
@@ -19,8 +21,6 @@ private int userId;
 
 //private Image image;
 
-@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-private BuyerEntity buyer;
 private String Firstname;
 private String Lastname;
 private String Address;
@@ -30,21 +30,29 @@ private String email;
 private String Password;
 private String user_Type;
 	
+@JsonManagedReference
+@OneToOne(mappedBy = "userid")
+private SellerEntity seller_id;
 
-//cons
+
+@JsonManagedReference
+@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+private BuyerEntity buyer;
+
+
 public UserEntity() {
 	super();
 }
 
-//
-//public Image getImage() {
-//	return image;
-//}
-//
-//
-//public void setImage(Image image) {
-//	this.image = image;
-//}
+
+public int getUserId() {
+	return userId;
+}
+
+
+public void setUserId(int userId) {
+	this.userId = userId;
+}
 
 
 public String getFirstname() {
@@ -126,18 +134,25 @@ public void setUser_Type(String user_Type) {
 	this.user_Type = user_Type;
 }
 
-public int getUserId() {
-	return userId;
+
+public SellerEntity getSeller_id() {
+	return seller_id;
 }
+
+
+public void setSeller_id(SellerEntity seller_id) {
+	this.seller_id = seller_id;
+}
+
 
 public BuyerEntity getBuyer() {
 	return buyer;
 }
 
 
-
-
-
+public void setBuyer(BuyerEntity buyer) {
+	this.buyer = buyer;
+}
 
 
 	
