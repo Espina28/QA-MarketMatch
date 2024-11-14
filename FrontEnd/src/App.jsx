@@ -14,7 +14,7 @@ import NotFound from './pages/NotFound';
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import MyProducts from './pages/MyProduct';
-
+import Transactions from './pages/Transactions';
 function App() {
   return (
     <Router>
@@ -39,6 +39,7 @@ function App() {
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/cart" element={<MyPurchase />} />
           <Route path="/myProducts" element={<MyProducts />} />
+          <Route path="/transactions" element={<Transactions />} />
           <Route path="*" element={<NotFound />} />
           
 

@@ -40,8 +40,8 @@ export default function SideBar() {
             case '/myOrder':
                 navigate('/myOrder', {state: { userData: userData || 'test test' }})
                 break;
-            case '/myTransactons':
-                navigate('/myProducts', {state: { userData: userData || 'test test' }})
+            case '/transactions':
+                navigate('/transactions', {state: { userData: userData || 'test test' }})
                 break;
             case '/cart':
                 navigate('/cart', {state: { userData: userData || 'test test' }})
@@ -101,7 +101,7 @@ export default function SideBar() {
                                 <SellIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
                             <Typography to="/my-purchase" sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer'  }}
-                            onClick={()=>{alert("NO UI AVAILABLE FOR THIS COMPONENT")}}
+                            onClick={()=> navigateSidebar("/transactions")}
                             >Transaction</Typography>
                         </Grid>
 

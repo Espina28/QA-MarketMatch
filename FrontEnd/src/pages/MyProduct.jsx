@@ -36,7 +36,7 @@ export default function MyProducts(){
                             width: '60vw'
                         }}>
                         {/* Your content goes here */}
-                        {/*
+                        
                         <Grid container alignItems="center" spacing={2} direction={'row'} sx={{width: 'auto', border: '1px solid grey', padding: '.5rem'}}>
                                 <Grid size={{md: 3}}>
 
@@ -50,7 +50,7 @@ export default function MyProducts(){
                                     <Typography>Time Created:  12/12/2020</Typography>
                                 </Grid>
                         </Grid>
-                        */}
+                       
                         
                         
                     </Grid>
