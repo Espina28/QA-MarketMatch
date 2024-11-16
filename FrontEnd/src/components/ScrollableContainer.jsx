@@ -6,7 +6,7 @@ const ScrollableContainer = ({ children }) => {
     <Box
       sx={{
         overflowY: 'auto',
-        maxHeight: '80vh', 
+        maxHeight: '90vh', 
         width: '100%', 
         padding: '1rem',
         border: '1px solid #ddd',

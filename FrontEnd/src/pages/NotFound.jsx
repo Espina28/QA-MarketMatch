@@ -13,7 +13,7 @@ function NotFound() {
 
 
     if (countdown === 0) {
-      navigate('/');
+      navigate('/home');
     }
 
 

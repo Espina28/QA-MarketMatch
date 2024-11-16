@@ -30,7 +30,7 @@ export default function SideBar() {
         })
           .then(response => {
             setUserData(response.data);
-            console.log(response.data);
+            //console.log(response.data);
           })
           .catch(error => {
             console.error('There was an error fetching the user data!', error);
@@ -50,7 +50,7 @@ export default function SideBar() {
                         <Grid sx={{ marginTop: 2 }}>
                             <Typography variant='h6'>{userData.firstname} {userData.lastname}</Typography>
                         </Grid>
-                        <Grid container direction={'row'} justifyContent={'start'}>
+                        <Grid container direction={'row'} justifyContent={'start'}> 
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <CreateIcon sx={{ fontSize: 20, color: 'grey'}} />
                             </IconButton>
@@ -69,19 +69,43 @@ export default function SideBar() {
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <ShoppingCartIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
-                            <Typography component={Link} to="/my-product-section" sx={{ textDecoration: 'none', color: 'black' }}>My Product Section</Typography>
+                            <Link to="/myProducts" sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                <Typography sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                    My Products
+                                </Typography>
+                            </Link>
                         </Grid>
                         <Grid container direction={'row'}>
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <DescriptionIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
-                            <Typography component={Link} to="/my-order-history" sx={{ textDecoration: 'none', color: 'black' }}>My Order History</Typography>
+                            <Link to="/orders" sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                <Typography sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                    My Orders
+                                </Typography>
+                            </Link>
                         </Grid>
+
                         <Grid container direction={'row'}>
                             <IconButton color="inherit" sx={{ paddingTop: 0 }}>
                                 <SellIcon sx={{ fontSize: 25, color: 'grey'}} />
                             </IconButton>
-                            <Typography component={Link} to="/my-purchase" sx={{ textDecoration: 'none', color: 'black' }}>My Purchase</Typography>
+                            <Link to="/transaction" sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                <Typography sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                    My Transactions
+                                </Typography>
+                            </Link>
+                        </Grid>
+
+                        <Grid container direction={'row'}>
+                            <IconButton color="inherit" sx={{ paddingTop: 0 }}>
+                                <SellIcon sx={{ fontSize: 25, color: 'grey'}} />
+                            </IconButton>
+                            <Link to="/cart" sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                <Typography sx={{ textDecoration: 'none', color: 'black', cursor: 'pointer' }}>
+                                    My Cart
+                                </Typography>
+                            </Link>
                         </Grid>
                     </Stack>
                 </Grid>

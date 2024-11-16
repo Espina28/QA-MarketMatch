@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import SideBar from '../components/SideBar';
@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import axios from 'axios';
 import '../App.css'; 
 import '../../public/css/UploadProducts.css'; 
+import { useLocation } from 'react-router-dom';
 
 const UnderlinedText = styled(Typography)({
     position: 'relative',
@@ -28,8 +29,8 @@ const UnderlinedText = styled(Typography)({
         backgroundColor: 'black',
         transform: 'scaleX(1)',
         transformOrigin: 'bottom left',
-    },
-});
+        },
+    });
 
 export default function UploadProduct() {
     const [product, setProduct] = useState({
@@ -42,6 +43,8 @@ export default function UploadProduct() {
         productTimeCreated: new Date().toISOString(),
     });
     const [image, setImage] = useState(null);
+
+
 
     const handleChange = (e) => {
         if (e.target.type === 'file') {
@@ -84,14 +87,18 @@ export default function UploadProduct() {
     };
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
-            <Navbar />
             <Grid>
+                <Navbar/>
             </Grid>
             <Grid container direction={'row'} spacing={6} sx={{ height: '101.5%' }} className="padding-color-outer">
-                <Grid item md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>
-                    <SideBar />
+                <Grid  md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>
+                <SideBar 
+                    state={{ 
+                    userData: location.state ? location.state.userData : null
+                    }} 
+                />
                 </Grid>
-                <Grid item md={8} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
+                <Grid  md={8} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
                     <Box textAlign="center" mb={3}>
                         <UnderlinedText variant="h6" component="span">
                             UPLOAD PRODUCT
@@ -101,21 +108,21 @@ export default function UploadProduct() {
                         <Grid container direction="column" spacing={2}>
                             <Grid container direction="row" spacing={2}>
                                 <Grid container direction="column" spacing={2} sx={{ width: '500px' }}>
-                                    <Grid item>
+                                    <Grid >
                                         <TextField fullWidth label="Product Name" name="productName" variant="outlined" className="customTextField" onChange={handleChange} />
                                     </Grid>
-                                    <Grid item>
+                                    <Grid >
                                         <TextField fullWidth label="Product Price" name="productPrice" variant="outlined" className="customTextField" onChange={handleChange} />
                                     </Grid>
-                                    <Grid item>
+                                    <Grid >
                                         <TextField fullWidth label="Product Stock" name="productStock" variant="outlined" className="customTextField" onChange={handleChange} />
                                     </Grid>
-                                    <Grid item>
+                                    <Grid >
                                         <TextField fullWidth label="Product Status" name="productStatus" variant="outlined" className="customTextField" onChange={handleChange} />
                                     </Grid>
                                 </Grid>
                                 
-                                <Grid item> 
+                                <Grid > 
                                     <Box
                                         sx={{
                                             border: '2px dashed grey',
@@ -153,18 +160,18 @@ export default function UploadProduct() {
                                     </Box>
                                 </Grid>
                             </Grid>
-                            <Grid spacing={2} sx={{ width: '900px', height: '80px' }}>
-                                <Grid item>
+                            <Grid sx={{ width: '900px', height: '80px' }}>
+                                <Grid>
                                     <TextField fullWidth label="Product Description" name="productDescription" variant="outlined" multiline rows={4} className="customTextField" onChange={handleChange} />
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="center" spacing={5}>
-                        <Grid item>
+                        <Grid>
                             <Button variant="contained" color="primary" sx={{ width: '200px', height: '40px' }} onClick={handleSave}>Save</Button>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             <Button variant="outlined" color="secondary" sx={{ width: '200px', height: '40px' }}>Cancel</Button>
                         </Grid>
                     </Grid>

@@ -8,6 +8,7 @@ import axios from 'axios';
 const HomePage = () => {
   const [products, setProducts] = useState([]);
 
+
   useEffect(() => {
     axios.get('http://localhost:8080/api/user/getAllProducts', {
       withCredentials: true,
@@ -55,9 +56,6 @@ const HomePage = () => {
                 alignItems: 'center',
               }}
             >
-              <Typography variant="h5" sx={{ textAlign: 'center', padding: 2 }}>
-                Swiper Content Placeholder
-              </Typography>
             </Box>
           </Grid>
 
@@ -105,7 +103,7 @@ const HomePage = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: '100px',
+                      height: '200px',
                       backgroundColor: '#E0E0E0',
                       borderRadius: 2,
                     }}

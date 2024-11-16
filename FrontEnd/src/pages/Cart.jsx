@@ -74,9 +74,9 @@ const Cart = () => {
       }) // Adjust endpoint as needed
         .then(response => {
           setCartItems(response.data.products); // Update state with the entire response data
-          // console.log(response.data);
-          // console.log(cartItems);
-          // console.log('GET request headers:', axios.defaults.headers.common);
+           //console.log(response.data);
+           //console.log(cartItems);
+           //console.log('GET request headers:', axios.defaults.headers.common);
         })
         .catch(error => {
           console.error('There was an error fetching the cart!', error);

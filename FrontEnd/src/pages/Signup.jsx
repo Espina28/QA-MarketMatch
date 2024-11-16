@@ -13,7 +13,7 @@ const Signup = () => {
     student_Id: '',
     email: '',
     password: '',
-    user_Type: ''
+   // user_Type: ''
   });
 
   const handleChange = (e) => {
@@ -65,7 +65,7 @@ const Signup = () => {
             student_Id: '',
             email: '',
             password: '',
-            user_Type: ''
+            //user_Type: ''
           });
           localStorage.removeItem('signupData');
 
@@ -156,14 +156,6 @@ const Signup = () => {
             placeholder="Password"
             className="signup-input"
             value={formData.password}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="user_Type"
-            placeholder="User Type"
-            className="signup-input"
-            value={formData.user_Type}
             onChange={handleChange}
           />
           <button type="submit" className="signup-button">SIGN UP</button>

@@ -57,6 +57,6 @@ This project is currently under development. Contributions, bug reports, and sug
 - Dave Mark Crystal
 - Ehrica Jynne Espada
 - Miklos Kaiser Bolarde
-- Mikael Lorenzo A Cuyugan
+- Mikael Lorenzo Cuyugan
 
 
