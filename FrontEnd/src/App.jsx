@@ -16,7 +16,6 @@ import Cart from './pages/Cart';
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import MyProducts from './pages/MyProduct';
-import Transactions from './pages/Transactions';
 function App() {
   return (
     <Router>

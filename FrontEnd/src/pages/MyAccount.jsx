@@ -19,6 +19,7 @@ function MyAccount() {
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false); // State for the warning modal
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
@@ -41,6 +42,13 @@ function MyAccount() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    
+    // Check if phone number is exactly 11 digits before saving
+    if (userData.phonenumber.length !== 11) {
+      setPhoneNumberWarningOpen(true); // Show warning modal if phone number is invalid
+      return; // Prevent saving if phone number is invalid
+    }
+
     try {
       await axios.put(`http://localhost:8080/api/user/updateUser?id=${userId}`, userData, {
         withCredentials: true,
@@ -82,11 +90,17 @@ function MyAccount() {
     }
   };
 
+  const handlePhoneChange = (e) => {
+    const input = e.target.value;
+    // Allow only numeric input and limit to 11 digits
+    if (/^\d*$/.test(input) && input.length <= 11) {
+      setUserData({ ...userData, phonenumber: input });
+    }
+  };
+
   return (
     <Container maxWidth={false} disableGutters sx={{ height: '105vh' }}>
-      <Navbar/>
-      <Grid2>
-      </Grid2>
+      <Navbar />
       <Grid2 container direction="row" spacing={6} sx={{ height: '91.9%', padding: 4, marginTop: '.01rem' }} className="padding-color-outer">
         <Grid2 item md={4} sx={{ maxWidth: '50%', padding: 6 }}>
           <SideBar state={{ userData: location.state ? location.state.userData : null }} />
@@ -125,7 +139,8 @@ function MyAccount() {
                 fullWidth
                 variant="outlined"
                 value={userData.phonenumber || ""}
-                onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
+                onChange={handlePhoneChange}
+                inputProps={{ maxLength: 11 }}
               />
             </Grid2>
             <Grid2 item>
@@ -142,6 +157,21 @@ function MyAccount() {
           </Grid2>
         </Grid2>
       </Grid2>
+
+      {/* Phone number warning modal */}
+      <Modal
+        open={phoneNumberWarningOpen}
+        onClose={() => setPhoneNumberWarningOpen(false)}
+        aria-labelledby="phone-number-warning"
+      >
+        <Box sx={{ width: 300, padding: 2, backgroundColor: 'white', margin: 'auto', marginTop: '20%' }}>
+          <Typography variant="h6" gutterBottom>Warning!</Typography>
+          <Typography variant="body1" color="error">Phone number must be exactly 11 digits.</Typography>
+          <Button variant="contained" color="primary" onClick={() => setPhoneNumberWarningOpen(false)} sx={{ marginTop: 2 }}>
+            OK
+          </Button>
+        </Box>
+      </Modal>
 
       {/* Password Change Modal */}
       <Modal open={passwordModalOpen} onClose={togglePasswordModal}>
