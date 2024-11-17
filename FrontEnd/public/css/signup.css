@@ -109,3 +109,23 @@
     align-items: center;
     padding: 20px;
 }
+/* Apply a similar layout for the login page password input */
+.password-container {
+    display: flex; /* Use flexbox layout */
+    align-items: center; /* Center items vertically */
+    padding-left: 6%; /* Adjust padding */
+    width: 110%; /* Adjust width to be slightly larger than the parent */
+    position: relative; /* Make sure the icon is positioned relative to the container */
+  }
+  
+  .login-input {
+    flex: 1; /* Allow the input to take up the available space */
+  }
+  
+  .visibility-icon {
+    position: absolute; /* Position the icon within the container */
+    bottom: 9px; /* Adjust bottom positioning */
+    right: 50px; /* Position the icon slightly from the right */
+    color: #777; /* Icon color */
+  }
+  

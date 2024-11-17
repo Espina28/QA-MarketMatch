@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import '../../public/css/signup.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 const Signup = () => {
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -13,19 +15,19 @@ const Signup = () => {
     student_Id: '',
     email: '',
     password: '',
-   // user_Type: ''
   });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const isFormComplete = () => {
-    return Object.values(formData).every(field => field.trim() !== '');
+    return Object.values(formData).every((field) => field.trim() !== '');
   };
 
   const handleSubmit = async (e) => {
@@ -36,9 +38,9 @@ const Signup = () => {
         const response = await fetch('http://localhost:8080/api/user/postUser', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formData),
         });
 
         if (response.ok) {
@@ -48,14 +50,18 @@ const Signup = () => {
           const cartPayload = {
             dateAdded: new Date().toISOString(),
             quantity: 0,
-            user: {userId: userId},
-        };
-        console.log(cartPayload);
-        const cartResponse = await axios.post(`http://localhost:8080/api/cart/postCart/`+userId, cartPayload, {
-            headers: {
+            user: { userId: userId },
+          };
+          console.log(cartPayload);
+          await axios.post(
+            `http://localhost:8080/api/cart/postCart/` + userId,
+            cartPayload,
+            {
+              headers: {
                 'Content-Type': 'application/json',
-            },
-        });
+              },
+            }
+          );
 
           setFormData({
             firstname: '',
@@ -65,15 +71,11 @@ const Signup = () => {
             student_Id: '',
             email: '',
             password: '',
-            //user_Type: ''
           });
           localStorage.removeItem('signupData');
 
           alert('Signup successful!');
-          navigate('/login'); // Redirect to Homepage after signup
-
-          //create cart for user
-
+          navigate('/login');
         } else {
           alert('Failed to sign up. Please try again.');
         }
@@ -96,6 +98,10 @@ const Signup = () => {
   useEffect(() => {
     localStorage.setItem('signupData', JSON.stringify(formData));
   }, [formData]);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   return (
     <div className="signup-page">
@@ -150,22 +156,37 @@ const Signup = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="signup-input"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <button type="submit" className="signup-button">SIGN UP</button>
+          <div className="password-container">
+            <input
+              type={isPasswordVisible ? 'text' : 'password'}
+              name="password"
+              placeholder="Password"
+              className="signup-input password-input"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <IconButton onClick={togglePasswordVisibility} className="visibility-icon">
+              {isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </div>
+          <button type="submit" className="signup-button">
+            SIGN UP
+          </button>
         </form>
       </div>
 
       <div className="logo-container">
-        <img src="logo.png" alt="Cebu Institute of Technology - University Logo" className="logo" />
-        <p className="university-title">CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY MARKET MATCH</p>
-        <Link to='/login'><button className="login-button">LOGIN</button></Link>
+        <img
+          src="logo.png"
+          alt="Cebu Institute of Technology - University Logo"
+          className="logo"
+        />
+        <p className="university-title">
+          CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY MARKET MATCH
+        </p>
+        <Link to="/login">
+          <button className="login-button">LOGIN</button>
+        </Link>
       </div>
     </div>
   );
