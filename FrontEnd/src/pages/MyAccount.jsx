@@ -16,10 +16,11 @@ function MyAccount() {
     email: "",
     phonenumber: "",
   });
+  const [originalUserData, setOriginalUserData] = useState({}); 
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false); // State for the warning modal
+  const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false); 
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
@@ -33,6 +34,7 @@ function MyAccount() {
     })
       .then(response => {
         setUserData(response.data);
+        setOriginalUserData(response.data); 
         console.log(response.data);
       })
       .catch(error => {
@@ -43,10 +45,10 @@ function MyAccount() {
   const handleSave = async (e) => {
     e.preventDefault();
     
-    // Check if phone number is exactly 11 digits before saving
+    
     if (userData.phonenumber.length !== 11) {
-      setPhoneNumberWarningOpen(true); // Show warning modal if phone number is invalid
-      return; // Prevent saving if phone number is invalid
+      setPhoneNumberWarningOpen(true); 
+      return; 
     }
 
     try {
@@ -92,10 +94,14 @@ function MyAccount() {
 
   const handlePhoneChange = (e) => {
     const input = e.target.value;
-    // Allow only numeric input and limit to 11 digits
+   
     if (/^\d*$/.test(input) && input.length <= 11) {
       setUserData({ ...userData, phonenumber: input });
     }
+  };
+
+  const handleCancel = () => {
+    setUserData(originalUserData);
   };
 
   return (
@@ -151,7 +157,14 @@ function MyAccount() {
                 <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
               </Grid2>
               <Grid2 item>
-                <Button variant="outlined" color="secondary">Cancel</Button>
+              <Button 
+                variant="contained" 
+                onClick={handleCancel} 
+                sx={{ backgroundColor: 'red', color: 'white', '&:hover': { backgroundColor: 'darkred' } }}
+              >
+                Cancel
+              </Button>
+
               </Grid2>
             </Grid2>
           </Grid2>
