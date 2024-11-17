@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Grid as Grid2, TextField, Button, Typography, Container, Box, Modal } from '@mui/material';
+import { Grid as Grid2, TextField, Button, Typography, Container, Box, Modal, IconButton } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
 import Navbar from '../components/Navbar';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../App.css';
 
 function MyAccount() {
@@ -16,11 +17,18 @@ function MyAccount() {
     email: "",
     phonenumber: "",
   });
-  const [originalUserData, setOriginalUserData] = useState({}); 
+  const [originalUserData, setOriginalUserData] = useState({});
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false); 
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [passwordValid, setPasswordValid] = useState({
+    length: false,
+    capital: false,
+    specialChar: false,
+  });
+  const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false);
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
@@ -34,7 +42,7 @@ function MyAccount() {
     })
       .then(response => {
         setUserData(response.data);
-        setOriginalUserData(response.data); 
+        setOriginalUserData(response.data);
         console.log(response.data);
       })
       .catch(error => {
@@ -42,13 +50,30 @@ function MyAccount() {
       });
   }, []);
 
+  const validatePassword = (password) => {
+    const lengthValid = password.length >= 8;
+    const capitalValid = /[A-Z]/.test(password);
+    const specialCharValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    setPasswordValid({
+      length: lengthValid,
+      capital: capitalValid,
+      specialChar: specialCharValid,
+    });
+  };
+
+  const handlePasswordInputChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    validatePassword(newPassword);
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
-    
-    
+
     if (userData.phonenumber.length !== 11) {
-      setPhoneNumberWarningOpen(true); 
-      return; 
+      setPhoneNumberWarningOpen(true);
+      return;
     }
 
     try {
@@ -72,6 +97,12 @@ function MyAccount() {
   };
 
   const handlePasswordChange = async () => {
+    // Check if password meets all criteria before saving
+    if (!passwordValid.length || !passwordValid.capital || !passwordValid.specialChar) {
+      alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
     } else {
@@ -94,7 +125,7 @@ function MyAccount() {
 
   const handlePhoneChange = (e) => {
     const input = e.target.value;
-   
+
     if (/^\d*$/.test(input) && input.length <= 11) {
       setUserData({ ...userData, phonenumber: input });
     }
@@ -102,6 +133,14 @@ function MyAccount() {
 
   const handleCancel = () => {
     setUserData(originalUserData);
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
   return (
@@ -157,14 +196,13 @@ function MyAccount() {
                 <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
               </Grid2>
               <Grid2 item>
-              <Button 
-                variant="contained" 
-                onClick={handleCancel} 
-                sx={{ backgroundColor: 'red', color: 'white', '&:hover': { backgroundColor: 'darkred' } }}
-              >
-                Cancel
-              </Button>
-
+                <Button
+                  variant="contained"
+                  onClick={handleCancel}
+                  sx={{ backgroundColor: 'red', color: 'white', '&:hover': { backgroundColor: 'darkred' } }}
+                >
+                  Cancel
+                </Button>
               </Grid2>
             </Grid2>
           </Grid2>
@@ -192,23 +230,62 @@ function MyAccount() {
           <Typography variant="h6" gutterBottom>Change Password</Typography>
           <TextField
             fullWidth
-            type="password"
+            type={passwordVisible ? "text" : "password"}
             label="New Password"
             variant="outlined"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordInputChange}
             sx={{ marginBottom: 2 }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={togglePasswordVisibility}
+                  edge="end"
+                >
+                  {passwordVisible ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
           />
           <TextField
             fullWidth
-            type="password"
-            label="Confirm Password"
+            type={confirmPasswordVisible ? "text" : "password"}
+            label="Confirm New Password"
             variant="outlined"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             sx={{ marginBottom: 2 }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={toggleConfirmPasswordVisibility}
+                  edge="end"
+                >
+                  {confirmPasswordVisible ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
           />
-          <Button variant="contained" color="primary" onClick={handlePasswordChange}>Save Password</Button>
+          
+          {/* Password Validation Feedback */}
+          <Typography variant="body2" color={passwordValid.length ? 'green' : 'red'}>
+            {passwordValid.length ? '✅ At least 8 characters' : '❌ At least 8 characters'}
+          </Typography>
+          <Typography variant="body2" color={passwordValid.capital ? 'green' : 'red'}>
+            {passwordValid.capital ? '✅ At least 1 capital letter' : '❌ At least 1 capital letter'}
+          </Typography>
+          <Typography variant="body2" color={passwordValid.specialChar ? 'green' : 'red'}>
+            {passwordValid.specialChar ? '✅ At least 1 special character' : '❌ At least 1 special character'}
+          </Typography>
+          
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handlePasswordChange}
+            disabled={!passwordValid.length || !passwordValid.capital || !passwordValid.specialChar || password !== confirmPassword}
+          >
+            Save Password
+          </Button>
         </Box>
       </Modal>
     </Container>
