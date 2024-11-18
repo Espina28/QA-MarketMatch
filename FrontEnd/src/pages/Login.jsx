@@ -47,7 +47,11 @@ const Login = () => {
   };
 
   return (
+
+    
     <div className="login-page">
+
+
       <div className="login-form-container">
         <h2 className="login-title">Log in</h2>
         <form className="login-form">
@@ -58,7 +62,7 @@ const Login = () => {
             name="email" 
             onChange={handleInput}
           />
-          <div className="password-container">
+          <div className="password-container-login">
             <input
               type={showPassword ? "text" : "password"} // Toggle between 'text' and 'password'
               placeholder="Password"
@@ -70,14 +74,14 @@ const Login = () => {
               className="toggle-password"
               onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
             >
-              {showPassword ? <VisibilityOff /> : <Visibility />} {/* Eye icon toggle */}
+              {showPassword ? <Visibility /> : <VisibilityOff />} {/* Eye icon toggle */}
             </span>
           </div>
           <button type="submit" className="login-button" onClick={handleLogin}>LOGIN</button>
         </form>
         <Typography variant="body2" align="center">
           <span style={{ color: 'gold' }}>Don't have an account?</span> 
-          <Link to="/signup" style={{ color: 'white' }}>Register here</Link>
+          <Link to="/signup" style={{ color: 'white' }}> Register here</Link>
         </Typography>
         {error && (
           <Typography variant="body2" color="error" align="center">
@@ -93,7 +97,7 @@ const Login = () => {
           className="logo" 
           onClick={handleLogoClick}  // Add onClick handler here
         />
-        <p className="university-title">CEBU INSTITUTE TECHNOLOGY - UNIVERSITY MARKET MATCH</p>
+        <p className="university-title">CEBU INSTITUTE TECHNOLOGY - UNIVERSITY<br></br>MARKET MATCH</p>
       </div>
     </div>
   );

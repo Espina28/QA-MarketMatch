@@ -166,7 +166,7 @@ const Signup = () => {
               onChange={handleChange}
             />
             <IconButton onClick={togglePasswordVisibility} className="visibility-icon">
-              {isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+              {isPasswordVisible ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </div>
           <button type="submit" className="signup-button">

@@ -16,14 +16,18 @@ export default function Navbar() {
         navigate('/');
     };
 
+    const handleLogoClick = () => {
+        navigate('/home'); 
+      };
+
     return (
         <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 'none' }}>
             <Toolbar>
                 <Grid container alignItems="center" justifyContent="space-between">
                     {/* CIT University logo */}
                     <Grid item>
-                        <a href="https://www.facebook.com/CITUniversity">
-                            <img src="/images/cit-logo.png" alt="Logo" style={{ height: '60px' }} />
+                        <a >
+                            <img src="/images/cit-logo.png" alt="Logo" style={{ height: '60px' }} onClick={handleLogoClick} />
                         </a>
                     </Grid>
 
