@@ -13,14 +13,14 @@ export default function MyProducts(){
                 <Navbar/>
             </Grid>
             <Grid className="padding-color-outer" container direction={'row'}  spacing={3} wrap='nowrap' sx={{height: '100%'}}>
-                <Grid size={{md: 4}}>
+                <Grid size={{md: 3}}>
                 <SideBar 
                     state={{ 
                     userData: location.state ? location.state.userData : null
                     }} 
                 />
                 </Grid>
-                <Grid size={{md: 8}} container direction={'column'} sx={{width: 'auto', backgroundColor: 'white', padding: 4}}>
+                <Grid size={{md: 9}} container direction={'column'} sx={{width: 'auto', backgroundColor: 'white', padding: 4}}>
                     <Grid>
                         <Typography variant='h4'>My Products</Typography>
                         <Divider sx={{ borderBottomWidth: 2, borderColor: 'black', margin: '20px 0' }} />

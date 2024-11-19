@@ -4,6 +4,7 @@ import java.nio.file.attribute.UserPrincipal;
 import java.util.Collections;
 import java.util.List;
 
+import com.marketmatch.appdev.BackEnd.Service.BuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,9 @@ public class UserController {
 @Autowired
 UserService userv;
 
+@Autowired
+BuyerService buyer_srv;
+
 private final TokenService tokenService;
 
 
@@ -50,6 +54,7 @@ public UserController(TokenService tokenService) {
 @PostMapping("/postUser")
 public ResponseEntity<UserEntity> postCourse(@RequestBody UserEntity user) {
 	UserEntity newUser = userv.addUserRecord(user);
+	buyer_srv.createNewBuyer(newUser);
 	return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 }
 

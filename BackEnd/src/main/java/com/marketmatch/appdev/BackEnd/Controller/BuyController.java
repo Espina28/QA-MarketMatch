@@ -2,6 +2,7 @@ package com.marketmatch.appdev.BackEnd.Controller;
 
 
 import com.marketmatch.appdev.BackEnd.Entity.BuyEntity;
+import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Service.BuyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,11 @@ public class BuyController {
     @GetMapping("/getAll")
     public List<BuyEntity> getAllItems(){
         return buy_serv.getAllBoughtItems();
+    }
+
+    @GetMapping("/purchase")
+    public List<ProductEntity> getAllPurchase(@RequestParam String email){
+        return buy_serv.getPurchased(email);
     }
 
     @PostMapping("/create")
