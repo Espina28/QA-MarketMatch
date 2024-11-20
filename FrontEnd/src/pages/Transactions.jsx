@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import '../App.css' /*<---- custom css*/
-
-import {useState} from 'react'
+import axios from 'axios'
+import {useState, useEffect} from 'react'
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -36,6 +36,21 @@ export default function Transactions() {
         console.log('Querying!!')
         setOpen(false);
       };
+
+      useEffect(()=>{
+        axios.get("http://localhost:8080/api/seller/transactions",{
+            params: {
+                email: "espina@cit.edu" // Send email as query parameter
+            },
+            auth: {
+                username: "espina@cit.edu",
+                password: "12345"
+            }
+        }).then((response)=>{
+            console.log(response)
+        })
+
+      },[])
 
       
 

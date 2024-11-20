@@ -1,6 +1,7 @@
 package com.marketmatch.appdev.BackEnd.Controller;
 
 
+import com.marketmatch.appdev.BackEnd.DTO.Transaction;
 import com.marketmatch.appdev.BackEnd.Entity.BuyEntity;
 import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Service.BuyService;

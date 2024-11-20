@@ -1,6 +1,8 @@
 package com.marketmatch.appdev.BackEnd.Controller;
 
 
+import com.marketmatch.appdev.BackEnd.DTO.Transaction;
+import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Entity.SellerEntity;
 import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
 
@@ -25,6 +27,11 @@ public class SellerController {
     @GetMapping("/{id}")
     public SellerEntity getSellerById(@PathVariable int id) {
         return seller_serv.getSellerById(id);
+    }
+
+    @GetMapping("/transactions")
+    public List<Transaction> getTransactions(@RequestParam String email){
+        return seller_serv.getTransactions(email) ;
     }
 
     @PutMapping("/edit")

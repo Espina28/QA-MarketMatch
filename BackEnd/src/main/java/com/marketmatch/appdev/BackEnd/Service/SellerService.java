@@ -1,6 +1,8 @@
 package com.marketmatch.appdev.BackEnd.Service;
 
 
+import com.marketmatch.appdev.BackEnd.DTO.Transaction;
+import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Entity.SellerEntity;
 import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
 import com.marketmatch.appdev.BackEnd.Repository.SellerRepo;
@@ -40,6 +42,15 @@ public class SellerService {
         seller.setProducts_sold(0);
         seller.setUserid(details);
         return seller_repo.save(seller);
+    }
+
+    public List<Transaction> getTransactions(String email){
+        int sellerId = user_repo.findByEmail(email).getSeller_id().getSeller_id();
+
+        if(sellerId != 0){
+            return seller_repo.getTransactions(sellerId);
+        }else
+            return null;
     }
 
     @SuppressWarnings("finally")
