@@ -18,24 +18,25 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 export default function Transactions() {
 
-    const [open, setOpen] = useState(false);
+        const [open, setOpen] = useState(false);
+        const [transactions, setTransactions] = useState(null)
 
-    const handleClickOpenDialog = () => {
-        console.log("opening!!")
-        setOpen(true);
-      };
+        const handleClickOpenDialog = () => {
+            console.log("opening!!")
+            setOpen(true);
+        };
 
-      const handleCloseDialog = () => {
-        console.log("closing")
-        setOpen(false);
-      };
+        const handleCloseDialog = () => {
+            console.log("closing")
+            setOpen(false);
+        };
 
-      const closeDialogQuery = () => {
+        const closeDialogQuery = () => {
 
-        //query axios here
-        console.log('Querying!!')
-        setOpen(false);
-      };
+            //query axios here
+            console.log('Querying!!')
+            setOpen(false);
+        };
 
       useEffect(()=>{
         axios.get("http://localhost:8080/api/seller/transactions",{
@@ -48,11 +49,10 @@ export default function Transactions() {
             }
         }).then((response)=>{
             console.log(response)
+            setTransactions(response.data)
         })
 
       },[])
-
-      
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '100vh' }}>
@@ -95,30 +95,11 @@ export default function Transactions() {
                             width: '100%',
                         }}>
                         {/* Products here */}
-                        <Grid container direction="column" width={'100%'} height={'auto'} sx={{padding: '.5rem', border: '2px solid black' }}>
-                            <Grid container direction="row" alignItems="center">
-                                <Grid item>
-                                    <img width="120px" src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image" />
-                                </Grid>
-                                <Grid item container sx={{ display: 'flex', justifyContent: 'space-between', padding: '0 1rem', width: '80%' }}>
-                                    <Typography>T-shirt</Typography>
-                                    <Typography>2px</Typography>
-                                    <Typography>Ehrica Jynne Espada</Typography>
-                                    <Typography>P 245.50</Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid item sx={{ marginLeft: 'auto'}}>
-                                <Button variant="contained" onClick={handleClickOpenDialog} color="success">COMPLETE</Button> &nbsp;
-                                <Button variant='contained' onClick={handleClickOpenDialog}
-                                    sx={{
-                                        background: "rgba(112, 5, 5, 1)",
-                                        "&:hover": {
-                                        background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
-                                        },
-                                    }}
-                                    >Cancel</Button>
-                            </Grid>
-                        </Grid>
+                        {
+                            transactions ? transactions.map((transaction, index) => (
+                                <TransactionItem key={index} data={transaction} />
+                            )) : <Typography>No Transaction found.</Typography>
+                        }
                     </Grid>
                 </Grid>
             </Grid>
@@ -151,5 +132,34 @@ export default function Transactions() {
                 </DialogActions>
             </Dialog>   
         </Container>
-    );
+        )
+
+    function TransactionItem({data}){
+        return (
+            <Grid container direction="column" width={'100%'} height={'auto'} sx={{padding: '.5rem', border: '2px solid black' }}>
+                <Grid container direction="row" alignItems="center">
+                    <Grid item>
+                        <img width="120px" src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image" />
+                    </Grid>
+                    <Grid item container sx={{ display: 'flex', justifyContent: 'space-between', padding: '0 1rem', width: '80%' }}>
+                        <Typography>{data.productName}</Typography>
+                        <Typography>{data.quantity}px</Typography>
+                        <Typography>{data.customerName}</Typography>
+                        <Typography>P {data.total}</Typography>
+                    </Grid>
+                </Grid>
+                <Grid item sx={{ marginLeft: 'auto'}}>
+                    <Button variant="contained" onClick={handleClickOpenDialog} color="success">COMPLETE</Button> &nbsp;
+                    <Button variant='contained' onClick={handleClickOpenDialog}
+                        sx={{
+                            background: "rgba(112, 5, 5, 1)",
+                            "&:hover": {
+                            background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
+                            },
+                        }}
+                        >Cancel</Button>
+                </Grid>
+            </Grid>
+        )
+    }
 }
