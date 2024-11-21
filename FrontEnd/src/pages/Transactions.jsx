@@ -42,19 +42,22 @@ export default function Transactions() {
             //query axios here
             console.log('Querying!!')
 
-            // axios.delete(`http://localhost:8080/api/buy/delete/${deleteItem}`)
-            // .then(response => {
-            //     console.log('Item deleted successfully:', response.data);
-            //     const newTransactions = transactions.filter((transactions)=>transactions.buyIdId ===  deleteItem)
-            //     setTransactions(newTransactions)
-            //     setDeleteItem(null)
-            // })
-            // .catch(error => {
-            //     console.error('Error deleting item:', error);
-            // });
-            const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
-            setTransactions(newTransactions)
-            setDeleteItem(null)
+            axios.delete(`http://localhost:8080/api/buy/delete/${deleteItem}`,{
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            })
+            .then(response => {
+                console.log('Item deleted successfully:', response.data);
+                const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
+                setTransactions(newTransactions)
+                setDeleteItem(null)
+            })
+            .catch(error => {
+                console.error('Error deleting item:', error);
+            });
             setOpenComplete(false);
         };
 
@@ -76,14 +79,22 @@ export default function Transactions() {
             //query axios here
             console.log('Querying!!')
 
-            // axios.delete('http://localhost:8080/api/seller/transactions',{
-            //     params: {
-
-            //     }
-            // })
-            const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
-            setTransactions(newTransactions)
-            setDeleteItem(null)
+            axios.delete(`http://localhost:8080/api/buy/delete/${deleteItem}`,{
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            })
+            .then(response => {
+                console.log('Item deleted successfully:', response.data);
+                const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
+                setTransactions(newTransactions)
+                setDeleteItem(null)
+            })
+            .catch(error => {
+                console.error('Error deleting item:', error);
+            });
             setCancel(false);
         };
 
