@@ -54,7 +54,6 @@ public UserController(TokenService tokenService) {
 @PostMapping("/postUser")
 public ResponseEntity<UserEntity> postCourse(@RequestBody UserEntity user) {
 	UserEntity newUser = userv.addUserRecord(user);
-	buyer_srv.createNewBuyer(newUser);
 	return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 }
 
