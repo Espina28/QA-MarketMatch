@@ -47,7 +47,7 @@ public class BuyService {
         int quantity = mapper.convertValue(payload.get("quantity"), Integer.class);
         double total = mapper.convertValue(payload.get("total"), Double.class);
 
-        BuyerEntity buyer = buyer_repo.findById(buyerPk).get();
+        BuyerEntity buyer = buyer_repo.findByBuyerId(buyerPk);
         ProductEntity product = prod_repo.findById(productPk).get();
 
         BuyEntity item = new BuyEntity();

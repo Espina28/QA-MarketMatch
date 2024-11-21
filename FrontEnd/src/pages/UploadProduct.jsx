@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import SideBar from '../components/SideBar';
 import Grid from '@mui/material/Grid2';
-import { IconButton, imageListClasses } from '@mui/material';
+import { IconButton, imageListClasses,FormControlLabel,Switch } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
@@ -33,17 +33,24 @@ const UnderlinedText = styled(Typography)({
     });
 
 export default function UploadProduct() {
+
+    const [id, setId] = useState(null);
+
+    useEffect(() => {
+        setId(localStorage.getItem('id'));
+    })
+
     const [product, setProduct] = useState({
         productName: '',
         productPrice: '',
         productStock: '',
-        productStatus: '',
+        productStatus: 'No Stock',
         productDescription: '',
         image: null,
         productTimeCreated: new Date().toISOString(),
+        sellerid:{ seller_id: localStorage.getItem('id') },
     });
     const [image, setImage] = useState(null);
-
 
 
     const handleChange = (e) => {
@@ -66,10 +73,29 @@ export default function UploadProduct() {
             });
         }
     };
+    const handleSwitchChange = (event) => {
+        const status = event.target.checked ? 'Available' : 'No Stock'; // 'checked' is true when the switch is on
+        setProduct({
+            ...product,
+            productStatus: status, // Update the status based on switch
+        });
+    };
     const handleSave = async () => {
+        console.log('Payload:', product);
         try {
             await axios.post(
                 'http://localhost:8080/api/user/postProduct',
+                product,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    },
+                }
+            );
+            await axios.post(
+                `http://localhost:8080/api/seller/addProduct/${id}`,
                 product,
                 {
                     withCredentials: true,
@@ -84,6 +110,7 @@ export default function UploadProduct() {
             console.error(error);
             alert('Error saving product!');
         }
+        
     };
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
@@ -117,8 +144,19 @@ export default function UploadProduct() {
                                     <Grid >
                                         <TextField fullWidth label="Product Stock" name="productStock" variant="outlined" className="customTextField" onChange={handleChange} />
                                     </Grid>
-                                    <Grid >
-                                        <TextField fullWidth label="Product Status" name="productStatus" variant="outlined" className="customTextField" onChange={handleChange} />
+                                    <Grid container direction="column" spacing={2}>
+                                        <Grid>
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={product.productStatus === 'Available'} // Check if status is 'Available'
+                                                        onChange={handleSwitchChange}
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label={<Typography variant="body1">{product.productStatus}</Typography>}
+                                            />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                                 

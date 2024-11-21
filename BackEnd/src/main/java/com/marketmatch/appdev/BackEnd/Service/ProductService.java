@@ -40,17 +40,17 @@ public class ProductService {
         return prodrepo.save(product);
     }
 
-    public ProductEntity createProducts(ProductRequest product){
-        UserEntity user = user_repo.findByEmail(product.getEmail());
+    // public ProductEntity createProducts(ProductRequest product){
+    //     // UserEntity user = user_repo.findByEmail(product.getEmail());
 
-        if(user.getSeller_id() != null){
-            product.getProduct().setSellerid(user.getSeller_id());
-        }else{
-            SellerEntity seller = seller_serv.createNewSeller(user);
-            product.getProduct().setSellerid(seller);
-        }
-        return prodrepo.save(product.getProduct());
-    }
+    //     // if(user.getSeller_id() != null){
+    //     //     product.getProduct().setSellerid(user.getSeller_id());
+    //     // }else{
+    //     //     SellerEntity seller = seller_serv.createNewSeller(user);
+    //     //     product.getProduct().setSellerid(seller);
+    //     // }
+    //     return prodrepo.save(product.getProduct());
+    // }
 
     //READ
     public ProductEntity readProducts(int productId) {

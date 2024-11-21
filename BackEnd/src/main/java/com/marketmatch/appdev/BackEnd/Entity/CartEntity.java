@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
     
@@ -26,7 +27,7 @@ public class CartEntity{
     private UserEntity user;
 
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cart")
     private List<ProductEntity> products;
 
     public CartEntity() {

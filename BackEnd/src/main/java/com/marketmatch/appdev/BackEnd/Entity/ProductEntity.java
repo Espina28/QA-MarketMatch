@@ -1,5 +1,6 @@
 package com.marketmatch.appdev.BackEnd.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -13,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -33,12 +36,14 @@ public class ProductEntity {
     @Column(name = "image",columnDefinition = "longblob")
     private byte[] image;
     
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="cartid")
-    private CartEntity cart;
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @JoinTable(name = "Cart_Products",
+            joinColumns = { @JoinColumn(name = "productId")},
+            inverseJoinColumns = { @JoinColumn (name = "cartID")})
+    private List<CartEntity> cart;
 
     
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private  SellerEntity sellerid;
@@ -52,7 +57,7 @@ public class ProductEntity {
     }
 
     public ProductEntity(int productId, String productName, String productDescription, String productPrice,
-            String productStock, String productStatus, String productTimeCreated, byte[] image) {
+            String productStock, String productStatus, String productTimeCreated, byte[] image, SellerEntity sellerid) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -61,6 +66,7 @@ public class ProductEntity {
         this.productStatus = productStatus;
         this.productTimeCreated = productTimeCreated;
         this.image = image;
+        this.sellerid = sellerid;
     }
     public int getProductId() {
         return productId;
@@ -112,17 +118,12 @@ public class ProductEntity {
         this.image = image;
     }
 
-    public void setCart(CartEntity cart) {
-        this.cart = cart;
-    }
-
-    public SellerEntity getSellerid() {
-        return sellerid;
-    }
 
     public void setSellerid(SellerEntity sellerid) {
         this.sellerid = sellerid;
     }
+
+    
 
     public List<BuyEntity> getBought() {
         return bought;
@@ -131,6 +132,22 @@ public class ProductEntity {
     public void setBought(List<BuyEntity> bought) {
         this.bought = bought;
     }
+
+    // public List<CartEntity> getCart() {
+    //     return cart;
+    // }
+
+    public void setCart(List<CartEntity> cart) {
+        this.cart = cart;
+    }
+
+    public void addCart(CartEntity cart) {
+        if (this.cart == null) {
+            this.cart = new ArrayList<>();
+        }
+        this.cart.add(cart);
+    }
+    
     
     
 

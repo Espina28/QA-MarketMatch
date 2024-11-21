@@ -1,6 +1,8 @@
 package com.marketmatch.appdev.BackEnd.Service;
 
 
+import com.marketmatch.appdev.BackEnd.Entity.CartEntity;
+import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Entity.SellerEntity;
 import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
 import com.marketmatch.appdev.BackEnd.Repository.SellerRepo;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameNotFoundException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -35,11 +39,28 @@ public class SellerService {
     }
 
 
-    public SellerEntity createNewSeller(UserEntity details){
-        SellerEntity seller = new SellerEntity();
-        seller.setProducts_sold(0);
-        seller.setUserid(details);
+    public SellerEntity createNewSeller(SellerEntity seller, int sellerid){
+        seller.setSeller_id(sellerid);
         return seller_repo.save(seller);
+    }
+
+     public SellerEntity addProductToSeller(int sellerId, ProductEntity product) {
+        SellerEntity seller = seller_repo.findById(sellerId);
+        
+        List<ProductEntity> products = seller.getProducts();
+        if (products == null) {
+            products = new ArrayList<>();
+        }
+        products.add(product);
+        seller.setProducts(products);
+        
+       
+        product.setSellerid(seller);
+        
+        
+        seller = seller_repo.save(seller);
+        
+        return seller;
     }
 
     @SuppressWarnings("finally")

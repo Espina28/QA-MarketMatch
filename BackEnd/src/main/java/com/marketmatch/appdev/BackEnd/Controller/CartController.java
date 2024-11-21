@@ -27,9 +27,9 @@ public class CartController {
         return cartService.postCart(cart, cartid);
     }
 
-    @PostMapping("/addProduct/{cartId}")
-    public CartEntity addProductToCart(@PathVariable int cartId, @RequestBody ProductEntity product) {
-        return cartService.addProductToCart(cartId, product);
+    @PostMapping("/addProduct/{cartId}/{productId}")
+    public CartEntity addProductToCart(@PathVariable int cartId, @PathVariable int productId) {
+        return cartService.addProductToCart(cartId, productId);
     }
 
     @DeleteMapping("/{cartId}/product/{productId}")

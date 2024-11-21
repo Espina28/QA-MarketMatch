@@ -63,6 +63,36 @@ const Signup = () => {
             }
           );
 
+          const SellerData = {
+            products_sold: 0,
+            userid: { userId: userId },
+          };
+          console.log(SellerData);
+          await axios.post(
+            `http://localhost:8080/api/seller/postSeller/` + userId,
+            SellerData,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          const BuyerData = {
+            totalTransaction: 0,
+            user: { userId: userId },
+          };
+          console.log(BuyerData);
+          await axios.post(
+            `http://localhost:8080/api/buyers/postBuyer/` + userId,
+            BuyerData,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
           setFormData({
             firstname: '',
             lastname: '',

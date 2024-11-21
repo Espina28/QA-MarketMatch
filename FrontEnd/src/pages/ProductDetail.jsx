@@ -19,19 +19,6 @@ export default function ProductLayout() {
     const { productId } = useParams();
 
     useEffect(() => {
-        // Safely check if location.state and location.state.userData are defined
-        if (location.state && location.state.userData) {
-          setUserData(location.state.userData);
-        }
-      }, [location]); 
-    
-      useEffect(() => {
-        if (userData) {
-          console.log('Updated userData:', userData); // This will log after the state is updated
-        }
-      }, [userData]); 
-
-    useEffect(() => {
         axios.get('http://localhost:8080/api/user/getProducts/' + productId,{
             withCredentials: true,
             headers: {
@@ -41,7 +28,7 @@ export default function ProductLayout() {
         })
             .then(response => {
                 setProducts(response.data);
-                console.log(response.data);
+                console.log("Prdoucts:",response.data);
             })
             .catch(error => {
                 console.error('There was an error fetching the products!', error);
@@ -51,23 +38,10 @@ export default function ProductLayout() {
     const imageUrl = products.image ? `data:image/jpeg;base64,${products.image}` : '';
 
     const handleAddToCart = () => {
-        console.log("Product to add to cart:", products);
         if (products) {
             const cartId = localStorage.getItem("id"); // Retrieve cart ID from session
-            const quantity = 1; // Set desired quantity
-        
-            const productsToAdd = {
-              productId: products.productId,
-              productName: products.productName,
-              productDescription: products.productDescription,
-              productPrice: products.productPrice,
-              productStock: products.productStock,
-              productStatus: products.productStatus,
-              productTimeCreated: products.productTimeCreated,
-              image: products.image,
-              quantity: quantity
-            };
-            axios.post(`http://localhost:8080/api/cart/addProduct/`+cartId, productsToAdd, {
+
+            axios.post(`http://localhost:8080/api/cart/addProduct/${cartId}/${productId}`,{}, {
               withCredentials: true,
               headers: {
                 'Content-Type': 'application/json',

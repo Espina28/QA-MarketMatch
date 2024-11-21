@@ -26,16 +26,14 @@ public class BuyerService {
     }
 
     // Save a new buyer
-    public BuyerEntity createNewBuyer(UserEntity details){
-        BuyerEntity buyer = new BuyerEntity();
-        buyer.setTotalTransaction(0);
-        buyer.setUser(details);
-        return buyerRepository.save(buyer);
+    public BuyerEntity createNewBuyer(BuyerEntity details,int buyerid) {
+        details.setBuyerId(buyerid);
+        return buyerRepository.save(details);
     }
 
     // Find a buyer by ID
     public BuyerEntity findBuyerById(int buyerId) {
-        return buyerRepository.findById(buyerId).orElse(null);
+        return buyerRepository.findByBuyerId(buyerId);
     }
 
     // Update an existing buyer
