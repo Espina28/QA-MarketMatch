@@ -6,24 +6,28 @@ public class Transaction {
     private String productName;
     private int quantity;
     private double total;
+    private byte[] image;
 
     public Transaction() {
     }
 
-    public Transaction(int buyId, String Firstname,String Lastname ,String productName, int quantity, double total) {
-        this.customerName = Firstname + ' ' + Lastname;
+    // Constructor with parameters for the DTO
+    public Transaction(int buyId, String firstname, String lastname, String productName, int quantity, double total, byte[] image) {
+        this.customerName = firstname + ' ' + lastname;
         this.productName = productName;
         this.quantity = quantity;
         this.total = total;
         this.buyId = buyId;
+        this.image = image;
     }
 
-    public void setBuyId(int buyId){
+    // Getters and setters
+    public int getBuyId() {
+        return buyId;
+    }
+
+    public void setBuyId(int buyId) {
         this.buyId = buyId;
-    }
-
-    public int getBuyIdId(){
-        return this.buyId;
     }
 
     public String getCustomerName() {
@@ -56,5 +60,13 @@ public class Transaction {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

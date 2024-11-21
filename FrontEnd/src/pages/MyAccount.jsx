@@ -99,6 +99,7 @@ function MyAccount() {
         },
       });
       alert("Changes saved!");
+      window.location.reload();
     } catch (error) {
       console.error("Error updating user data", error);
     }

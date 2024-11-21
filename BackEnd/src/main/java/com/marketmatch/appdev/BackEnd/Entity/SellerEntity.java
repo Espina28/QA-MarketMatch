@@ -11,7 +11,6 @@ import java.util.List;
 public class SellerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int seller_id;
 
     private int products_sold;

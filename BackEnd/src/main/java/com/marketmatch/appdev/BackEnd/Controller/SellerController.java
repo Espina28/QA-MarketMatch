@@ -33,8 +33,8 @@ public class SellerController {
     }
 
     @GetMapping("/transactions")
-    public List<Transaction> getTransactions(@RequestParam String email){
-        return seller_serv.getTransactions(email) ;
+    public List<Transaction> getTransactions(@RequestParam int id){
+        return seller_serv.getTransactions(id) ;
     }
 
     @PutMapping("/edit")

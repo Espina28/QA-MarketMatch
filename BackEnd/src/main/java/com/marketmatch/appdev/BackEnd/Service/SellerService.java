@@ -45,13 +45,9 @@ public class SellerService {
         return seller_repo.save(seller);
     }
 
-    public List<Transaction> getTransactions(String email) {
-        int sellerId = user_repo.findByEmail(email).getSeller_id().getSeller_id();
+    public List<Transaction> getTransactions(int sellerid) {
+            return seller_repo.getTransactions(sellerid);
 
-        if (sellerId != 0) {
-            return seller_repo.getTransactions(sellerId);
-        } else
-            return null;
     }
 
      public SellerEntity addProductToSeller(int sellerId, ProductEntity product) {

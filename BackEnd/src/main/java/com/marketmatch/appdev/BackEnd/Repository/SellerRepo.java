@@ -23,14 +23,15 @@ public interface SellerRepo extends JpaRepository<SellerEntity, Integer> {
 //    @Query("SELECT CONCAT(user.Firstname,' ', user.Lastname) AS customerName, prod.productName as productName, buy.quantity as quantity, buy.total as total FROM ProductEntity prod JOIN prod.sellerid seller JOIN prod.bought buy JOIN buy.buyer buyer JOIN buyer.user user WHERE seller.sellerId = 1")
 
 
-    @Query("SELECT new com.marketmatch.appdev.BackEnd.DTO.Transaction(buy.buyId, user.Firstname, user.Lastname, " +
-            "prod.productName, buy.quantity, buy.total) " +
-            "FROM ProductEntity prod " +
-            "JOIN prod.sellerid seller " +
-            "JOIN prod.bought buy " +
-            "JOIN buy.buyer buyer " +
-            "JOIN buyer.user user " +
-            "WHERE seller.seller_id = 1")
-    List<Transaction> getTransactions(@Param("sellerId") int sellerId);
+@Query("SELECT new com.marketmatch.appdev.BackEnd.DTO.Transaction(buy.buyId, user.Firstname, user.Lastname, " +
+        "prod.productName, buy.quantity, buy.total, prod.image) " +
+        "FROM ProductEntity prod " +
+        "JOIN prod.sellerid seller " +
+        "JOIN prod.bought buy " +
+        "JOIN buy.buyer buyer " +
+        "JOIN buyer.user user " +
+        "WHERE seller.seller_id = :sellerId")
+List<Transaction> getTransactions(@Param("sellerId") int sellerId);
+
 
 }

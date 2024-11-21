@@ -1,256 +1,166 @@
-import Navbar from '../components/Navbar'
-import Container from '@mui/material/Container'
-import SideBar from '../components/SideBar'
-import Grid from '@mui/material/Grid2'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import Button from '@mui/material/Button'
-import '../App.css' /*<---- custom css*/
-import axios from 'axios'
-import {useState, useEffect} from 'react'
-
+import React, { useState, useEffect } from 'react';
+import { Container, Grid, Typography, Box, Paper, Button } from '@mui/material';
+import SideBar from '../components/SideBar';
+import Navbar from '../components/Navbar';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import axios from 'axios';
+import '../App.css';
 
 export default function Transactions() {
+    const [transactions, setTransactions] = useState([]);
+    const [openComplete, setOpenComplete] = useState(false);
+    const [openCancel, setOpenCancel] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-        const [openComplete, setOpenComplete] = useState(false);
-        const [openCancel, setCancel] = useState(false);
-
-        const [deleteItem, setDeleteItem] = useState(null);
-
-        const [transactions, setTransactions] = useState(null)
-
-        //Complete
-        const openCompleteDialog = (buyIdId) => {
-            console.log("opening!! ", buyIdId)
-
-            setDeleteItem(buyIdId)
-            setOpenComplete(true);
-        };
-
-        const closeCompleteDialog = () => {
-            console.log("closing")
-            setOpenComplete(false);
-        };
-        const completeDialogQuery = () => {
-
-            //query axios here
-            console.log('Querying!!')
-
-            axios.delete(`http://localhost:8080/api/buy/delete/${deleteItem}`,{
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                },
-            })
-            .then(response => {
-                console.log('Item deleted successfully:', response.data);
-                const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
-                setTransactions(newTransactions)
-                setDeleteItem(null)
-            })
-            .catch(error => {
-                console.error('Error deleting item:', error);
-            });
-            setOpenComplete(false);
-        };
-
-
-        
-        //Cancel
-        const openCancelDialog = (buyIdId) => {
-            console.log("opening!!")
-            setDeleteItem(buyIdId)
-            setCancel(true);
-        };
-
-        const closeCancelDialog = () => {
-            console.log("closing")
-            setCancel(false);
-        };
-        const cancelDialogQuery = () => {
-
-            //query axios here
-            console.log('Querying!!')
-
-            axios.delete(`http://localhost:8080/api/buy/delete/${deleteItem}`,{
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                },
-            })
-            .then(response => {
-                console.log('Item deleted successfully:', response.data);
-                const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
-                setTransactions(newTransactions)
-                setDeleteItem(null)
-            })
-            .catch(error => {
-                console.error('Error deleting item:', error);
-            });
-            setCancel(false);
-        };
-
-
-      useEffect(()=>{
-        axios.get("http://localhost:8080/api/seller/transactions",{
-            params: {
-                email: "espina@cit.edu" // Send email as query parameter
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/seller/transactions', {
+            params: { id: localStorage.getItem('id') },
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
             },
-            auth: {
-                username: "espina@cit.edu",
-                password: "12345"
-            }
-        }).then((response)=>{
-            console.log(response)
-            setTransactions(response.data)
-        })
+        }).then(response => {
+            setTransactions(response.data);
+        }).catch(error => {
+            console.error('Error fetching transactions:', error);
+        });
+    }, []);
 
-      },[])
+    const handleComplete = (transactionId) => {
+        setSelectedTransaction(transactionId);
+        setOpenComplete(true);
+    };
+
+    const handleCancel = (transactionId) => {
+        setSelectedTransaction(transactionId);
+        setOpenCancel(true);
+    };
+
+    const completeTransaction = () => {
+        axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
+        }).then(() => {
+            setTransactions(transactions.filter(t => t.buyId!== selectedTransaction));
+            setOpenComplete(false);
+            setSelectedTransaction(null);
+        }).catch(error => {
+            console.error('Error completing transaction:', error);
+        });
+    };
+
+    const cancelTransaction = () => {
+        axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
+        }).then(() => {
+            setTransactions(transactions.filter(t => t.buyId !== selectedTransaction));
+            setOpenCancel(false);
+            setSelectedTransaction(null);
+        }).catch(error => {
+            console.error('Error canceling transaction:', error);
+        });
+    };
 
     return (
-        <Container maxWidth={false} disableGutters sx={{ height: '100vh' }}>
-            <Grid container sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Navbar />
-            </Grid>
-            <Grid container direction="row" spacing={3} wrap="nowrap" sx={{ height: '100%' }} className="padding-color-outer">
-                <Grid size={{md: 3}}>
-                    <SideBar 
-                        state={{
-                            userData: location.state ? location.state.userData : null
-                        }}
-                    />
-                </Grid>
-                <Grid item size={{md: 9}} container direction="column" sx={{ width: '100%', backgroundColor: 'white', padding: 4 }}>
-                <Grid >
-                    <Typography variant="h4">Transactions</Typography>
-                    <Divider sx={{ borderBottomWidth: 2, borderColor: 'black', margin: '20px 0' }} />
-                </Grid> 
-                <Grid container justifyContent="space-around"
-                        sx={{
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center'
-                        }}>
-                        <Typography marginLeft={'10rem'}>Product Name</Typography>
-                        <Typography>Quantity</Typography>
-                        <Typography>Name of Buyer</Typography>
-                        <Typography>Total</Typography>
+        <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <Navbar />
+            <Box sx={{ flexGrow: 1, display: 'flex', padding: 4 }} className="padding-color-outer">
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={3} lg={2.5}>
+                        <SideBar />
                     </Grid>
-                    <Grid item container spacing={2}
-                        sx={{
-                            display: 'flex',
-                            height: '450px',
-                            maxHeight: '450px',
-                            overflowY: 'auto',
-                            overflowX: 'hidden',
-                            border: '2px solid black',
-                            padding: '1rem',
-                            width: '100%',
-                        }}>
-                        {/* Products here */}
-                        {
-                            transactions ? transactions.map((transaction, index) => (
-                                <TransactionItem key={index} data={transaction} />
-                            )) : <Typography>No Transaction found.</Typography>
-                        }
+                    <Grid item xs={12} md={9} lg={9.5}>
+                        <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant="h5" sx={{ p: 2, borderBottom: '1px solid #e0e0e0', fontWeight: 'bold' }}>
+                                Transactions
+                            </Typography>
+                            <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2, maxHeight: 'calc(100vh - 250px)' }}>
+                                {transactions.length > 0 ? (
+                                    transactions.map((transaction) => (
+                                        <TransactionItem
+                                            key={transaction.buyId}
+                                            transaction={transaction}
+                                            onComplete={handleComplete}
+                                            onCancel={handleCancel}
+                                        />
+                                    ))
+                                ) : (
+                                    <Typography variant="body1" sx={{ textAlign: 'center', py: 4 }}>No transactions found.</Typography>
+                                )}
+                            </Box>
+                        </Paper>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Dialog
-                open={openComplete}
-                onClose={closeCompleteDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >  
-                <DialogTitle id="alert-dialog-title">
-                {"Do you want to complete this transaction?"}
-                </DialogTitle>
+            </Box>
+            <Dialog open={openComplete} onClose={() => setOpenComplete(false)}>
+                <DialogTitle>Do you want to complete this transaction?</DialogTitle>
                 <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    You can't undo this operation
-                </DialogContentText>
+                    <DialogContentText>You can't undo this operation.</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                <Button variant='contained' onClick={closeCompleteDialog}
-                sx={{
-                    background: "rgba(112, 5, 5, 1)",
-                    "&:hover": {
-                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
-                    },
-                }}
-                >Cancel</Button>
-                <Button variant='contained' color="success" onClick={completeDialogQuery} autoFocus>
-                    Proceed
-                </Button>
+                    <Button onClick={() => setOpenComplete(false)} variant="contained" color="error">
+                        Cancel
+                    </Button>
+                    <Button onClick={completeTransaction} variant="contained" color="success">
+                        Proceed
+                    </Button>
                 </DialogActions>
             </Dialog>
-            {/** */}
-
-            <Dialog
-                open={openCancel}
-                onClose={closeCancelDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >  
-                <DialogTitle id="alert-dialog-title">
-                {"Do you want to delete this transaction?"}
-                </DialogTitle>
+            <Dialog open={openCancel} onClose={() => setOpenCancel(false)}>
+                <DialogTitle>Do you want to cancel this transaction?</DialogTitle>
                 <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    You can't undo this operation
-                </DialogContentText>
+                    <DialogContentText>You can't undo this operation.</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                <Button variant='contained' onClick={closeCancelDialog}
-                sx={{
-                    background: "rgba(112, 5, 5, 1)",
-                    "&:hover": {
-                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
-                    },
-                }}
-                >Cancel</Button>
-                <Button variant='contained' color="success" onClick={cancelDialogQuery} autoFocus>
-                    Proceed
-                </Button>
+                    <Button onClick={() => setOpenCancel(false)} variant="contained" color="error">
+                        Cancel
+                    </Button>
+                    <Button onClick={cancelTransaction} variant="contained" color="success">
+                        Proceed
+                    </Button>
                 </DialogActions>
-            </Dialog>   
+            </Dialog>
         </Container>
-        )
+    );
+}
 
-    function TransactionItem({data}){
-        return (
-            <Grid container direction="column" width={'100%'} height={'auto'} sx={{padding: '.5rem', border: '2px solid black' }}>
-                <Grid container direction="row" alignItems="center">
-                    <Grid item>
-                        <img width="120px" src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image" />
-                    </Grid>
-                    <Grid item container sx={{ display: 'flex', justifyContent: 'space-between', padding: '0 1rem', width: '80%' }}>
-                        <Typography>{data.productName}</Typography>
-                        <Typography>{data.quantity}px</Typography>
-                        <Typography>{data.customerName}</Typography>
-                        <Typography>P {data.total}</Typography>
-                    </Grid>
+function TransactionItem({ transaction, onComplete, onCancel }) {
+    return (
+        <Paper elevation={1} sx={{ p: 2, mb: 2 }}>
+            <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} sm={2}>
+                    <Box
+                        component="img"
+                        src={transaction.image ? `data:image/jpeg;base64,${transaction.image}` : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}
+                        alt={transaction.productName}
+                        sx={{ width: '100%', height: 'auto', borderRadius: 1, maxWidth: 100 }}
+                    />
                 </Grid>
-                <Grid item sx={{ marginLeft: 'auto'}}>
-                    <Button variant="contained" onClick={()=> openCompleteDialog(data.buyIdId)} color="success">COMPLETE</Button> &nbsp;
-                    <Button variant='contained' onClick={()=>openCancelDialog(data.buyIdId)}
-                        sx={{
-                            background: "rgba(112, 5, 5, 1)",
-                            "&:hover": {
-                            background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
-                            },
-                        }}
-                        >Cancel</Button>
+                <Grid item xs={12} sm={4}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{transaction.productName}</Typography>
+                    <Typography variant="body2">Quantity: {transaction.quantity} pcs</Typography>
+                    <Typography variant="body2">Buyer: {transaction.customerName}</Typography>
+                    <Typography variant="body2">Total: P {transaction.total}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                    <Button variant="contained" onClick={() => onComplete(transaction.buyId)} color="success">
+                        Complete
+                    </Button>
+                    <Button variant="outlined" color="error" onClick={() => onCancel(transaction.buyId)}>
+                        Cancel
+                    </Button>
                 </Grid>
             </Grid>
-        )
-    }
+        </Paper>
+    );
 }
