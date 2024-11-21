@@ -40,17 +40,17 @@ public class ProductService {
         return prodrepo.save(product);
     }
 
-    public ProductEntity createProducts(ProductRequest product){
-        UserEntity user = user_repo.findByEmail(product.getEmail());
+    // public ProductEntity createProducts(ProductRequest product){
+    //     // UserEntity user = user_repo.findByEmail(product.getEmail());
 
-        if(user.getSeller_id() != null){
-            product.getProduct().setSellerid(user.getSeller_id());
-        }else{
-            SellerEntity seller = seller_serv.createNewSeller(user);
-            product.getProduct().setSellerid(seller);
-        }
-        return prodrepo.save(product.getProduct());
-    }
+    //     // if(user.getSeller_id() != null){
+    //     //     product.getProduct().setSellerid(user.getSeller_id());
+    //     // }else{
+    //     //     SellerEntity seller = seller_serv.createNewSeller(user);
+    //     //     product.getProduct().setSellerid(seller);
+    //     // }
+    //     return prodrepo.save(product.getProduct());
+    // }
 
     //READ
     public ProductEntity readProducts(int productId) {
@@ -73,25 +73,20 @@ public class ProductService {
         return prodrepo.findBysellerid(id);
     }
 
-    //UPDATE
-    @SuppressWarnings("finally")
-    public ProductEntity updateProduct(int productId, ProductEntity productName) {
-        ProductEntity product = new ProductEntity();
-        try {
-            product = prodrepo.findById(productId).get();
-
-            product.setProductName(productName.getProductName());
-            product.setProductDescription(productName.getProductDescription());
-            product.setProductPrice(productName.getProductPrice());
-            product.setProductStock(productName.getProductStock());
-            product.setProductStatus(productName.getProductStatus());
-            product.setProductTimeCreated(productName.getProductTimeCreated());
-            return prodrepo.save(product);
-        } catch(NoSuchElementException nex){
-            throw new NameNotFoundException("Product " + productId + " not found");
-        }finally {
-            return prodrepo.save(product);
-        }
+    public ProductEntity updateProduct(int productId, ProductEntity updatedProduct) {
+        ProductEntity product = prodrepo.findByproductId(productId);
+    
+        // Update only the specified fields
+        product.setProductName(updatedProduct.getProductName());
+        product.setProductDescription(updatedProduct.getProductDescription());
+        product.setProductPrice(updatedProduct.getProductPrice());
+        product.setProductStock(updatedProduct.getProductStock());
+        product.setProductStatus(updatedProduct.getProductStatus());
+        product.setProductTimeCreated(updatedProduct.getProductTimeCreated());
+        product.setImage(updatedProduct.getImage());
+    
+        // Save the updated product
+        return prodrepo.save(product);
     }
 
     //DELETE

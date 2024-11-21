@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.marketmatch.appdev.BackEnd.Entity.BuyerEntity;
+import com.marketmatch.appdev.BackEnd.Entity.SellerEntity;
 import com.marketmatch.appdev.BackEnd.Service.BuyerService;
 
 import java.util.List;
@@ -18,10 +19,9 @@ public class BuyerController {
     private BuyerService bserv;
 
     // Create a new buyer
-    @PostMapping
-    public ResponseEntity<BuyerEntity> createBuyer(@RequestBody BuyerEntity buyer) {
-        BuyerEntity savedBuyer = bserv.saveBuyer(buyer);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBuyer);
+    @PostMapping("/postBuyer/{buyerid}")
+    public BuyerEntity createBuyer(@RequestBody BuyerEntity buyer,@PathVariable int buyerid) {
+       return bserv.createNewBuyer(buyer,buyerid);
     }
 
     // Get a buyer by ID
@@ -60,9 +60,8 @@ public class BuyerController {
     }
 
     // Optional: Get all buyers
-    @GetMapping
-    public ResponseEntity<List<BuyerEntity>> getAllBuyers() {
-        List<BuyerEntity> buyers = bserv.findAllBuyers(); // Implement this method in BuyerService
-        return ResponseEntity.ok(buyers);
+    @GetMapping("/getAllBuyers")
+    public List<BuyerEntity> getAllBuyers() {
+        return bserv.findAllBuyers();
     }
 }

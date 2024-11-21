@@ -11,17 +11,16 @@ import java.util.List;
 public class BuyerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int buyerId;
 
     private int totalTransaction;
 
     @JsonBackReference
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @JsonManagedReference("buyer-reference")
+    @JsonManagedReference
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     private List<BuyEntity> bought;
 
@@ -56,4 +55,6 @@ public class BuyerEntity {
     public void setBought(List<BuyEntity> bought) {
         this.bought = bought;
     }
+    
+    
 }

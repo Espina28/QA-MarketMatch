@@ -39,34 +39,40 @@ public class BuyService {
 
                                 //when buyer buys a product this method expects the buyer pk
                                 // and the product pk he chose, to create a buy entry
-    public BuyEntity
-    buyItem(HashMap<String, Object> payload){
-        ObjectMapper mapper = new ObjectMapper();
-//
-//        // Extract the `productDetail` and `buyerDetail` objects from the payload
-        int productPk = mapper.convertValue(payload.get("productDetail"), Integer.class);
-        int buyerPk = mapper.convertValue(payload.get("buyerDetail"), Integer.class);
+//     public BuyEntity
+//     buyItem(HashMap<String, Object> payload){
+//         ObjectMapper mapper = new ObjectMapper();
+// //
+// //        // Extract the `productDetail` and `buyerDetail` objects from the payload
+//         int productPk = mapper.convertValue(payload.get("productDetail"), Integer.class);
+//         int buyerPk = mapper.convertValue(payload.get("buyerDetail"), Integer.class);
 
-        String orderDate = mapper.convertValue(payload.get("orderDate"), String.class);
-        int quantity = mapper.convertValue(payload.get("quantity"), Integer.class);
-        double total = mapper.convertValue(payload.get("total"), Double.class);
+//         String orderDate = mapper.convertValue(payload.get("orderDate"), String.class);
+//         int quantity = mapper.convertValue(payload.get("quantity"), Integer.class);
+//         double total = mapper.convertValue(payload.get("total"), Double.class);
 
-        BuyerEntity buyer = buyer_repo.findById(buyerPk).get();
-        ProductEntity product = prod_repo.findById(productPk).get();
+//         BuyerEntity buyer = buyer_repo.findByBuyerId(buyerPk);
+//         ProductEntity product = prod_repo.findById(productPk).get();
 
-        BuyEntity item = new BuyEntity();
-        item.setBuyer(buyer);
-        item.setProduct(product);
-        item.setOrderDate(orderDate);
-        item.setQuantity(quantity);
-        item.setTotal(total);
+//         BuyEntity item = new BuyEntity();
+//         item.setBuyer(buyer);
+//         item.setProduct(product);
+//         item.setOrderDate(orderDate);
+//         item.setQuantity(quantity);
+//         item.setTotal(total);
 
-        return buy_repo.save(item);
+//         return buy_repo.save(item);
+//     }
+
+
+
+// did it in the front end now backend only expects a BuyEntity
+    public BuyEntity buyItem(BuyEntity payload){
+        return buy_repo.save(payload);
     }
 
-    public List<ProductEntity> getPurchased(String email){
-        int buyerId = user_repo.findByEmail(email).getUserId();
-        return buy_repo.getPurchased(buyerId);
+    public List<BuyEntity> getPurchased(int id){
+        return buy_repo.findBuyerItems(id);
     }
 
     public BuyEntity editBoughtItem(int id, BuyEntity itemDetail) {
@@ -79,8 +85,6 @@ public class BuyService {
 //            newItem.setOrderRecieved(itemDetail.getOrderRecieved());
             newItem.setQuantity(itemDetail.getQuantity());
             newItem.setTotal(itemDetail.getTotal());
-            newItem.setBuyer(itemDetail.getBuyer());
-            newItem.setProduct(itemDetail.getProduct());
 
         } catch (NoSuchElementException err) {
             throw new NameNotFoundException("Not found");

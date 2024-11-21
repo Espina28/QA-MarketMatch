@@ -1,6 +1,7 @@
 package com.marketmatch.appdev.BackEnd.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,15 +15,34 @@ public class BuyEntity {
     private String orderDate;
     private double total;
 
-    @JsonBackReference("buyer-reference")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "buyer_id")
+    @JsonBackReference
     private BuyerEntity buyer;
 
-    @JsonBackReference("product-reference")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
+
+
+    
+
+    public BuyEntity(int buyId, int quantity, String orderDate, double total, BuyerEntity buyer,
+            ProductEntity product) {
+        this.buyId = buyId;
+        this.quantity = quantity;
+        this.orderDate = orderDate;
+        this.total = total;
+        this.buyer = buyer;
+        this.product = product;
+    }
+
+    
+
+    public BuyEntity() {
+        super();
+    }
+
 
 
     public int getBuyId() {
@@ -57,9 +77,9 @@ public class BuyEntity {
         this.total = total;
     }
 
-    public BuyerEntity getBuyer() {
-        return buyer;
-    }
+    // public BuyerEntity getBuyer() {
+    //     return buyer;
+    // }
 
     public void setBuyer(BuyerEntity buyer) {
         this.buyer = buyer;

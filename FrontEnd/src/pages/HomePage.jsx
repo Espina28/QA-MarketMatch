@@ -98,7 +98,7 @@ const HomePage = () => {
               <Grid container spacing={2} sx={{ zIndex: 2 }}>
                 {products.map((product, index) => (
                 <Grid item xs={4} key={index}>
-                <Link to={`/product-detail/${product.productId}`}>
+                <Link to={`/${product.productName}/${product.productId}`}>
                   <Box
                     sx={{
                       position: 'relative',

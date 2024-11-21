@@ -1,189 +1,106 @@
-import Navbar from '../components/Navbar'
-import Container from '@mui/material/Container'
-import SideBar from '../components/SideBar'
-import Grid from '@mui/material/Grid2'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import '../App.css' /*<---- custom css*/
-
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Alert from '@mui/material/Alert';
-
+import React, { useState, useEffect } from 'react';
+import { Container, Grid, Typography, Box, Button, Divider, Paper } from '@mui/material';
+import SideBar from '../components/SideBar';
+import Navbar from '../components/Navbar';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import {useState, useEffect} from 'react'
-import axios from "axios"
-import { useLocation } from 'react-router-dom'
-
-export default function Orders(){
-
+export default function Orders() {
     const [products, setProducts] = useState(null);
     const location = useLocation();
     const [userData, setUserData] = useState();
-    const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        // Safely check if location.state and location.state.userData are defined
         if (location.state && location.state.userData) {
-          setUserData(location.state.userData);
+            setUserData(location.state.userData);
         }
-      }, [location]); 
-    
-      useEffect(() => {
-        if (userData) {
-          console.log('Updated userData:', userData); // This will log after the state is updated
-        }
-      }, [userData]);
-      
-      const handleClickOpenDialog = () => {
-        setOpen(true);
-      };
+    }, [location]);
 
-      const handleCloseDialog = () => {
-        setOpen(false);
-      };
-
-      const closeDialogQuery = () => {
-        //query axios here
-        console.log('Querying!!')
-        
-        setOpen(false);
-      };
-    
-
-      useEffect(() => {
-        axios.get("http://localhost:8080/api/buy/purchase", {
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/buy/purchase', {
             params: {
-                email: "espina@cit.edu" // Send email as query parameter
+                id: localStorage.getItem('id'),
             },
-            auth: {
-                username: "espina@cit.edu",
-                password: "12345"
-            }
+            withCredentials: true,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
         })
-        .then((response) => {
-            setProducts(response.data); // Save fetched products
-            console.log(response)
-            console.log('success!')
-        })
-        .catch((error) => {
-            console.error("Error fetching products:", error);
-        });
+            .then((response) => {
+                setProducts(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching products:', error);
+            });
     }, []);
-    
-
 
     return (
-        <Container maxWidth={false} disableGutters >
-            <Grid sx={{paddingTop: 1, paddingBottom: 1}}>
-                <Navbar/> 
-            </Grid>
-            <Grid className="padding-color-outer" container direction={'row'}  spacing={3} wrap='nowrap' sx={{height: '50%'}}>
-                <Grid size={{md: 3}}  sx={{maxWidth: '100%', border: '2px solid black'}}>
-                <SideBar 
-                    state={{ 
-                    userData: location.state ? location.state.userData : null
-                    }} 
-                />
-                </Grid>
-                <Grid size={{md: 9}} container direction={'column'} sx={{backgroundColor: 'white', padding: 4}}>
-                    <Grid>
-                        <Typography variant='h4'>My Orders</Typography>
-                        <Divider sx={{ borderBottomWidth: 2, borderColor: 'black', margin: '20px 0' }} />
+        <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <Navbar />
+            <Box sx={{ flexGrow: 1, display: 'flex', padding: 4 }} className="padding-color-outer">
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={3} lg={2.5}>
+                        <SideBar />
                     </Grid>
-                    <Grid container spacing={2} className=""
-                        sx={{
-                            maxHeight: '600px',  // Set the maximum height as needed
-                            overflowY: 'auto',   // Enable vertical scrolling
-                            overflowX: 'hidden', // Prevent horizontal scrolling (optional)
-                            border: '1px solid black',
-                            height: '600px',
-                            display: 'flex'
-                        }}>
-                        {/* Your content goes here */}
-                        {
-                            products ? products.map((product, index) => (
-                                <PrintProducts key={index} product={product} />
-                            )) : <Typography>No products found.</Typography> // Optional fallback
-                        }      
+                    <Grid item xs={12} md={9} lg={9.5}>
+                        <Paper elevation={3} sx={{ padding: 4 }}>
+                            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>My Orders</Typography>
+                            <Divider sx={{ mb: 2 }} />
+                            <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', p: 2 }}>
+                                {products ? products.map((product, index) => (
+                                    <OrderCard key={index} product={product} />
+                                )) : <Typography>No products found.</Typography>}
+                            </Box>
+                        </Paper>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Dialog
-                open={open}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                {"Are sure you want to cancel your order?"}
-                </DialogTitle>
-                <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    You can't undo this operation
-                </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                <Button variant='contained' onClick={handleCloseDialog}
-                sx={{
-                    background: "rgba(112, 5, 5, 1)",
-                    "&:hover": {
-                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
-                    },
-                }}
-                >Cancel</Button>
-                <Button variant='contained' color="success" onClick={closeDialogQuery} autoFocus>
-                    Proceed
-                </Button>
-                </DialogActions>
-            </Dialog>  
+            </Box>
         </Container>
-    )
+    );
+}
 
-
-    
-function PrintProducts(props){
+function OrderCard({ product }) {
     return (
-        <Grid container spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem', width: '100%'}}>
-             <Grid size={{md: 3}}>
-                {props.product.image ? (
+        <Paper elevation={2} sx={{ p: 2, mb: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center' }}>
+            <Box sx={{ width: { xs: '100%', sm: '200px' }, mb: { xs: 2, sm: 0 }, mr: { sm: 3 } }}>
+                {product.product.image ? (
                     <img
-                        width="200px"
-                        src={`data:image/jpeg;base64,${props.product.image}`}
-                        alt="product image"
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '4px' }}
+                        src={`data:image/jpeg;base64,${product.product.image}`}
+                        alt="product"
                     />
-                ) : ( 
+                ) : (
                     <img
-                        width="200px"
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '4px' }}
                         src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                        alt="placeholder image"
+                        alt="placeholder"
                     />
                 )}
-            </Grid>
-            <Grid size={{md: 6}} container direction={'column'}>
-                <Typography variant="h6">{props.product.productName}</Typography>
-                <Typography variant="h6">{props.product.productDescription}</Typography>
-                <Typography variant="h5">
-                        2x
-                </Typography>
-            </Grid>
-            <Grid container direction={'column'} size={{md: 3}}>
-                <Typography>Order Ordered: 12/12/2020</Typography>
-                <Button variant='contained' startIcon={<DeleteIcon />} onClick={handleClickOpenDialog}  
-                sx={{
-                    background: "rgba(112, 5, 5, 1)",
-                    "&:hover": {
-                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
-                    },
-                }}
-                >Cancel</Button>
-            </Grid>
-        </Grid>
-    )
-}
+            </Box>
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <Box>
+                    <Typography variant="h6" gutterBottom>{product.product.productName}</Typography>
+                    <Typography variant="body2" gutterBottom>{product.product.productDescription}</Typography>
+                    <Typography variant="h6" gutterBottom>Quantity: 2x</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                    <Typography variant="body2">Order Date: 12/12/2020</Typography>
+                    <Button
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        sx={{
+                            background: "rgba(112, 5, 5, 1)",
+                            "&:hover": {
+                                background: "rgba(140, 10, 10, 1)",
+                            },
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                </Box>
+            </Box>
+        </Paper>
+    );
 }

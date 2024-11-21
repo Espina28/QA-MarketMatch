@@ -16,19 +16,20 @@ import Cart from './pages/Cart';
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import MyProducts from './pages/MyProduct';
+import CheckLogIn from './components/CheckLogIn';
 function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-           <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Welcome />} />
-          <Route path='/home' element={<HomePage />} />
-          
+           <Route path="/signup" element={<CheckLogIn><Signup /></CheckLogIn>} />
+          <Route path="/login" element={<CheckLogIn><Login /></CheckLogIn>} />
+          <Route path="/" element={<CheckLogIn><Welcome /></CheckLogIn>} />
+
+          <Route path='/home' element={<ProtectedRoutes><HomePage /></ProtectedRoutes>} />
           <Route path="/sell-product" element={<ProtectedRoutes><UploadProduct /></ProtectedRoutes>} />
           <Route path="/orders" element={<ProtectedRoutes><Orders /></ProtectedRoutes>} />
-          <Route path="/product-detail/:productId" element={<ProtectedRoutes><ProductDetail /></ProtectedRoutes>} />
+          <Route path="/:productname/:productId" element={<ProtectedRoutes><ProductDetail /></ProtectedRoutes>} />
           <Route path="/my-account" element={<ProtectedRoutes><MyAccount /></ProtectedRoutes>} />
           <Route path="/cart" element={<ProtectedRoutes><Cart /></ProtectedRoutes>} />
           <Route path="/myProducts" element={<ProtectedRoutes><MyProducts /></ProtectedRoutes>} />

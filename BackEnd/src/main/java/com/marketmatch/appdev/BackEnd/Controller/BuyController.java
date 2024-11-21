@@ -24,12 +24,13 @@ public class BuyController {
     }
 
     @GetMapping("/purchase")
-    public List<ProductEntity> getAllPurchase(@RequestParam String email){
-        return buy_serv.getPurchased(email);
+    public List<BuyEntity> getAllPurchase(@RequestParam int id){
+        return buy_serv.getPurchased(id);
     }
 
     @PostMapping("/create")
-    public BuyEntity buyItem(@RequestBody HashMap<String, Object> payload){
+    public BuyEntity buyItem(@RequestBody BuyEntity payload){
+        System.out.println("Received Payload: " + payload.getProduct());
         return buy_serv.buyItem(payload);
     }
 

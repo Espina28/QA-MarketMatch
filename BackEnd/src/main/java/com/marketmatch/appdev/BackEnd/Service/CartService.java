@@ -48,9 +48,9 @@ public class CartService {
         }).orElseThrow(() -> new NoSuchElementException("Cart record with ID " + id + " not found"));
     }
 
-    public CartEntity addProductToCart(int cartId, ProductEntity product) {
+    public CartEntity addProductToCart(int cartId, int productid) {
         CartEntity cart = cartRepo.findById(cartId).orElseThrow();
-        
+        ProductEntity product = productRepo.findById(productid).orElseThrow();
         List<ProductEntity> products = cart.getProducts();
         if (products == null) {
             products = new ArrayList<>();
@@ -59,7 +59,7 @@ public class CartService {
         cart.setProducts(products);
         
        
-        product.setCart(cart);
+        product.addCart(cart);
         
         
         cart = cartRepo.save(cart);

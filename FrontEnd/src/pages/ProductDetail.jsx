@@ -19,19 +19,6 @@ export default function ProductLayout() {
     const { productId } = useParams();
 
     useEffect(() => {
-        // Safely check if location.state and location.state.userData are defined
-        if (location.state && location.state.userData) {
-          setUserData(location.state.userData);
-        }
-      }, [location]); 
-    
-      useEffect(() => {
-        if (userData) {
-          console.log('Updated userData:', userData); // This will log after the state is updated
-        }
-      }, [userData]); 
-
-    useEffect(() => {
         axios.get('http://localhost:8080/api/user/getProducts/' + productId,{
             withCredentials: true,
             headers: {
@@ -41,7 +28,7 @@ export default function ProductLayout() {
         })
             .then(response => {
                 setProducts(response.data);
-                console.log(response.data);
+                console.log("Prdoucts:",response.data);
             })
             .catch(error => {
                 console.error('There was an error fetching the products!', error);
@@ -51,23 +38,10 @@ export default function ProductLayout() {
     const imageUrl = products.image ? `data:image/jpeg;base64,${products.image}` : '';
 
     const handleAddToCart = () => {
-        console.log("Product to add to cart:", products);
         if (products) {
             const cartId = localStorage.getItem("id"); // Retrieve cart ID from session
-            const quantity = 1; // Set desired quantity
-        
-            const productsToAdd = {
-              productId: products.productId,
-              productName: products.productName,
-              productDescription: products.productDescription,
-              productPrice: products.productPrice,
-              productStock: products.productStock,
-              productStatus: products.productStatus,
-              productTimeCreated: products.productTimeCreated,
-              image: products.image,
-              quantity: quantity
-            };
-            axios.post(`http://localhost:8080/api/cart/addProduct/`+cartId, productsToAdd, {
+
+            axios.post(`http://localhost:8080/api/cart/addProduct/${cartId}/${productId}`,{}, {
               withCredentials: true,
               headers: {
                 'Content-Type': 'application/json',
@@ -85,6 +59,40 @@ export default function ProductLayout() {
             console.log("Products data is not yet available. Please try again.");
           }
       };
+
+      const handleBuy = () => {
+        if (products) {
+            const payload = {
+                quantity: 1, 
+                orderDate: new Date().toISOString(), 
+                total: parseFloat(products.productPrice),
+                buyer: {
+                    buyerId: localStorage.getItem("id"), 
+                },
+                product: {
+                    productId: productId, 
+                },
+            };
+    
+            axios.post('http://localhost:8080/api/buy/create', payload, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            })
+            .then(response => {
+                console.log("Purchase successful:", response.data);
+                alert("Purchase successful!");
+            })
+            .catch(error => {
+                console.error("Error during purchase:", error);
+                alert("Failed to complete the purchase. Please try again.");
+            });
+        } else {
+            console.log("Product data is not available yet. Please wait.");
+        }
+    };
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>
@@ -166,18 +174,10 @@ export default function ProductLayout() {
                             <Grid container spacing={2} direction={'column'}>
                                 <Grid container direction={'row'}>
                                     <Grid item marginLeft={10} marginRight={8}>
-                                        <Button variant="contained" sx={{ backgroundColor: 'black', color: 'white',padding: '15px 50px' }}>Buy Now</Button>
+                                        <Button variant="contained" onClick={handleBuy} sx={{ backgroundColor: 'black', color: 'white',padding: '15px 50px' }}>Buy Now</Button>
                                     </Grid>
                                     <Grid item>
                                         <Button variant="outlined" onClick={handleAddToCart} sx={{padding: '15px 50px' }}>Add to Cart</Button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container direction={'row'}>
-                                    <Grid item marginLeft={42}>
-                                        <Button variant="contained" color="error">Report</Button>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button variant="contained" sx={{ backgroundColor: '#00BFFF', color: 'white' }}>Share</Button>
                                     </Grid>
                                 </Grid>
                             </Grid>

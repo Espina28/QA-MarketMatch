@@ -13,7 +13,7 @@ function NotFound() {
 
 
     if (countdown === 0) {
-      navigate('/home');
+      navigate('/');
     }
 
 
@@ -22,7 +22,7 @@ function NotFound() {
 
 
   const handleGoBack = () => {
-    navigate('/home');
+    navigate('/');
   };
 
   return (

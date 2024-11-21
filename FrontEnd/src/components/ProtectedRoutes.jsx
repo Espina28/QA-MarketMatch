@@ -1,14 +1,25 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-const ProtectedRoutes = ({children}) => {
-    const {isAuthenticated} = useAuth();
+import {jwtDecode} from 'jwt-decode';
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" />;
-    }else{
-        return children;
-    }
-}
+const ProtectedRoutes = ({ children }) => {
+  const { isAuthenticated, token, logout } = useAuth();
 
-export default ProtectedRoutes
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  const decodedToken = jwtDecode(token);
+  const expirationTime = decodedToken.exp * 1000; // convert to milliseconds
+  const currentTime = new Date().getTime();
+
+  if (currentTime > expirationTime) {
+    logout();
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoutes;

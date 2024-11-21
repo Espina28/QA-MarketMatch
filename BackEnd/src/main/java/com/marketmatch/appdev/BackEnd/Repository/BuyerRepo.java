@@ -7,5 +7,5 @@ import com.marketmatch.appdev.BackEnd.Entity.BuyerEntity;
 
 @Repository
 public interface BuyerRepo extends JpaRepository<BuyerEntity, Integer> {
-	
+	BuyerEntity findByBuyerId(int buyerId);
 }

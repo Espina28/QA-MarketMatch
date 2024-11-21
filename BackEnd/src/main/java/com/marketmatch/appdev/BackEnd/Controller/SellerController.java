@@ -1,7 +1,11 @@
 package com.marketmatch.appdev.BackEnd.Controller;
 
 
+<<<<<<< HEAD
 import com.marketmatch.appdev.BackEnd.DTO.Transaction;
+=======
+import com.marketmatch.appdev.BackEnd.Entity.CartEntity;
+>>>>>>> bc0c1a37ad6ddd9dab84de4c09d9fae434459c7a
 import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Entity.SellerEntity;
 import com.marketmatch.appdev.BackEnd.Entity.UserEntity;
@@ -19,9 +23,11 @@ public class SellerController {
     @Autowired
     SellerService seller_serv;
 
-    @GetMapping("/getAll")
-    public List<SellerEntity> getAllSeller() {
-        return seller_serv.getAllSeller();
+    @GetMapping("/getAll/{sellerid}")
+    public SellerEntity getAllSeller(@PathVariable int sellerid) {
+        SellerEntity seller = seller_serv.getSellerById(sellerid);
+        seller.getProducts().size();
+        return seller;
     }
 
     @GetMapping("/{id}")
@@ -39,9 +45,14 @@ public class SellerController {
         return seller_serv.editSeller(id, seller);
     }
 
-    @PostMapping("/create")
-    public SellerEntity createSeller(@RequestBody UserEntity details) {
-        return seller_serv.createNewSeller(details);
+    @PostMapping("/postSeller/{sellerid}")
+    public SellerEntity createSeller(@RequestBody SellerEntity details, @PathVariable int sellerid) {
+        return seller_serv.createNewSeller(details,sellerid);
+    }
+
+    @PostMapping("/addProduct/{sellerid}")
+    public SellerEntity addProductToSeller(@PathVariable int sellerid, @RequestBody ProductEntity product) {
+        return seller_serv.addProductToSeller(sellerid, product);
     }
 
     @DeleteMapping("/delete/{id}")

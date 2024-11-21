@@ -21,9 +21,23 @@ public class SellerEntity {
     @JsonBackReference
     private UserEntity userid;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "sellerid", fetch = FetchType.LAZY)
     private List<ProductEntity> products;
+
+    
+    public SellerEntity(int seller_id, int products_sold, UserEntity userid, List<ProductEntity> products) {
+        this.seller_id = seller_id;
+        this.products_sold = products_sold;
+        this.userid = userid;
+        this.products = products;
+    }
+
+    
+
+    public SellerEntity() {
+        super();
+    }
+
 
 
     public List<ProductEntity> getProducts() {
@@ -42,10 +56,6 @@ public class SellerEntity {
         this.seller_id = seller_id;
     }
 
-    public UserEntity getUserid() {
-        return userid;
-    }
-
     public void setUserid(UserEntity userid) {
         this.userid = userid;
     }
@@ -57,4 +67,5 @@ public class SellerEntity {
     public void setProducts_sold(int products_sold) {
         this.products_sold = products_sold;
     }
+
 }

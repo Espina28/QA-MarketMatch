@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Grid as Grid2, TextField, Button, Typography, Container, Box, Modal, IconButton } from '@mui/material';
+import { 
+  TextField, Button, Typography, Container, Box, Modal, IconButton,
+  Grid, Paper, Avatar, Divider
+} from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
 import Navbar from '../components/Navbar';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff, CloudUpload } from '@mui/icons-material';
 import '../App.css';
 
 function MyAccount() {
@@ -16,7 +19,9 @@ function MyAccount() {
     address: "",
     email: "",
     phonenumber: "",
+    image: null,
   });
+  const [profileImage, setProfileImage] = useState(null);
   const [originalUserData, setOriginalUserData] = useState({});
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [password, setPassword] = useState("");
@@ -43,22 +48,31 @@ function MyAccount() {
       .then(response => {
         setUserData(response.data);
         setOriginalUserData(response.data);
-        console.log(response.data);
+        if (response.data.image) {
+          setProfileImage(`data:image/jpeg;base64,${response.data.image}`);
+        }
       })
       .catch(error => {
-        console.error('There was an error fetching the user data!', error);
+        console.error('Error fetching user data!', error);
       });
-  }, []);
+  }, [userId]);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Image = reader.result.replace(/^data:image\/[a-z]+;base64,/, '');
+      setUserData({ ...userData, image: base64Image });
+      setProfileImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const validatePassword = (password) => {
-    const lengthValid = password.length >= 8;
-    const capitalValid = /[A-Z]/.test(password);
-    const specialCharValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
     setPasswordValid({
-      length: lengthValid,
-      capital: capitalValid,
-      specialChar: specialCharValid,
+      length: password.length >= 8,
+      capital: /[A-Z]/.test(password),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     });
   };
 
@@ -90,14 +104,7 @@ function MyAccount() {
     }
   };
 
-  const togglePasswordModal = () => {
-    setPasswordModalOpen(!passwordModalOpen);
-    setPassword("");
-    setConfirmPassword("");
-  };
-
   const handlePasswordChange = async () => {
-    // Check if password meets all criteria before saving
     if (!passwordValid.length || !passwordValid.capital || !passwordValid.specialChar) {
       alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
       return;
@@ -116,23 +123,21 @@ function MyAccount() {
           },
         });
         alert("Password changed successfully!");
-        togglePasswordModal();
+        setPasswordModalOpen(false);
       } catch (error) {
         console.error("Error changing password", error);
       }
     }
   };
 
-  const handlePhoneChange = (e) => {
-    const input = e.target.value;
-
-    if (/^\d*$/.test(input) && input.length <= 11) {
-      setUserData({ ...userData, phonenumber: input });
-    }
-  };
-
   const handleCancel = () => {
     setUserData(originalUserData);
+  };
+
+  const togglePasswordModal = () => {
+    setPasswordModalOpen(!passwordModalOpen);
+    setPassword("");
+    setConfirmPassword("");
   };
 
   const togglePasswordVisibility = () => {
@@ -144,78 +149,94 @@ function MyAccount() {
   };
 
   return (
-    <Container maxWidth={false} disableGutters sx={{ height: '105vh' }}>
+    <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
-      <Grid2 container direction="row" spacing={6} sx={{ height: '91.9%', padding: 4, marginTop: '.01rem' }} className="padding-color-outer">
-        <Grid2 item md={4} sx={{ maxWidth: '50%', padding: 6 }}>
-          <SideBar state={{ userData: location.state ? location.state.userData : null }} />
-        </Grid2>
+      <Box sx={{ flexGrow: 1, display: 'flex', padding: 4, marginTop: '.01rem' }} className="padding-color-outer">
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4} lg={3}>
+            <SideBar state={{ userData: location.state ? location.state.userData : null }} />
+          </Grid>
+          <Grid item xs={12} md={8} lg={9}>
+            <Paper elevation={3} sx={{ padding: 4 }}>
+              <Typography variant="h4" gutterBottom>My Profile</Typography>
+              <Divider sx={{ my: 2 }} />
+              
+              <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems="center" mb={4}>
+                <Avatar
+                  src={profileImage}
+                  sx={{ width: 150, height: 150, mr: { xs: 0, sm: 4 }, mb: { xs: 2, sm: 0 } }}
+                />
+                <Box>
+                  <Typography variant="h5" gutterBottom>{`${userData.firstname} ${userData.lastname}`}</Typography>
+                  <Typography variant="subtitle1" gutterBottom><strong>Student ID:</strong> {userData.student_Id}</Typography>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    startIcon={<CloudUpload />}
+                    sx={{ mt: 2 }}
+                  >
+                    Upload New Picture
+                    <input hidden accept="image/*" type="file" onChange={handleImageUpload} />
+                  </Button>
+                </Box>
+              </Box>
 
-        <Grid2 item md={8} container direction="column" sx={{ backgroundColor: 'white', padding: 4 }}>
-          <Typography variant="h4" gutterBottom>My Profile</Typography>
-          <Grid2 container direction="column" spacing={2}>
-            <Grid2 item>
-              <Typography variant="subtitle1"><strong>Name:</strong> {`${userData.firstname} ${userData.lastname}`}</Typography>
-            </Grid2>
-            <Grid2 item>
-              <Typography variant="subtitle1"><strong>Student ID:</strong> {userData.student_Id}</Typography>
-            </Grid2>
-            <Grid2 item>
-              <Typography variant="subtitle1"><strong>Address:</strong></Typography>
-              <TextField
-                fullWidth
-                variant="outlined"
-                value={userData.address || ""}
-                onChange={(e) => setUserData({ ...userData, address: e.target.value })}
-              />
-            </Grid2>
-            <Grid2 item>
-              <Typography variant="subtitle1"><strong>Email:</strong></Typography>
-              <TextField
-                fullWidth
-                variant="outlined"
-                value={userData.email || ""}
-                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-              />
-            </Grid2>
-            <Grid2 item>
-              <Typography variant="subtitle1"><strong>Phone:</strong></Typography>
-              <TextField
-                fullWidth
-                variant="outlined"
-                value={userData.phonenumber || ""}
-                onChange={handlePhoneChange}
-                inputProps={{ maxLength: 11 }}
-              />
-            </Grid2>
-            <Grid2 item>
-              <Button variant="contained" color="primary" onClick={togglePasswordModal}>Change Password</Button>
-            </Grid2>
-            <Grid2 item container spacing={2} sx={{ marginTop: '1rem' }}>
-              <Grid2 item>
-                <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
-              </Grid2>
-              <Grid2 item>
-                <Button
-                  variant="contained"
-                  onClick={handleCancel}
-                  sx={{ backgroundColor: 'red', color: 'white', '&:hover': { backgroundColor: 'darkred' } }}
-                >
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Address"
+                    variant="outlined"
+                    value={userData.address || ""}
+                    onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    variant="outlined"
+                    value={userData.email || ""}
+                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Phone"
+                    variant="outlined"
+                    value={userData.phonenumber || ""}
+                    onChange={(e) => setUserData({ ...userData, phonenumber: e.target.value })}
+                    inputProps={{ maxLength: 11 }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" color="primary" onClick={togglePasswordModal}>
+                    Change Password
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <Box display="flex" justifyContent="flex-end" mt={4}>
+                <Button variant="outlined" onClick={handleCancel} sx={{ mr: 2 }}>
                   Cancel
                 </Button>
-              </Grid2>
-            </Grid2>
-          </Grid2>
-        </Grid2>
-      </Grid2>
+                <Button variant="contained" onClick={handleSave}>
+                  Save Changes
+                </Button>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Box>
 
-      {/* Phone number warning modal */}
+      {/* Phone Number Warning Modal */}
       <Modal
         open={phoneNumberWarningOpen}
         onClose={() => setPhoneNumberWarningOpen(false)}
         aria-labelledby="phone-number-warning"
       >
-        <Box sx={{ width: 300, padding: 2, backgroundColor: 'white', margin: 'auto', marginTop: '20%' }}>
+        <Box sx={{ width: 300, padding: 2, backgroundColor: 'white', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <Typography variant="h6" gutterBottom>Warning!</Typography>
           <Typography variant="body1" color="error">Phone number must be exactly 11 digits.</Typography>
           <Button variant="contained" color="primary" onClick={() => setPhoneNumberWarningOpen(false)} sx={{ marginTop: 2 }}>
@@ -226,7 +247,7 @@ function MyAccount() {
 
       {/* Password Change Modal */}
       <Modal open={passwordModalOpen} onClose={togglePasswordModal}>
-        <Box sx={{ width: 400, padding: 4, backgroundColor: 'white', margin: 'auto', marginTop: '10%' }}>
+        <Box sx={{ width: 400, padding: 4, backgroundColor: 'white', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <Typography variant="h6" gutterBottom>Change Password</Typography>
           <TextField
             fullWidth
@@ -238,10 +259,7 @@ function MyAccount() {
             sx={{ marginBottom: 2 }}
             InputProps={{
               endAdornment: (
-                <IconButton
-                  onClick={togglePasswordVisibility}
-                  edge="end"
-                >
+                <IconButton onClick={togglePasswordVisibility} edge="end">
                   {passwordVisible ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               ),
@@ -257,16 +275,13 @@ function MyAccount() {
             sx={{ marginBottom: 2 }}
             InputProps={{
               endAdornment: (
-                <IconButton
-                  onClick={toggleConfirmPasswordVisibility}
-                  edge="end"
-                >
+                <IconButton onClick={toggleConfirmPasswordVisibility} edge="end">
                   {confirmPasswordVisible ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               ),
             }}
           />
-          
+
           {/* Password Validation Feedback */}
           <Typography variant="body2" color={passwordValid.length ? 'green' : 'red'}>
             {passwordValid.length ? '✅ At least 8 characters' : '❌ At least 8 characters'}
@@ -277,12 +292,13 @@ function MyAccount() {
           <Typography variant="body2" color={passwordValid.specialChar ? 'green' : 'red'}>
             {passwordValid.specialChar ? '✅ At least 1 special character' : '❌ At least 1 special character'}
           </Typography>
-          
+
           <Button
             variant="contained"
             color="primary"
             onClick={handlePasswordChange}
             disabled={!passwordValid.length || !passwordValid.capital || !passwordValid.specialChar || password !== confirmPassword}
+            sx={{ marginTop: 2 }}
           >
             Save Password
           </Button>
@@ -293,3 +309,4 @@ function MyAccount() {
 }
 
 export default MyAccount;
+
