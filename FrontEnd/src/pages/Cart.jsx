@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Typography, Box, Button, Select, MenuItem } from '@mui/material';
+import { Container, Grid, Typography, Box, Button, Select, MenuItem, Paper } from '@mui/material';
 import SideBar from '../components/SideBar';
 import '../App.css';
 import axios from 'axios';
@@ -19,7 +19,7 @@ const Cart = () => {
             },
         })
         .then(response => {
-            setCartItems(response.data.products); // Update state with the entire response data
+            setCartItems(response.data.products);
         })
         .catch(error => {
             console.error('There was an error fetching the cart!', error);
@@ -27,10 +27,9 @@ const Cart = () => {
     }, [cartid]);
 
     const handleBuy = (product) => {
-        console.log(product.productId);
         if (product) {
             const payload = {
-                quantity: product.quantity || 1, // Use product quantity or default to 1
+                quantity: product.quantity || 1,
                 orderDate: new Date().toISOString(),
                 total: parseFloat(product.productPrice) * (product.quantity || 1),
                 buyer: {
@@ -99,34 +98,45 @@ const Cart = () => {
     }, [cartItems]);
 
     return (
-        <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
+        <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Navbar />
-            <Grid container sx={{ height: '100%' }} className="padding-color-outer">
-                <Grid item md={2.61} sx={{ border: '2px solid black', marginRight: 5.94 }}>
-                    <SideBar />
+            <Box sx={{ flexGrow: 1, display: 'flex', padding: 4 }} className="padding-color-outer">
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={3} lg={2.5}>
+                        <SideBar />
+                    </Grid>
+                    <Grid item xs={12} md={9} lg={9.5}>
+                        <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant="h5" sx={{ p: 2, borderBottom: '1px solid #e0e0e0', fontWeight: 'bold' }}>
+                                MY PURCHASE
+                            </Typography>
+                            <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2, maxHeight: 'calc(100vh - 250px)' }}>
+                                {cartItems.length > 0 ? (
+                                    cartItems.map((product) => (
+                                        <CartItem 
+                                            key={product.productId} 
+                                            product={product} 
+                                            onRemoveFromCart={handleRemoveFromCart} 
+                                            onQuantityChange={handleQuantityChange}
+                                            onBuy={() => handleBuy(product)}
+                                        />
+                                    ))
+                                ) : (
+                                    <Typography variant="body1" sx={{ textAlign: 'center', py: 4 }}>Your cart is empty.</Typography>
+                                )}
+                            </Box>
+                            <Box sx={{ p: 2, borderTop: '1px solid #e0e0e0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                    Total Price:
+                                </Typography>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                    ${totalCartPrice}
+                                </Typography>
+                            </Box>
+                        </Paper>
+                    </Grid>
                 </Grid>
-                <Grid item md={7.573} sx={{ backgroundColor: 'white', padding: 4, overflowY: 'auto' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', borderBottom: '2px solid black', marginBottom: 3 }}>
-                        MY PURCHASE
-                    </Typography>
-                    {cartItems.length > 0 ? (
-                        cartItems.map((product) => (
-                            <CartItem 
-                                key={product.productId} 
-                                product={product} 
-                                onRemoveFromCart={handleRemoveFromCart} 
-                                onQuantityChange={handleQuantityChange}
-                                onBuy={() => handleBuy(product)} // Pass handleBuy as a prop
-                            />
-                        ))
-                    ) : (
-                        <Typography variant="body1" sx={{ marginTop: 2 }}>Your cart is empty.</Typography>
-                    )}
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', marginTop: 3 }}>
-                        Total Price: ${totalCartPrice}
-                    </Typography>
-                </Grid>
-            </Grid>
+            </Box>
         </Container>
     );
 };
@@ -144,42 +154,50 @@ const CartItem = ({ product, onRemoveFromCart, onQuantityChange, onBuy }) => {
     const totalPrice = (parseFloat(product.productPrice) * quantity).toFixed(2);
 
     return (
-        <Grid container sx={{ border: '1px solid black', borderRadius: 1, padding: 2, marginBottom: 2, position: 'relative' }}>
-            <Typography variant="body2" sx={{ position: 'absolute', top: 8, right: 8, fontSize: '0.8rem', color: 'gray' }}>
+        <Paper elevation={1} sx={{ p: 2, mb: 2, position: 'relative' }}>
+            <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} sm={2}>
+                    <Box
+                        component="img"
+                        src={imageUrl}
+                        alt={product.productName}
+                        sx={{ width: '100%', height: 'auto', borderRadius: 1, maxWidth: 100 }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{product.productName}</Typography>
+                    <Typography variant="body2">Price: ${parseFloat(product.productPrice).toFixed(2)}</Typography>
+                    <Box sx={{ mt: 1 }}>
+                        <Select
+                            value={quantity}
+                            onChange={handleQuantityChange}
+                            size="small"
+                            sx={{ minWidth: 60 }}
+                        >
+                            {[1, 2, 3, 4, 5].map(num => (
+                                <MenuItem key={num} value={num}>{num}</MenuItem>
+                            ))}
+                        </Select>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Total: ${totalPrice}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                    <Button variant="contained" onClick={onBuy} sx={{ backgroundColor: 'black', color: 'white', '&:hover': { backgroundColor: '#333' } }}>
+                        BUY NOW
+                    </Button>
+                    <Button variant="outlined" color="error" onClick={() => onRemoveFromCart(product.productId)}>
+                        REMOVE
+                    </Button>
+                </Grid>
+            </Grid>
+            <Typography variant="caption" sx={{ position: 'absolute', top: 8, right: 8, color: 'text.secondary' }}>
                 {product.dateAdded}
             </Typography>
-            <Grid item xs={12} md={2}>
-                <Box
-                    component="img"
-                    src={imageUrl}
-                    alt={product.productName}
-                    sx={{ width: '80%', height: 'auto', borderRadius: 1 }}
-                />
-            </Grid>
-            <Grid item xs={12} md={4} sx={{ paddingLeft: 2 }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{product.productName}</Typography>
-                <Typography variant="body2">Price: ${parseFloat(product.productPrice).toFixed(2)}</Typography>
-                <Select
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                    sx={{ minWidth: '40px', height: '30px', fontSize: '0.75rem' }}
-                >
-                    {[1, 2, 3, 4, 5].map(num => (
-                        <MenuItem key={num} value={num}>{num}</MenuItem>
-                    ))}
-                </Select>
-            </Grid>
-            <Grid item xs={12} md={3}>
-                <Typography variant="body2">Total: ${totalPrice}</Typography>
-            </Grid>
-            <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: 'flex-end', position: 'absolute', bottom: '10px', right: '10px' }}>
-                <Button variant="contained" color="primary" onClick={onBuy} sx={{ backgroundColor: 'black', color: 'white', marginRight: 1 }}>BUY NOW</Button>
-                <Button variant="contained" color="error" onClick={() => onRemoveFromCart(product.productId)}>
-                    REMOVE
-                </Button>
-            </Grid>
-        </Grid>
+        </Paper>
     );
 };
 
 export default Cart;
+

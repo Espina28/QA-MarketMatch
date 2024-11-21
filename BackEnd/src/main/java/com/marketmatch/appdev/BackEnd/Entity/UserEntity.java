@@ -24,6 +24,9 @@ public class UserEntity {
 	private String email;
 	private String Password;
 
+	@Column(name = "profilePicture",columnDefinition = "longblob")
+    private byte[] image;
+
 	@JsonManagedReference
 	@OneToOne(mappedBy = "userid")
 	private SellerEntity seller_id;
@@ -112,4 +115,13 @@ public class UserEntity {
 	public void setBuyer(BuyerEntity buyer) {
 		this.buyer = buyer;
 	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+	
 }

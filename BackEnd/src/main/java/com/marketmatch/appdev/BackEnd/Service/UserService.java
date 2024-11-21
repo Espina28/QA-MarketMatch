@@ -78,6 +78,7 @@ public class UserService {
 			user.setStudent_Id(newUserDetails.getStudent_Id());
 			user.setEmail(newUserDetails.getEmail());
 			user.setPassword(newUserDetails.getPassword());
+			user.setImage(newUserDetails.getImage());
 
 
 			

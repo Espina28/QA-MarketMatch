@@ -14,6 +14,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import axios from 'axios';
 import '../App.css';
 
@@ -24,10 +26,9 @@ export default function MyProducts() {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [deleteProductId, setDeleteProductId] = useState(null);
 
-    const sellerId = localStorage.getItem('id'); // Assuming sellerId is stored in localStorage
+    const sellerId = localStorage.getItem('id');
 
     useEffect(() => {
-        // Fetch products for the seller
         axios
             .get(`http://localhost:8080/api/seller/getAll/${sellerId}`, {
                 withCredentials: true,
@@ -37,7 +38,7 @@ export default function MyProducts() {
                 },
             })
             .then((response) => {
-                setProducts(response.data.products || []); // Ensure 'products' is handled properly
+                setProducts(response.data.products || []);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -57,12 +58,15 @@ export default function MyProducts() {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCurrentProduct((prev) => ({ ...prev, [name]: value }));
+        const { name, value, checked } = e.target;
+        if (name === "productStatus") {
+            setCurrentProduct((prev) => ({ ...prev, [name]: checked ? "Available" : "No Stock" }));
+        } else {
+            setCurrentProduct((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSave = () => {
-        // Ensure currentProduct is defined and has necessary properties
         if (!currentProduct) {
             console.error('No product selected for update');
             return;
@@ -124,23 +128,21 @@ export default function MyProducts() {
                 setProducts((prevProducts) =>
                     prevProducts.filter((product) => product.productId !== deleteProductId)
                 );
-                handleDeleteClose(); // Close dialog after successful deletion
+                handleDeleteClose();
                 console.log('Product deleted successfully:', response.data);
             })
             .catch((error) => {
                 console.error('Error deleting product:', error.response?.data || error);
-                handleDeleteClose(); // Close dialog even if deletion fails
+                handleDeleteClose();
             });
     };
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '100vh' }}>
-            {/* Navbar */}
             <Grid sx={{ paddingTop: 1, paddingBottom: 1 }}>
                 <Navbar />
             </Grid>
 
-            {/* Main Grid */}
             <Grid
                 className="padding-color-outer"
                 container
@@ -149,7 +151,6 @@ export default function MyProducts() {
                 wrap="nowrap"
                 sx={{ height: '100%' }}
             >
-                {/* Sidebar */}
                 <Grid size={{ md: 4 }}>
                     <SideBar
                         state={{
@@ -158,14 +159,12 @@ export default function MyProducts() {
                     />
                 </Grid>
 
-                {/* Products Section */}
                 <Grid
                     size={{ md: 8 }}
                     container
                     direction={'column'}
                     sx={{ width: 'auto', backgroundColor: 'white', padding: 4 }}
                 >
-                    {/* Section Title */}
                     <Grid>
                         <Typography variant="h4">My Products</Typography>
                         <Divider
@@ -177,7 +176,6 @@ export default function MyProducts() {
                         />
                     </Grid>
 
-                    {/* Products List */}
                     <Grid
                         container
                         sx={{
@@ -206,7 +204,6 @@ export default function MyProducts() {
                                         maxWidth: '800px',
                                     }}
                                 >
-                                    {/* Product Image */}
                                     <Grid
                                         item
                                         xs={12}
@@ -234,7 +231,6 @@ export default function MyProducts() {
                                         />
                                     </Grid>
 
-                                    {/* Product Details */}
                                     <Grid
                                         item
                                         xs={12}
@@ -253,11 +249,10 @@ export default function MyProducts() {
                                             Price: ${parseFloat(product.productPrice).toFixed(2)}
                                         </Typography>
                                         <Typography variant="body2" sx={{ color: 'gray' }}>
-                                            Status: {product.productStatus === 'Available' ? 'Available' : 'No Stock'}
+                                            Status: {product.productStatus}
                                         </Typography>
                                     </Grid>
 
-                                    {/* Action Buttons */}
                                     <Grid
                                         item
                                         xs={12}
@@ -307,13 +302,11 @@ export default function MyProducts() {
                 </Grid>
             </Grid>
 
-            {/* Edit Product Dialog */}
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                 <Box sx={{ padding: 3 }}>
                     <Typography variant="h6" mb={2}>
                         Edit Product
                     </Typography>
-                    {/* Display Product Image */}
                     <Box sx={{ textAlign: 'center', marginTop: 1 }}>
                     <IconButton
                         color="primary"
@@ -361,7 +354,7 @@ export default function MyProducts() {
                                         const imageData = reader.result.replace(/^data:image\/[a-z]+;base64,/, '');
                                         setCurrentProduct((prev) => ({
                                             ...prev,
-                                            image: imageData, // Set Base64 image data
+                                            image: imageData,
                                         }));
                                     };
                                     reader.readAsDataURL(file);
@@ -371,7 +364,6 @@ export default function MyProducts() {
                     </IconButton>
                 </Box>
 
-                    {/* Form Fields */}
                     <TextField
                         fullWidth
                         margin="normal"
@@ -406,6 +398,16 @@ export default function MyProducts() {
                         value={currentProduct?.productStock || ''}
                         onChange={handleChange}
                     />
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={currentProduct?.productStatus === "Available"}
+                                onChange={handleChange}
+                                name="productStatus"
+                            />
+                        }
+                        label={currentProduct?.productStatus === "Available" ? "Available" : "No Stock"}
+                    />
                     <Box mt={3} display="flex" justifyContent="space-between">
                         <Button variant="outlined" onClick={handleClose}>
                             Cancel
@@ -416,17 +418,16 @@ export default function MyProducts() {
                     </Box>
                 </Box>
             </Dialog>
-            {/* Custom Delete Confirmation Dialog */}
             <Dialog
                 open={openDeleteDialog}
                 onClose={handleDeleteClose}
                 maxWidth="sm"
                 fullWidth
                 sx={{
-                    backgroundColor: 'transparent',  // Make dialog's background transparent
-                    boxShadow: 'none',                // Remove box shadow to blend with the background
-                    backdropFilter: 'blur(5px)',      // Optional: Add blur effect for the page content
-                    zIndex: 1000,                    // Ensure the dialog is on top of other elements
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    backdropFilter: 'blur(5px)',
+                    zIndex: 1000,
                 }}
             >
                 <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold' }}>
@@ -449,3 +450,4 @@ export default function MyProducts() {
         </Container>
     );
 }
+

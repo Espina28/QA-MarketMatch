@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import SideBar from '../components/SideBar';
 import Grid from '@mui/material/Grid2';
-import { IconButton, imageListClasses,FormControlLabel,Switch } from '@mui/material';
+import { IconButton, FormControlLabel, Switch } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
@@ -29,29 +29,27 @@ const UnderlinedText = styled(Typography)({
         backgroundColor: 'black',
         transform: 'scaleX(1)',
         transformOrigin: 'bottom left',
-        },
-    });
+    },
+});
 
 export default function UploadProduct() {
-
     const [id, setId] = useState(null);
 
     useEffect(() => {
         setId(localStorage.getItem('id'));
-    })
+    }, []);
 
     const [product, setProduct] = useState({
         productName: '',
         productPrice: '',
         productStock: '',
-        productStatus: 'No Stock',
+        productStatus: 'Available', // Default set to 'Available'
         productDescription: '',
         image: null,
         productTimeCreated: new Date().toISOString(),
-        sellerid:{ seller_id: localStorage.getItem('id') },
+        sellerid: { seller_id: localStorage.getItem('id') },
     });
     const [image, setImage] = useState(null);
-
 
     const handleChange = (e) => {
         if (e.target.type === 'file') {
@@ -59,13 +57,19 @@ export default function UploadProduct() {
             const reader = new FileReader();
             reader.onload = () => {
                 setImage(reader.result);
-                const imageData = reader.result.replace(/^data:image\/[a-z]+;base64,/, ''); // Remove the prefix
+                const imageData = reader.result.replace(/^data:image\/[a-z]+;base64,/, '');
                 setProduct({
                     ...product,
-                    image: imageData, // Set only the Base64 data
+                    image: imageData,
                 });
             };
             reader.readAsDataURL(file);
+        } else if (e.target.type === 'number') {
+            const value = e.target.value === '' ? '' : Number(e.target.value);
+            setProduct({
+                ...product,
+                [e.target.name]: value,
+            });
         } else {
             setProduct({
                 ...product,
@@ -73,13 +77,15 @@ export default function UploadProduct() {
             });
         }
     };
+
     const handleSwitchChange = (event) => {
-        const status = event.target.checked ? 'Available' : 'No Stock'; // 'checked' is true when the switch is on
+        const status = event.target.checked ? 'Available' : 'No Stock';
         setProduct({
             ...product,
-            productStatus: status, // Update the status based on switch
+            productStatus: status,
         });
     };
+
     const handleSave = async () => {
         console.log('Payload:', product);
         try {
@@ -110,22 +116,22 @@ export default function UploadProduct() {
             console.error(error);
             alert('Error saving product!');
         }
-        
     };
+
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '90vh' }}>
             <Grid>
                 <Navbar/>
             </Grid>
             <Grid container direction={'row'} spacing={6} sx={{ height: '101.5%' }} className="padding-color-outer">
-                <Grid  md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>
-                <SideBar 
-                    state={{ 
-                    userData: location.state ? location.state.userData : null
-                    }} 
-                />
+                <Grid md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>
+                    <SideBar 
+                        state={{ 
+                            userData: location.state ? location.state.userData : null
+                        }} 
+                    />
                 </Grid>
-                <Grid  md={8} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
+                <Grid md={8} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
                     <Box textAlign="center" mb={3}>
                         <UnderlinedText variant="h6" component="span">
                             UPLOAD PRODUCT
@@ -135,23 +141,42 @@ export default function UploadProduct() {
                         <Grid container direction="column" spacing={2}>
                             <Grid container direction="row" spacing={2}>
                                 <Grid container direction="column" spacing={2} sx={{ width: '500px' }}>
-                                    <Grid >
+                                    <Grid>
                                         <TextField fullWidth label="Product Name" name="productName" variant="outlined" className="customTextField" onChange={handleChange} />
                                     </Grid>
-                                    <Grid >
-                                        <TextField fullWidth label="Product Price" name="productPrice" variant="outlined" className="customTextField" onChange={handleChange} />
+                                    <Grid>
+                                        <TextField 
+                                            fullWidth 
+                                            label="Product Price" 
+                                            name="productPrice" 
+                                            variant="outlined" 
+                                            className="customTextField" 
+                                            onChange={handleChange}
+                                            type="number"
+                                            inputProps={{ min: 0, step: 0.01 }}
+                                        />
                                     </Grid>
-                                    <Grid >
-                                        <TextField fullWidth label="Product Stock" name="productStock" variant="outlined" className="customTextField" onChange={handleChange} />
+                                    <Grid>
+                                        <TextField 
+                                            fullWidth 
+                                            label="Product Stock" 
+                                            name="productStock" 
+                                            variant="outlined" 
+                                            className="customTextField" 
+                                            onChange={handleChange}
+                                            type="number"
+                                            inputProps={{ min: 0, step: 1 }}
+                                        />
                                     </Grid>
                                     <Grid container direction="column" spacing={2}>
                                         <Grid>
                                             <FormControlLabel
                                                 control={
                                                     <Switch
-                                                        checked={product.productStatus === 'Available'} // Check if status is 'Available'
+                                                        checked={product.productStatus === 'Available'}
                                                         onChange={handleSwitchChange}
                                                         color="primary"
+                                                        defaultChecked
                                                     />
                                                 }
                                                 label={<Typography variant="body1">{product.productStatus}</Typography>}
@@ -160,7 +185,7 @@ export default function UploadProduct() {
                                     </Grid>
                                 </Grid>
                                 
-                                <Grid > 
+                                <Grid> 
                                     <Box
                                         sx={{
                                             border: '2px dashed grey',
@@ -174,7 +199,7 @@ export default function UploadProduct() {
                                             gap: 1,
                                         }}
                                     >
-                                        {image ? ( // Conditionally render the image
+                                        {image ? (
                                             <Box
                                                 component="img"
                                                 src={image}
@@ -186,11 +211,11 @@ export default function UploadProduct() {
                                                     marginTop: 1,
                                                 }}
                                             />
-                                        ):(
+                                        ) : (
                                             <Box sx={{ textAlign: 'center', marginTop: 1 }}>
                                                 <IconButton color="primary" aria-label="upload image" component="label">
-                                                <input hidden accept="image/*" type="file" onChange={handleChange}/>
-                                                <CloudUploadIcon sx={{ fontSize: 50 }} />
+                                                    <input hidden accept="image/*" type="file" onChange={handleChange}/>
+                                                    <CloudUploadIcon sx={{ fontSize: 50 }} />
                                                 </IconButton>
                                                 <Typography variant="body2">Upload an image</Typography>
                                             </Box>
@@ -218,3 +243,4 @@ export default function UploadProduct() {
         </Container>
     );
 }
+

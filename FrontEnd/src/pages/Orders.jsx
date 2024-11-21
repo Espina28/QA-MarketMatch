@@ -1,80 +1,21 @@
-import Navbar from '../components/Navbar'
-import Container from '@mui/material/Container'
-import SideBar from '../components/SideBar'
-import Grid from '@mui/material/Grid2'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import '../App.css' /*<---- custom css*/
-
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Alert from '@mui/material/Alert';
-
+import React, { useState, useEffect } from 'react';
+import { Container, Grid, Typography, Box, Button, Divider, Paper } from '@mui/material';
+import SideBar from '../components/SideBar';
+import Navbar from '../components/Navbar';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-import {useState, useEffect} from 'react'
-import axios from "axios"
-import { useLocation } from 'react-router-dom'
 
 export default function Orders() {
     const [products, setProducts] = useState(null);
     const location = useLocation();
     const [userData, setUserData] = useState();
-    const [open, setOpen] = useState(false);
-    const [selectedProductId, setSelectedProductId] = useState(null); // For keeping track of the product to delete
 
     useEffect(() => {
         if (location.state && location.state.userData) {
             setUserData(location.state.userData);
         }
     }, [location]);
-
-    useEffect(() => {
-        if (userData) {
-            console.log('Updated userData:', userData);
-        }
-    }, [userData]);
-
-    const handleClickOpenDialog = (productId) => {
-        console.log("Opening dialog for product ID:", productId);
-        setSelectedProductId(productId); // Set the product ID to be deleted
-        setOpen(true);
-    };
-
-    const handleCloseDialog = () => {
-        setOpen(false);
-        setSelectedProductId(null); // Clear the selected product ID
-    };
-
-    const handleDelete = () => {
-        console.log('Deleting product with ID:', selectedProductId);
-        if (!selectedProductId) return;
-
-        axios.delete(`http://localhost:8080/api/buy/delete/${selectedProductId}`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            },
-        })
-            .then((response) => {
-                console.log(response.data);
-                alert('Order canceled successfully!');
-                setProducts((prevProducts) =>
-                    prevProducts.filter((product) => product.buyId !== selectedProductId)
-                );
-            })
-            .catch((error) => {
-                console.error('Error canceling order:', error);
-                alert('Failed to cancel the order. Please try again.');
-            })
-            .finally(() => {
-                handleCloseDialog(); // Close the dialog after the request
-            });
-    };
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/buy/purchase', {
@@ -89,7 +30,6 @@ export default function Orders() {
             .then((response) => {
                 setProducts(response.data);
                 console.log(response.data);
-                console.log('success!');
             })
             .catch((error) => {
                 console.error('Error fetching products:', error);
@@ -97,106 +37,70 @@ export default function Orders() {
     }, []);
 
     return (
-        <Container maxWidth={false} disableGutters>
-            <Grid sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Navbar />
-            </Grid>
-            <Grid className="padding-color-outer" container direction={'row'} spacing={3} wrap='nowrap' sx={{ height: '50%' }}>
-                <Grid size={{ md: 3 }} sx={{ maxWidth: '100%', border: '2px solid black' }}>
-                    <SideBar
-                        state={{
-                            userData: location.state ? location.state.userData : null,
-                        }}
-                    />
-                </Grid>
-                <Grid size={{ md: 9 }} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
-                    <Grid>
-                        <Typography variant='h4'>My Orders</Typography>
-                        <Divider sx={{ borderBottomWidth: 2, borderColor: 'black', margin: '20px 0' }} />
+        <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <Navbar />
+            <Box sx={{ flexGrow: 1, display: 'flex', padding: 4 }} className="padding-color-outer">
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={3} lg={2.5}>
+                        <SideBar />
                     </Grid>
-                    <Grid container spacing={2} className=""
-                        sx={{
-                            maxHeight: '600px',
-                            overflowY: 'auto',
-                            overflowX: 'hidden',
-                            border: '1px solid black',
-                            height: '600px',
-                            display: 'flex',
-                        }}>
-                        {products ? products.map((product, index) => (
-                            <PrintProducts key={index} product={product} onDelete={handleClickOpenDialog} />
-                        )) : <Typography>No products found.</Typography>}
+                    <Grid item xs={12} md={9} lg={9.5}>
+                        <Paper elevation={3} sx={{ padding: 4 }}>
+                            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>My Orders</Typography>
+                            <Divider sx={{ mb: 2 }} />
+                            <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', p: 2 }}>
+                                {products ? products.map((product, index) => (
+                                    <OrderCard key={index} product={product} />
+                                )) : <Typography>No products found.</Typography>}
+                            </Box>
+                        </Paper>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Dialog
-                open={open}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Are sure you want to cancel your order?"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        You can't undo this operation.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button variant='contained' onClick={handleCloseDialog}
-                        sx={{
-                            background: "rgba(112, 5, 5, 1)",
-                            "&:hover": {
-                                background: "rgba(140, 10, 10, 1)",
-                            },
-                        }}
-                    >Cancel</Button>
-                    <Button variant='contained' color="success" onClick={handleDelete} autoFocus>
-                        Proceed
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            </Box>
         </Container>
     );
+}
 
-    function PrintProducts(props) {
-        return (
-            <Grid container spacing={2} direction={'row'} sx={{ border: '1px solid grey', padding: '.5rem', width: '100%' }}>
-                <Grid size={{ md: 3 }}>
-                    {props.product.product.image ? (
-                        <img
-                            width="200px"
-                            src={`data:image/jpeg;base64,${props.product.product.image}`}
-                            alt="product image"
-                        />
-                    ) : (
-                        <img
-                            width="200px"
-                            src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                            alt="placeholder image"
-                        />
-                    )}
-                </Grid>
-                <Grid size={{ md: 6 }} container direction={'column'}>
-                    <Typography variant="h6">{props.product.product.productName}</Typography>
-                    <Typography variant="h6">{props.product.product.productDescription}</Typography>
-                    <Typography variant="h5">
-                        2x
-                    </Typography>
-                </Grid>
-                <Grid container direction={'column'} size={{ md: 3 }}>
-                    <Typography>Order Ordered: 12/12/2020</Typography>
-                    <Button variant='contained' startIcon={<DeleteIcon />} onClick={() => props.onDelete(props.product.buyId)}
+function OrderCard({ product }) {
+    return (
+        <Paper elevation={2} sx={{ p: 2, mb: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center' }}>
+            <Box sx={{ width: { xs: '100%', sm: '200px' }, mb: { xs: 2, sm: 0 }, mr: { sm: 3 } }}>
+                {product.product.image ? (
+                    <img
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '4px' }}
+                        src={`data:image/jpeg;base64,${product.product.image}`}
+                        alt="product"
+                    />
+                ) : (
+                    <img
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '4px' }}
+                        src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                        alt="placeholder"
+                    />
+                )}
+            </Box>
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <Box>
+                    <Typography variant="h6" gutterBottom>{product.product.productName}</Typography>
+                    <Typography variant="body2" gutterBottom>{product.product.productDescription}</Typography>
+                    <Typography variant="h6" gutterBottom>Quantity: 2x</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                    <Typography variant="body2">Order Date: 12/12/2020</Typography>
+                    <Button
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
                         sx={{
                             background: "rgba(112, 5, 5, 1)",
                             "&:hover": {
                                 background: "rgba(140, 10, 10, 1)",
                             },
                         }}
-                    >Cancel</Button>
-                </Grid>
-            </Grid>
-        );
-    }
+                    >
+                        Cancel
+                    </Button>
+                </Box>
+            </Box>
+        </Paper>
+    );
 }
