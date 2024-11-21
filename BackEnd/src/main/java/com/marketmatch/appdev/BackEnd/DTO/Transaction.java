@@ -1,6 +1,7 @@
 package com.marketmatch.appdev.BackEnd.DTO;
 
 public class Transaction {
+    private int buyId;
     private String customerName;
     private String productName;
     private int quantity;
@@ -9,11 +10,20 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String Firstname,String Lastname ,String productName, int quantity, double total) {
+    public Transaction(int buyId, String Firstname,String Lastname ,String productName, int quantity, double total) {
         this.customerName = Firstname + ' ' + Lastname;
         this.productName = productName;
         this.quantity = quantity;
         this.total = total;
+        this.buyId = buyId;
+    }
+
+    public void setBuyId(int buyId){
+        this.buyId = buyId;
+    }
+
+    public int getBuyIdId(){
+        return this.buyId;
     }
 
     public String getCustomerName() {

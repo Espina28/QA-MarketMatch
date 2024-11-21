@@ -18,25 +18,75 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 export default function Transactions() {
 
-        const [open, setOpen] = useState(false);
+        const [openComplete, setOpenComplete] = useState(false);
+        const [openCancel, setCancel] = useState(false);
+
+        const [deleteItem, setDeleteItem] = useState(null);
+
         const [transactions, setTransactions] = useState(null)
 
-        const handleClickOpenDialog = () => {
-            console.log("opening!!")
-            setOpen(true);
+        //Complete
+        const openCompleteDialog = (buyIdId) => {
+            console.log("opening!! ", buyIdId)
+
+            setDeleteItem(buyIdId)
+            setOpenComplete(true);
         };
 
-        const handleCloseDialog = () => {
+        const closeCompleteDialog = () => {
             console.log("closing")
-            setOpen(false);
+            setOpenComplete(false);
         };
-
-        const closeDialogQuery = () => {
+        const completeDialogQuery = () => {
 
             //query axios here
             console.log('Querying!!')
-            setOpen(false);
+
+            // axios.delete(`http://localhost:8080/api/buy/delete/${deleteItem}`)
+            // .then(response => {
+            //     console.log('Item deleted successfully:', response.data);
+            //     const newTransactions = transactions.filter((transactions)=>transactions.buyIdId ===  deleteItem)
+            //     setTransactions(newTransactions)
+            //     setDeleteItem(null)
+            // })
+            // .catch(error => {
+            //     console.error('Error deleting item:', error);
+            // });
+            const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
+            setTransactions(newTransactions)
+            setDeleteItem(null)
+            setOpenComplete(false);
         };
+
+
+        
+        //Cancel
+        const openCancelDialog = (buyIdId) => {
+            console.log("opening!!")
+            setDeleteItem(buyIdId)
+            setCancel(true);
+        };
+
+        const closeCancelDialog = () => {
+            console.log("closing")
+            setCancel(false);
+        };
+        const cancelDialogQuery = () => {
+
+            //query axios here
+            console.log('Querying!!')
+
+            // axios.delete('http://localhost:8080/api/seller/transactions',{
+            //     params: {
+
+            //     }
+            // })
+            const newTransactions = transactions.filter((transactions)=>transactions.buyIdId !==  deleteItem)
+            setTransactions(newTransactions)
+            setDeleteItem(null)
+            setCancel(false);
+        };
+
 
       useEffect(()=>{
         axios.get("http://localhost:8080/api/seller/transactions",{
@@ -104,13 +154,13 @@ export default function Transactions() {
                 </Grid>
             </Grid>
             <Dialog
-                open={open}
-                onClose={handleCloseDialog}
+                open={openComplete}
+                onClose={closeCompleteDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >  
                 <DialogTitle id="alert-dialog-title">
-                {" Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi, ea?"}
+                {"Do you want to complete this transaction?"}
                 </DialogTitle>
                 <DialogContent>
                 <DialogContentText id="alert-dialog-description">
@@ -118,7 +168,7 @@ export default function Transactions() {
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                <Button variant='contained' onClick={handleCloseDialog}
+                <Button variant='contained' onClick={closeCompleteDialog}
                 sx={{
                     background: "rgba(112, 5, 5, 1)",
                     "&:hover": {
@@ -126,7 +176,37 @@ export default function Transactions() {
                     },
                 }}
                 >Cancel</Button>
-                <Button variant='contained' color="success" onClick={closeDialogQuery} autoFocus>
+                <Button variant='contained' color="success" onClick={completeDialogQuery} autoFocus>
+                    Proceed
+                </Button>
+                </DialogActions>
+            </Dialog>
+            {/** */}
+
+            <Dialog
+                open={openCancel}
+                onClose={closeCancelDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >  
+                <DialogTitle id="alert-dialog-title">
+                {"Do you want to delete this transaction?"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    You can't undo this operation
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button variant='contained' onClick={closeCancelDialog}
+                sx={{
+                    background: "rgba(112, 5, 5, 1)",
+                    "&:hover": {
+                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
+                    },
+                }}
+                >Cancel</Button>
+                <Button variant='contained' color="success" onClick={cancelDialogQuery} autoFocus>
                     Proceed
                 </Button>
                 </DialogActions>
@@ -149,8 +229,8 @@ export default function Transactions() {
                     </Grid>
                 </Grid>
                 <Grid item sx={{ marginLeft: 'auto'}}>
-                    <Button variant="contained" onClick={handleClickOpenDialog} color="success">COMPLETE</Button> &nbsp;
-                    <Button variant='contained' onClick={handleClickOpenDialog}
+                    <Button variant="contained" onClick={()=> openCompleteDialog(data.buyIdId)} color="success">COMPLETE</Button> &nbsp;
+                    <Button variant='contained' onClick={()=>openCancelDialog(data.buyIdId)}
                         sx={{
                             background: "rgba(112, 5, 5, 1)",
                             "&:hover": {
