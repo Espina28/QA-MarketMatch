@@ -7,6 +7,13 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import '../App.css' /*<---- custom css*/
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Alert from '@mui/material/Alert';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import {useState, useEffect} from 'react'
@@ -18,6 +25,7 @@ export default function Orders(){
     const [products, setProducts] = useState(null);
     const location = useLocation();
     const [userData, setUserData] = useState();
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         // Safely check if location.state and location.state.userData are defined
@@ -30,142 +38,132 @@ export default function Orders(){
         if (userData) {
           console.log('Updated userData:', userData); // This will log after the state is updated
         }
-      }, [userData]); 
+      }, [userData]);
+      
+      const handleClickOpenDialog = () => {
+        setOpen(true);
+      };
 
-    // useEffect(()=>{  
-    //     axios.get("http://localhost:8080/api/product/buyer/purchase", {
-    //         params: {
-    //             buyerPk: 2   //<---change this
-    //         }
-    //     }).then((response) => {
-    //         setProducts(response.data);
-    //     }).catch((error)=>{
-    //         console.error("Error fetching products:", error);
-    //     });
-    // },[])
+      const handleCloseDialog = () => {
+        setOpen(false);
+      };
+
+      const closeDialogQuery = () => {
+        //query axios here
+        console.log('Querying!!')
+        
+        setOpen(false);
+      };
+    
+
+      useEffect(() => {
+        axios.get("http://localhost:8080/api/buy/purchase", {
+            params: {
+                email: "espina@cit.edu" // Send email as query parameter
+            },
+            auth: {
+                username: "espina@cit.edu",
+                password: "12345"
+            }
+        })
+        .then((response) => {
+            setProducts(response.data); // Save fetched products
+            console.log(response)
+            console.log('success!')
+        })
+        .catch((error) => {
+            console.error("Error fetching products:", error);
+        });
+    }, []);
+    
 
 
     return (
-        <Container maxWidth={false} disableGutters  sx={{height: '100vh'}} >
+        <Container maxWidth={false} disableGutters >
             <Grid sx={{paddingTop: 1, paddingBottom: 1}}>
                 <Navbar/> 
             </Grid>
-            <Grid className="padding-color-outer" container direction={'row'}  spacing={3} wrap='nowrap' sx={{height: '100%'}}>
-                <Grid size={{md: 4}}  sx={{maxWidth: '100%', border: '2px solid black'}}>
+            <Grid className="padding-color-outer" container direction={'row'}  spacing={3} wrap='nowrap' sx={{height: '50%'}}>
+                <Grid size={{md: 3}}  sx={{maxWidth: '100%', border: '2px solid black'}}>
                 <SideBar 
                     state={{ 
                     userData: location.state ? location.state.userData : null
                     }} 
                 />
                 </Grid>
-                <Grid size={{md: 8}} container direction={'column'} sx={{backgroundColor: 'white', padding: 4}}>
+                <Grid size={{md: 9}} container direction={'column'} sx={{backgroundColor: 'white', padding: 4}}>
                     <Grid>
                         <Typography variant='h4'>My Orders</Typography>
                         <Divider sx={{ borderBottomWidth: 2, borderColor: 'black', margin: '20px 0' }} />
                     </Grid>
                     <Grid container spacing={2} className=""
                         sx={{
-                            maxHeight: '450px',  // Set the maximum height as needed
+                            maxHeight: '600px',  // Set the maximum height as needed
                             overflowY: 'auto',   // Enable vertical scrolling
                             overflowX: 'hidden', // Prevent horizontal scrolling (optional)
                             border: '1px solid black',
-                            height: '450px',
+                            height: '600px',
                             display: 'flex'
                         }}>
                         {/* Your content goes here */}
                         {
-                            // products ? products.map((product, index) => (
-                            //     <PrintProducts key={index} product={product} />
-                            // )) : <Typography>No products found.</Typography> // Optional fallback
+                            products ? products.map((product, index) => (
+                                <PrintProducts key={index} product={product} />
+                            )) : <Typography>No products found.</Typography> // Optional fallback
                         }      
-                        <Grid container alignItems="center" spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem'}}>
-                            <Grid size={{md: 3}}>
-                                <img width ='200px' src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image"/>
-                            </Grid>
-                            <Grid size={{md: 6}} container direction={'column'}>
-                                <Typography variant="h6">T-shirt</Typography>
-                                <Typography variant="h6">Lorem ipsum dolor sit amet consectetur adipisicing... </Typography>
-                                <Typography variant="h5">
-                                        2x
-                                </Typography>
-                            </Grid>
-                            <Grid container direction={'column'} size={{md: 3}}>
-                                <Typography>Order Ordered: 12/12/2020</Typography>
-                                <Button variant='contained' startIcon={<DeleteIcon />}
-                                sx={{
-                                    background: 'black'
-                                }}>Cancel</Button>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem'}}>
-                            <Grid size={{md: 3}}>
-                                <img width ='200px' src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image"/>
-                            </Grid>
-                            <Grid size={{md: 6}} container direction={'column'}>
-                                <Typography variant="h6">T-shirt</Typography>
-                                <Typography variant="h6">Lorem ipsum dolor sit amet consectetur adipisicing... </Typography>
-                                <Typography variant="h5">
-                                        2x
-                                </Typography>
-                            </Grid>
-                            <Grid container direction={'column'} size={{md: 3}}>
-                                <Typography>Order Ordered: 12/12/2020</Typography>
-                                <Button variant='contained' startIcon={<DeleteIcon />}
-                                sx={{
-                                    background: 'black'
-                                }}>Cancel</Button>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem'}}>
-                            <Grid size={{md: 3}}>
-                                <img width ='200px' src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image"/>
-                            </Grid>
-                            <Grid size={{md: 6}} container direction={'column'}>
-                                <Typography variant="h6">T-shirt</Typography>
-                                <Typography variant="h6">Lorem ipsum dolor sit amet consectetur adipisicing... </Typography>
-                                <Typography variant="h5">
-                                        2x
-                                </Typography>
-                            </Grid>
-                            <Grid container direction={'column'} size={{md: 3}}>
-                                <Typography>Order Ordered: 12/12/2020</Typography>
-                                <Button variant='contained' startIcon={<DeleteIcon />}
-                                sx={{
-                                    background: 'black'
-                                }}>Cancel</Button>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem'}}>
-                            <Grid size={{md: 3}}>
-                                <img width ='200px' src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" alt="product image"/>
-                            </Grid>
-                            <Grid size={{md: 6}} container direction={'column'}>
-                                <Typography variant="h6">T-shirt</Typography>
-                                <Typography variant="h6">Lorem ipsum dolor sit amet consectetur adipisicing... </Typography>
-                                <Typography variant="h5">
-                                        2x
-                                </Typography>
-                            </Grid>
-                            <Grid container direction={'column'} size={{md: 3}}>
-                                <Typography>Order Ordered: 12/12/2020</Typography>
-                                <Button variant='contained' startIcon={<DeleteIcon />}
-                                sx={{
-                                    background: 'black'
-                                }}>Cancel</Button>
-                            </Grid>
-                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>  
+            </Grid>
+            <Dialog
+                open={open}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Are sure you want to cancel your order?"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    You can't undo this operation
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button variant='contained' onClick={handleCloseDialog}
+                sx={{
+                    background: "rgba(112, 5, 5, 1)",
+                    "&:hover": {
+                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
+                    },
+                }}
+                >Cancel</Button>
+                <Button variant='contained' color="success" onClick={closeDialogQuery} autoFocus>
+                    Proceed
+                </Button>
+                </DialogActions>
+            </Dialog>  
         </Container>
     )
-}
 
+
+    
 function PrintProducts(props){
     return (
-        <Grid container alignItems="center" spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem'}}>
-            <Grid size={{md: 3}}>
-                <img width ='200px' src={`data:image/jpeg;base64,${props.product.image}`} alt="product image"/>
+        <Grid container spacing={2} direction={'row'} sx={{border: '1px solid grey', padding: '.5rem', width: '100%'}}>
+             <Grid size={{md: 3}}>
+                {props.product.image ? (
+                    <img
+                        width="200px"
+                        src={`data:image/jpeg;base64,${props.product.image}`}
+                        alt="product image"
+                    />
+                ) : ( 
+                    <img
+                        width="200px"
+                        src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                        alt="placeholder image"
+                    />
+                )}
             </Grid>
             <Grid size={{md: 6}} container direction={'column'}>
                 <Typography variant="h6">{props.product.productName}</Typography>
@@ -176,11 +174,16 @@ function PrintProducts(props){
             </Grid>
             <Grid container direction={'column'} size={{md: 3}}>
                 <Typography>Order Ordered: 12/12/2020</Typography>
-                <Button variant='contained' startIcon={<DeleteIcon />}
+                <Button variant='contained' startIcon={<DeleteIcon />} onClick={handleClickOpenDialog}  
                 sx={{
-                    background: 'black'
-                }}>Cancel</Button>
+                    background: "rgba(112, 5, 5, 1)",
+                    "&:hover": {
+                    background: "rgba(140, 10, 10, 1)", // Optional: Add hover color
+                    },
+                }}
+                >Cancel</Button>
             </Grid>
         </Grid>
     )
+}
 }

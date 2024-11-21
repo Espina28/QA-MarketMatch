@@ -8,6 +8,7 @@ import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
 import com.marketmatch.appdev.BackEnd.Repository.BuyRepo;
 import com.marketmatch.appdev.BackEnd.Repository.BuyerRepo;
 import com.marketmatch.appdev.BackEnd.Repository.ProductRepo;
+import com.marketmatch.appdev.BackEnd.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class BuyService {
 
     @Autowired
     BuyerRepo buyer_repo;
+
+    @Autowired
+    UserRepo user_repo;
 
     @Autowired
     ProductRepo prod_repo;
@@ -60,6 +64,10 @@ public class BuyService {
         return buy_repo.save(item);
     }
 
+    public List<ProductEntity> getPurchased(String email){
+        int buyerId = user_repo.findByEmail(email).getUserId();
+        return buy_repo.getPurchased(buyerId);
+    }
 
     public BuyEntity editBoughtItem(int id, BuyEntity itemDetail) {
         BuyEntity newItem = new BuyEntity();
