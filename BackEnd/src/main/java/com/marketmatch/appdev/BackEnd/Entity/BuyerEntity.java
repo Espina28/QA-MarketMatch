@@ -20,7 +20,7 @@ public class BuyerEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @JsonManagedReference("buyer-reference")
+    @JsonManagedReference
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     private List<BuyEntity> bought;
 

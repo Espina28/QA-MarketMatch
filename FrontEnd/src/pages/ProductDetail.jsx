@@ -69,7 +69,7 @@ export default function ProductLayout() {
                 buyer: {
                     buyerId: localStorage.getItem("id"), 
                 },
-                productId: {
+                product: {
                     productId: productId, 
                 },
             };

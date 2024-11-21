@@ -29,7 +29,7 @@ public class BuyController {
 
     @PostMapping("/create")
     public BuyEntity buyItem(@RequestBody BuyEntity payload){
-        System.out.println("Received Payload: " + payload);
+        System.out.println("Received Payload: " + payload.getProduct());
         return buy_serv.buyItem(payload);
     }
 

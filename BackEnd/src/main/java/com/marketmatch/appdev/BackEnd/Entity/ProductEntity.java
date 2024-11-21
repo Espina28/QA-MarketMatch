@@ -48,7 +48,7 @@ public class ProductEntity {
     @JoinColumn(name = "seller_id")
     private  SellerEntity sellerid;
 
-    @OneToMany(mappedBy = "productId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<BuyEntity> bought;
 
     public ProductEntity() {
