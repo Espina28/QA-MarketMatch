@@ -60,6 +60,40 @@ export default function ProductLayout() {
           }
       };
 
+      const handleBuy = () => {
+        if (products) {
+            const payload = {
+                quantity: 1, 
+                orderDate: new Date().toISOString(), 
+                total: parseFloat(products.productPrice),
+                buyer: {
+                    buyerId: localStorage.getItem("id"), 
+                },
+                productId: {
+                    productId: productId, 
+                },
+            };
+    
+            axios.post('http://localhost:8080/api/buy/create', payload, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            })
+            .then(response => {
+                console.log("Purchase successful:", response.data);
+                alert("Purchase successful!");
+            })
+            .catch(error => {
+                console.error("Error during purchase:", error);
+                alert("Failed to complete the purchase. Please try again.");
+            });
+        } else {
+            console.log("Product data is not available yet. Please wait.");
+        }
+    };
+
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '91.4vh', padding: 0 }}>
             <Navbar />
@@ -140,18 +174,10 @@ export default function ProductLayout() {
                             <Grid container spacing={2} direction={'column'}>
                                 <Grid container direction={'row'}>
                                     <Grid item marginLeft={10} marginRight={8}>
-                                        <Button variant="contained" sx={{ backgroundColor: 'black', color: 'white',padding: '15px 50px' }}>Buy Now</Button>
+                                        <Button variant="contained" onClick={handleBuy} sx={{ backgroundColor: 'black', color: 'white',padding: '15px 50px' }}>Buy Now</Button>
                                     </Grid>
                                     <Grid item>
                                         <Button variant="outlined" onClick={handleAddToCart} sx={{padding: '15px 50px' }}>Add to Cart</Button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container direction={'row'}>
-                                    <Grid item marginLeft={42}>
-                                        <Button variant="contained" color="error">Report</Button>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button variant="contained" sx={{ backgroundColor: '#00BFFF', color: 'white' }}>Share</Button>
                                     </Grid>
                                 </Grid>
                             </Grid>

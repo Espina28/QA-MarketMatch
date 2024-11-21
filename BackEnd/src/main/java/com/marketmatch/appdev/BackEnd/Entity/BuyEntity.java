@@ -14,15 +14,13 @@ public class BuyEntity {
     private String orderDate;
     private double total;
 
-    @JsonBackReference("buyer-reference")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "buyer_id")
     private BuyerEntity buyer;
 
-    @JsonBackReference("product-reference")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
-    private ProductEntity product;
+    @JoinColumn(name = "productId")
+    private ProductEntity productId;
 
 
     public int getBuyId() {
@@ -57,19 +55,19 @@ public class BuyEntity {
         this.total = total;
     }
 
-    public BuyerEntity getBuyer() {
-        return buyer;
-    }
+    // public BuyerEntity getBuyer() {
+    //     return buyer;
+    // }
 
     public void setBuyer(BuyerEntity buyer) {
         this.buyer = buyer;
     }
 
     public ProductEntity getProduct() {
-        return product;
+        return productId;
     }
 
-    public void setProduct(ProductEntity product) {
-        this.product = product;
+    public void setProduct(ProductEntity productId) {
+        this.productId = productId;
     }
 }

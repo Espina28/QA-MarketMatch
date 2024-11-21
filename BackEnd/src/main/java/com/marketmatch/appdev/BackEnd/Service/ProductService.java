@@ -73,25 +73,20 @@ public class ProductService {
         return prodrepo.findBysellerid(id);
     }
 
-    //UPDATE
-    @SuppressWarnings("finally")
-    public ProductEntity updateProduct(int productId, ProductEntity productName) {
-        ProductEntity product = new ProductEntity();
-        try {
-            product = prodrepo.findById(productId).get();
-
-            product.setProductName(productName.getProductName());
-            product.setProductDescription(productName.getProductDescription());
-            product.setProductPrice(productName.getProductPrice());
-            product.setProductStock(productName.getProductStock());
-            product.setProductStatus(productName.getProductStatus());
-            product.setProductTimeCreated(productName.getProductTimeCreated());
-            return prodrepo.save(product);
-        } catch(NoSuchElementException nex){
-            throw new NameNotFoundException("Product " + productId + " not found");
-        }finally {
-            return prodrepo.save(product);
-        }
+    public ProductEntity updateProduct(int productId, ProductEntity updatedProduct) {
+        ProductEntity product = prodrepo.findByproductId(productId);
+    
+        // Update only the specified fields
+        product.setProductName(updatedProduct.getProductName());
+        product.setProductDescription(updatedProduct.getProductDescription());
+        product.setProductPrice(updatedProduct.getProductPrice());
+        product.setProductStock(updatedProduct.getProductStock());
+        product.setProductStatus(updatedProduct.getProductStatus());
+        product.setProductTimeCreated(updatedProduct.getProductTimeCreated());
+        product.setImage(updatedProduct.getImage());
+    
+        // Save the updated product
+        return prodrepo.save(product);
     }
 
     //DELETE

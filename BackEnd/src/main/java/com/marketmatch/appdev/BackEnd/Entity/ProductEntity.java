@@ -48,8 +48,7 @@ public class ProductEntity {
     @JoinColumn(name = "seller_id")
     private  SellerEntity sellerid;
 
-    @JsonManagedReference("product-reference")
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productId", fetch = FetchType.LAZY)
     private List<BuyEntity> bought;
 
     public ProductEntity() {
@@ -125,9 +124,9 @@ public class ProductEntity {
 
     
 
-    public List<BuyEntity> getBought() {
-        return bought;
-    }
+    // public List<BuyEntity> getBought() {
+    //     return bought;
+    // }
 
     public void setBought(List<BuyEntity> bought) {
         this.bought = bought;
