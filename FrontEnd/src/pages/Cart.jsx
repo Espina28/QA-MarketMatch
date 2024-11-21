@@ -135,8 +135,26 @@ const Cart = () => {
                 <Grid item md={2.61} sx={{ border: '2px solid black', marginRight: 5.94 }}>
                     <SideBar />
                 </Grid>
-                <Grid item md={7.573} sx={{ backgroundColor: 'white', padding: 4, overflowY: 'auto' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', borderBottom: '2px solid black', marginBottom: 3 }}>
+                <Grid
+                    item
+                    md={7.573}
+                    className="scrollable-cart"
+                    sx={{
+                        backgroundColor: 'white',
+                        padding: 4,
+                        overflowY: 'auto',
+                        maxHeight: '770px', // Set the height of the scrollable cart
+                        border: '2px solid black',
+                    }}
+                >
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 'bold',
+                            borderBottom: '2px solid black',
+                            marginBottom: 3,
+                        }}
+                    >
                         MY PURCHASE
                     </Typography>
                     {cartItems.length > 0 ? (
@@ -149,7 +167,9 @@ const Cart = () => {
                             />
                         ))
                     ) : (
-                        <Typography variant="body1" sx={{ marginTop: 2 }}>Your cart is empty.</Typography>
+                        <Typography variant="body1" sx={{ marginTop: 2 }}>
+                            Your cart is empty.
+                        </Typography>
                     )}
                     {/* Total Price for the Cart */}
                     <Typography variant="h6" sx={{ fontWeight: 'bold', marginTop: 3 }}>
