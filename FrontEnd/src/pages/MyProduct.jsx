@@ -180,12 +180,12 @@ export default function MyProducts() {
                         container
                         sx={{
                             marginTop: 0,
-                            maxHeight: '450px',
+                            maxHeight: 'calc(100vh - 200px)',
                             overflowY: 'auto',
                             overflowX: 'hidden',
                             border: '2px solid black',
                             padding: '1rem',
-                            width: '60vw',
+                            width: '100%',
                         }}
                     >
                         {products.length > 0 ? (
@@ -201,7 +201,8 @@ export default function MyProducts() {
                                         backgroundColor: '#f9f9f9',
                                         position: 'relative',
                                         width: '100%',
-                                        maxWidth: '800px',
+                                        display: 'flex',
+                                        alignItems: 'center',
                                     }}
                                 >
                                     <Grid
@@ -259,12 +260,11 @@ export default function MyProducts() {
                                         md={3}
                                         sx={{
                                             display: 'flex',
-                                            flexDirection: 'column',
+                                            flexDirection: { xs: 'row', md: 'column' },
                                             justifyContent: 'flex-end',
                                             alignItems: 'flex-end',
-                                            position: 'absolute',
-                                            bottom: 10,
-                                            right: 10,
+                                            gap: 1,
+                                            mt: { xs: 2, md: 0 },
                                         }}
                                     >
                                         <Button
@@ -273,7 +273,6 @@ export default function MyProducts() {
                                             sx={{
                                                 backgroundColor: 'black',
                                                 color: 'white',
-                                                marginBottom: 1,
                                                 width: '100px',
                                             }}
                                             onClick={() => handleEdit(product.productId)}

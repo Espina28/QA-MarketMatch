@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
   TextField, Button, Typography, Container, Box, Modal, IconButton,
@@ -7,6 +7,7 @@ import {
 import axios from 'axios';
 import SideBar from '../components/SideBar';
 import Navbar from '../components/Navbar';
+import { styled } from '@mui/material/styles';
 import { Visibility, VisibilityOff, CloudUpload } from '@mui/icons-material';
 import '../App.css';
 
@@ -33,6 +34,7 @@ function MyAccount() {
     capital: false,
     specialChar: false,
   });
+  const fileInputRef = useRef(null)
   const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false);
   const userId = localStorage.getItem("id");
 
@@ -131,6 +133,10 @@ function MyAccount() {
     }
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
   const handleCancel = () => {
     setUserData(originalUserData);
   };
@@ -151,7 +157,7 @@ function MyAccount() {
 
   return (
     <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Navbar />
+       <Navbar />
       <Box sx={{ flexGrow: 1, display: 'flex', padding: 4, marginTop: '.01rem' }} className="padding-color-outer">
         <Grid container spacing={4}>
           <Grid item xs={12} md={4} lg={3}>
@@ -159,77 +165,160 @@ function MyAccount() {
           </Grid>
           <Grid item xs={12} md={8} lg={9}>
             <Paper elevation={3} sx={{ padding: 4 }}>
-              <Typography variant="h4" gutterBottom>My Profile</Typography>
-              <Divider sx={{ my: 2 }} />
+              <Typography variant="h5" sx={{ mb: 4, borderBottom: '1px solid #e0e0e0', pb: 2 }}>
+                My Profile
+              </Typography>
               
-              <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems="center" mb={4}>
-                <Avatar
-                  src={profileImage}
-                  sx={{ width: 150, height: 150, mr: { xs: 0, sm: 4 }, mb: { xs: 2, sm: 0 } }}
-                />
-                <Box>
-                  <Typography variant="h5" gutterBottom>{`${userData.firstname} ${userData.lastname}`}</Typography>
-                  <Typography variant="subtitle1" gutterBottom><strong>Student ID:</strong> {userData.student_Id}</Typography>
-                  <Button
-                    variant="contained"
-                    component="label"
-                    startIcon={<CloudUpload />}
-                    sx={{ mt: 2 }}
-                  >
-                    Upload New Picture
-                    <input hidden accept="image/*" type="file" onChange={handleImageUpload} />
-                  </Button>
-                </Box>
-              </Box>
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={4}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <EditableAvatar
+                      src={profileImage}
+                      onClick={handleAvatarClick}
+                      sx={{ 
+                        width: 150, 
+                        height: 150, 
+                        mb: 2,
+                        bgcolor: '#e0e0e0',
+                      }}
+                    >
+                      <CloudUpload 
+                        className="editIcon"
+                        sx={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          color: 'white',
+                          opacity: 0,
+                          transition: 'opacity 0.3s',
+                          zIndex: 1,
+                        }}
+                      />
+                    </EditableAvatar>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      style={{ display: 'none' }}
+                      accept="image/*"
+                    />
+                  </Box>
+                </Grid>
 
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Address"
-                    variant="outlined"
-                    value={userData.address || ""}
-                    onChange={(e) => setUserData({ ...userData, address: e.target.value })}
-                  />
+                <Grid item xs={12} md={8}>
+                  <Box sx={{ mb: 4 }}>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Name:</Typography>
+                      <Typography>{`${userData.firstname} ${userData.lastname}`}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Student Id:</Typography>
+                      <Typography>{userData.studentId}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Address:</Typography>
+                      <Typography>{userData.address}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Email:</Typography>
+                      <Typography>{userData.email}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', mb: 2 }}>
+                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Phone:</Typography>
+                      <Typography>{userData.phonenumber}</Typography>
+                    </Box>
+                  </Box>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Email"
-                    variant="outlined"
-                    value={userData.email || ""}
-                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Phone"
-                    variant="outlined"
-                    value={userData.phonenumber || ""}
-                    onChange={(e) => setUserData({ ...userData, phonenumber: e.target.value })}
-                    inputProps={{ maxLength: 11 }}
-                  />
-                </Grid>
+
                 <Grid item xs={12}>
-                  <Button variant="contained" color="primary" onClick={togglePasswordModal}>
-                    Change Password
-                  </Button>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Update First Name"
+                        variant="outlined"
+                        value={userData.firstname || ""}
+                        onChange={(e) => setUserData({ ...userData, firstname: e.target.value })}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Update Last Name"
+                        variant="outlined"
+                        value={userData.lastname || ""}
+                        onChange={(e) => setUserData({ ...userData, lastname: e.target.value })}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Update Email"
+                        variant="outlined"
+                        value={userData.email || ""}
+                        onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Update Address"
+                        variant="outlined"
+                        value={userData.address || ""}
+                        onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Update Phone"
+                        variant="outlined"
+                        value={userData.phonenumber || ""}
+                        onChange={(e) => setUserData({ ...userData, phonenumber: e.target.value })}
+                        inputProps={{ maxLength: 11 }}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 
-              <Box display="flex" justifyContent="flex-end" mt={4}>
-                <Button variant="outlined" onClick={handleCancel} sx={{ mr: 2 }}>
-                  Cancel
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'flex-start', 
+                mt: 4,
+                gap: 2
+              }}>
+                <Button 
+                  variant="contained"
+                  onClick={handleSave}
+                  sx={{ 
+                    bgcolor: '#E3A008',
+                    '&:hover': { bgcolor: '#C47F00' },
+                    color: 'white',
+                    px: 4
+                  }}
+                >
+                  Save
                 </Button>
-                <Button variant="contained" onClick={handleSave}>
-                  Save Changes
+                <Button
+                  variant="contained"
+                  onClick={togglePasswordModal}
+                  sx={{ 
+                    bgcolor: '#E3A008',
+                    '&:hover': { bgcolor: '#C47F00' },
+                    color: 'white',
+                    px: 4
+                  }}
+                >
+                  Change Password
                 </Button>
               </Box>
             </Paper>
           </Grid>
         </Grid>
       </Box>
+
 
       {/* Phone Number Warning Modal */}
       <Modal
@@ -311,3 +400,22 @@ function MyAccount() {
 
 export default MyAccount;
 
+const EditableAvatar = styled(Avatar)(({ theme }) => ({
+  position: 'relative',
+  cursor: 'pointer',
+  '&:hover': {
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      borderRadius: '50%',
+    },
+    '& .editIcon': {
+      opacity: 1,
+    },
+  },
+}));

@@ -44,6 +44,11 @@ public class ProductController {
         return productService.readAllProducts();
     }
 
+    @GetMapping("/related")
+    public List<ProductEntity> getRelatedProducts(@RequestParam String productName, @RequestParam int productId) {
+        return productService.getRelatedProducts(productName, productId);
+    }
+
     // UPDATE
     @PutMapping("/putProduct/{productId}")
     public ProductEntity putProduct(@PathVariable int productId, @RequestBody ProductEntity productName) {

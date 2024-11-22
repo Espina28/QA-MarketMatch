@@ -73,6 +73,17 @@ public class ProductService {
         return prodrepo.findBysellerid(id);
     }
 
+    public List<ProductEntity> getRelatedProducts(String productName, int productId) {
+        List<ProductEntity> relatedProducts = prodrepo.findRelatedProducts(productName, productId);
+
+        // If no related products are found, fetch random products
+        if (relatedProducts == null || relatedProducts.isEmpty()) {
+            relatedProducts = prodrepo.findRandomProducts(2); // Limit to 5 random products
+        }
+
+        return relatedProducts;
+    }
+
     public ProductEntity updateProduct(int productId, ProductEntity updatedProduct) {
         ProductEntity product = prodrepo.findByproductId(productId);
     
