@@ -34,9 +34,25 @@ const UnderlinedText = styled(Typography)({
 
 export default function UploadProduct() {
     const [id, setId] = useState(null);
+    const[isSeller, setIsSeller] = useState();
 
     useEffect(() => {
         setId(localStorage.getItem('id'));
+        axios.get('http://localhost:8080/api/user/getUserbyId', {
+            params: { id: localStorage.getItem('id') },
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
+          })
+            .then(response => {
+              console.log(response.data);
+              setIsSeller(response.data.seller);
+            })
+            .catch(error => {
+              console.error('Error fetching user data!', error);
+            });
     }, []);
 
     const [product, setProduct] = useState({

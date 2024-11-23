@@ -12,6 +12,8 @@ import Signup from './pages/Signup';
 import MyPurchase from './pages/Cart';
 import NotFound from './pages/NotFound';
 import Transactions from './pages/Transactions';
+import SellerHistory from './pages/SellerHistory';
+import BuyerHistory from './pages/BuyerHistory';
 import Cart from './pages/Cart';
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoutes from './components/ProtectedRoutes';
@@ -34,6 +36,8 @@ function App() {
           <Route path="/cart" element={<ProtectedRoutes><Cart /></ProtectedRoutes>} />
           <Route path="/myProducts" element={<ProtectedRoutes><MyProducts /></ProtectedRoutes>} />
           <Route path="/transaction" element={<ProtectedRoutes><Transactions /></ProtectedRoutes>} />
+          <Route path="/buyerhistory" element={<ProtectedRoutes><BuyerHistory /></ProtectedRoutes>} />
+          <Route path="/sellerhistory" element={<ProtectedRoutes><SellerHistory /></ProtectedRoutes>} />
 
 
           

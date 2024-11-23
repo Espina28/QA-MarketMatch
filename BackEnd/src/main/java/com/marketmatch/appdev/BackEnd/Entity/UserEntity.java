@@ -23,6 +23,7 @@ public class UserEntity {
 	private String Student_Id;
 	private String email;
 	private String Password;
+	private boolean isSeller;
 
 	@Column(name = "profilePicture",columnDefinition = "longblob")
     private byte[] image;
@@ -122,6 +123,14 @@ public class UserEntity {
 
 	public void setImage(byte[] image) {
 		this.image = image;
+	}
+
+	public boolean isSeller() {
+		return isSeller;
+	}
+
+	public void setSeller(boolean isSeller) {
+		this.isSeller = isSeller;
 	}
 	
 }

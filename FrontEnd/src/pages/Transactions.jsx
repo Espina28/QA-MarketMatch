@@ -42,32 +42,140 @@ export default function Transactions() {
     };
 
     const completeTransaction = () => {
-        axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
+        // First, create the BuyerHistory and SellerHistory entries
+        const transactionToTransfer = transactions.find(t => t.buyId === selectedTransaction);
+        const userid = localStorage.getItem('id');
+        // console.log(userid);
+         console.log(transactionToTransfer);
+        
+        if (!transactionToTransfer) {
+            console.error('Transaction not found.');
+            return;
+        }
+    
+        // Create the history entries for both buyer and seller
+        const buyerHistoryData = {
+            buyer: { buyerId: transactionToTransfer.buyerId}, 
+            product: { productId: transactionToTransfer.productId }, 
+            quantity: transactionToTransfer.quantity,
+            totalPrice: transactionToTransfer.total,
+            transactionDate: new Date().toISOString(),
+            status: 'Completed',
+            canceledBy: null,
+        };
+    
+        const sellerHistoryData = {
+            seller: { seller_id: userid }, 
+            product: { productId: transactionToTransfer.productId }, 
+            quantity: transactionToTransfer.quantity,
+            totalPrice: transactionToTransfer.total,
+            transactionDate: new Date().toISOString(),
+            status: 'Completed',
+            canceledBy: null,
+        };
+        // console.log(buyerHistoryData);
+        // console.log(sellerHistoryData);
+        // First create Buyer History
+        axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
             withCredentials: true,
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
             },
         }).then(() => {
-            setTransactions(transactions.filter(t => t.buyId!== selectedTransaction));
-            setOpenComplete(false);
-            setSelectedTransaction(null);
+            // Then create Seller History
+            axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            }).then(() => {
+                // After successfully transferring to history, delete from 'buy' collection
+                axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    },
+                }).then(() => {
+                    setTransactions(transactions.filter(t => t.buyId !== selectedTransaction));
+                    setOpenComplete(false);
+                    setSelectedTransaction(null);
+                }).catch(error => {
+                    console.error('Error deleting transaction:', error);
+                });
+            }).catch(error => {
+                console.error('Error creating seller history:', error);
+            });
         }).catch(error => {
-            console.error('Error completing transaction:', error);
+            console.error('Error creating buyer history:', error);
         });
     };
-
+    
     const cancelTransaction = () => {
-        axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
+        // Same process for canceling a transaction
+        const transactionToTransfer = transactions.find(t => t.buyId === selectedTransaction);
+        const userid = localStorage.getItem('id');
+        console.log(userid);
+        console.log(transactionToTransfer);
+        if (!transactionToTransfer) {
+            console.error('Transaction not found.');
+            return;
+        }
+    
+        const buyerHistoryData = {
+            buyer: { buyerId: userid }, 
+            product: { productId: transactionToTransfer.productId }, 
+            quantity: transactionToTransfer.quantity,
+            totalPrice: transactionToTransfer.total,
+            transactionDate: new Date().toISOString(),
+            status: 'Cancelled',
+            canceledBy: 'Seller',
+        };
+    
+        const sellerHistoryData = {
+            seller: { seller_id: userid }, 
+            product: { productId: transactionToTransfer.productId }, 
+            quantity: transactionToTransfer.quantity,
+            totalPrice: transactionToTransfer.total,
+            transactionDate: new Date().toISOString(),
+            status: 'Cancelled',
+            canceledBy: 'Seller',
+        };
+
+        // console.log(buyerHistoryData);
+        // console.log(sellerHistoryData);
+    
+        // First create Buyer History
+        axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
             withCredentials: true,
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
             },
         }).then(() => {
-            setTransactions(transactions.filter(t => t.buyId !== selectedTransaction));
-            setOpenCancel(false);
-            setSelectedTransaction(null);
+            // Then create Seller History
+            axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            }).then(() => {
+                // After successfully transferring to history, delete from 'buy' collection
+                axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    },
+                }).then(() => {
+                    setTransactions(transactions.filter(t => t.buyId !== selectedTransaction));
+                    setOpenCancel(false);
+                    setSelectedTransaction(null);
+                }).catch(error => {
+                    console.error('Error deleting transaction:', error);
+                });
+            }).catch(error => {
+                console.error('Error creating seller history:', error);
+            });
         }).catch(error => {
-            console.error('Error canceling transaction:', error);
+            console.error('Error creating buyer history:', error);
         });
     };
 

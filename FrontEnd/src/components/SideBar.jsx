@@ -18,11 +18,12 @@ export default function SideBar() {
         lastname: "",
         image: null,
     });
-    const userId = localStorage.getItem("id");
+    const [isSeller, setIsSeller] = useState(false);
 
     useEffect(() => {
+        // Fetch user data to check if the user is a seller
         axios.get('http://localhost:8080/api/user/getUserbyId', {
-            params: { id: userId },
+            params: { id: localStorage.getItem('id') },
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
@@ -31,11 +32,12 @@ export default function SideBar() {
         })
         .then(response => {
             setUserData(response.data);
+            setIsSeller(response.data.seller); // Assuming the seller status is in response.data.seller
         })
         .catch(error => {
             console.error('There was an error fetching the user data!', error);
         });
-    }, [userId]);
+    }, []);
 
     return (
         <Grid container justifyContent={'center'} sx={{ background: 'white', paddingTop: '4rem', paddingRight: '2rem', paddingLeft: '2rem', height: '100%' }}>
@@ -72,7 +74,7 @@ export default function SideBar() {
                             <Typography>My Orders</Typography>
                         </Box>
                     </Link>
-                    <Link to="/transaction" style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link to="/buyerhistory" style={{ textDecoration: 'none', color: 'black' }}>
                         <Box display="flex" alignItems="center">
                             <IconButton color="inherit" sx={{ mr: 1 }}>
                                 <SellIcon sx={{ fontSize: 25, color: 'grey' }} />
@@ -88,9 +90,32 @@ export default function SideBar() {
                             <Typography>My Cart</Typography>
                         </Box>
                     </Link>
+
+                    {/* Order Management Section - Only visible if the user is a seller */}
+                    {isSeller && (
+                        <>
+                            <Divider sx={{ margin: '1rem 0' }} />
+                            <Typography variant="h6" sx={{ marginBottom: '1rem' }}>Order Management</Typography>
+                            <Link to="/transaction" style={{ textDecoration: 'none', color: 'black' }}>
+                                <Box display="flex" alignItems="center">
+                                    <IconButton color="inherit" sx={{ mr: 1 }}>
+                                        <DescriptionIcon sx={{ fontSize: 25, color: 'grey' }} />
+                                    </IconButton>
+                                    <Typography>Manage Orders</Typography>
+                                </Box>
+                            </Link>
+                            <Link to="/sellerhistory" style={{ textDecoration: 'none', color: 'black' }}>
+                                <Box display="flex" alignItems="center">
+                                    <IconButton color="inherit" sx={{ mr: 1 }}>
+                                        <DescriptionIcon sx={{ fontSize: 25, color: 'grey' }} />
+                                    </IconButton>
+                                    <Typography>Transaction History</Typography>
+                                </Box>
+                            </Link>
+                        </>
+                    )}
                 </Stack>
             </Grid>
         </Grid>
     );
 }
-

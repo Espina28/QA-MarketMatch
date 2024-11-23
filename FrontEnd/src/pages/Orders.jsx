@@ -43,24 +43,71 @@ export default function Orders() {
     };
 
     const cancelOrder = () => {
-        if (selectedOrder) {
-            axios.delete(`http://localhost:8080/api/buy/delete/${selectedOrder}`, {
+        // Find the product to transfer
+        const orderToTransfer = products.find(p => p.buyId === selectedOrder);
+        const userId = localStorage.getItem('id');
+        console.log(orderToTransfer);
+    
+        if (!orderToTransfer) {
+            console.error('Order not found.');
+            return;
+        }
+    
+        const buyerHistoryData = {
+            buyer: { buyerId: userId },
+            product: { productId: orderToTransfer.product.productId },
+            quantity: orderToTransfer.quantity,
+            totalPrice: orderToTransfer.total,
+            transactionDate: new Date().toISOString(),
+            status: 'Cancelled',
+            canceledBy: 'Buyer',
+        };
+    
+        const sellerHistoryData = {
+            seller: { seller_id: orderToTransfer.seller.seller_id },
+            product: { productId: orderToTransfer.product.productId },
+            quantity: orderToTransfer.quantity,
+            totalPrice: orderToTransfer.total,
+            transactionDate: new Date().toISOString(),
+            status: 'Cancelled',
+            canceledBy: 'Buyer',
+        };
+        console.log(buyerHistoryData);
+        console.log(sellerHistoryData);
+        // Create Buyer History
+        axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
+            withCredentials: true,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
+        }).then(() => {
+            // Create Seller History
+            axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
                 withCredentials: true,
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 },
-            })
-            .then(() => {
-                setProducts(products.filter(product => product.buyId !== selectedOrder)); // Remove the canceled order from state
-                setOpenCancelDialog(false); // Close the dialog after cancellation
-                setSelectedOrder(null); // Reset selected order
-            })
-            .catch(error => {
-                console.error('Error canceling order:', error);
+            }).then(() => {
+                // Delete the order
+                axios.delete(`http://localhost:8080/api/buy/delete/${selectedOrder}`, {
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    },
+                }).then(() => {
+                    setProducts(products.filter(p => p.buyId !== selectedOrder));
+                    setOpenCancelDialog(false);
+                    setSelectedOrder(null);
+                }).catch(error => {
+                    console.error('Error deleting order:', error);
+                });
+            }).catch(error => {
+                console.error('Error creating seller history:', error);
             });
-        }
+        }).catch(error => {
+            console.error('Error creating buyer history:', error);
+        });
     };
-
     return (
         <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Navbar />

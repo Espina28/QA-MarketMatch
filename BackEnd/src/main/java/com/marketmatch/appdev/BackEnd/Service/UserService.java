@@ -90,6 +90,16 @@ public class UserService {
 
 	}
 
+	public UserEntity makeSeller(int userId) {
+
+        UserEntity user = urepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+				
+        user.setSeller(true);
+
+        return urepo.save(user);
+    }
+
 	public void updatePassword(int id, String password) {
 		UserEntity user = urepo.findById(id).orElseThrow();
 		user.setPassword(bCryptPasswordEncoder.encode(password));

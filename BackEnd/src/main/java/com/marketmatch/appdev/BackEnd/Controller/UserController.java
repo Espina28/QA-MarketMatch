@@ -80,6 +80,16 @@ public ResponseEntity<String> updatePassword(@RequestParam int id, @RequestParam
     return ResponseEntity.ok("Password updated successfully!");
 }
 
+@PutMapping("/{userId}/make-seller")
+public ResponseEntity<UserEntity> makeSeller(@PathVariable int userId) {
+	try {
+		UserEntity updatedUser = userv.makeSeller(userId);
+		return ResponseEntity.ok(updatedUser);
+	} catch (RuntimeException e) {
+		return ResponseEntity.status(404).body(null);
+	}
+}
+
 @DeleteMapping("/deleteUser")
 public String deleteUser(@PathVariable int id) {
 	return userv.deleteUser(id);

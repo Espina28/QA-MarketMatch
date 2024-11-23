@@ -50,6 +50,7 @@ function MyAccount() {
       .then(response => {
         setUserData(response.data);
         setOriginalUserData(response.data);
+        // console.log(response.data);
         if (response.data.image) {
           setProfileImage(`data:image/jpeg;base64,${response.data.image}`);
         }
@@ -205,7 +206,7 @@ function MyAccount() {
                     />
                   </Box>
                 </Grid>
-
+                    
                 <Grid item xs={12} md={8}>
                   <Box sx={{ mb: 4 }}>
                     <Box sx={{ display: 'flex', mb: 2 }}>
@@ -213,8 +214,8 @@ function MyAccount() {
                       <Typography>{`${userData.firstname} ${userData.lastname}`}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 2 }}>
-                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Student Id:</Typography>
-                      <Typography>{userData.studentId}</Typography>
+                      <Typography sx={{ width: 120, color: 'text.secondary' }}>Student ID:</Typography>
+                      <Typography>{userData.student_Id}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 2 }}>
                       <Typography sx={{ width: 120, color: 'text.secondary' }}>Address:</Typography>
