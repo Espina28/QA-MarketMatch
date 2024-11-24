@@ -22,11 +22,11 @@ export default function Orders() {
     useEffect(() => {
         axios.get('http://localhost:8080/api/buy/purchase', {
             params: {
-                id: localStorage.getItem('id'),
+                id: sessionStorage.getItem('id'),
             },
             withCredentials: true,
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         })
             .then((response) => {
@@ -45,7 +45,7 @@ export default function Orders() {
     const cancelOrder = () => {
         // Find the product to transfer
         const orderToTransfer = products.find(p => p.buyId === selectedOrder);
-        const userId = localStorage.getItem('id');
+        const userId = sessionStorage.getItem('id');
         console.log(orderToTransfer);
     
         if (!orderToTransfer) {
@@ -78,21 +78,21 @@ export default function Orders() {
         axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
             withCredentials: true,
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(() => {
             // Create Seller History
             axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
                 withCredentials: true,
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }).then(() => {
                 // Delete the order
                 axios.delete(`http://localhost:8080/api/buy/delete/${selectedOrder}`, {
                     withCredentials: true,
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                     },
                 }).then(() => {
                     setProducts(products.filter(p => p.buyId !== selectedOrder));

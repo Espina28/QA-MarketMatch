@@ -23,11 +23,11 @@ export default function SideBar() {
     useEffect(() => {
         // Fetch user data to check if the user is a seller
         axios.get('http://localhost:8080/api/user/getUserbyId', {
-            params: { id: localStorage.getItem('id') },
+            params: { id: sessionStorage.getItem('id') },
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         })
         .then(response => {

@@ -8,14 +8,14 @@ import Navbar from '../components/Navbar';
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [totalCartPrice, setTotalCartPrice] = useState(0);
-    const cartid = localStorage.getItem("id");
+    const cartid = sessionStorage.getItem("id");
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/cart/getCart/' + cartid, {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         })
         .then(response => {
@@ -33,7 +33,7 @@ const Cart = () => {
                 orderDate: new Date().toISOString(),
                 total: parseFloat(product.productPrice) * (product.quantity || 1),
                 buyer: {
-                    buyerId: localStorage.getItem("id"),
+                    buyerId: sessionStorage.getItem("id"),
                 },
                 product: {
                     productId: product.productId,
@@ -44,7 +44,7 @@ const Cart = () => {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             })
             .then(response => {
@@ -61,7 +61,7 @@ const Cart = () => {
     };
 
     const handleRemoveFromCart = (productId) => {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         
         axios.delete(`http://localhost:8080/api/cart/${cartid}/product/${productId}`, {
             withCredentials: true,

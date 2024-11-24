@@ -17,11 +17,11 @@ export default function Navbar() {
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/user/getUserbyId', {
-          params: { id: localStorage.getItem('id') },
+          params: { id: sessionStorage.getItem('id') },
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
           },
         })
           .then(response => {
@@ -60,11 +60,11 @@ export default function Navbar() {
       
       const makeUserSeller = async () => {
         try {
-          const response = await fetch('http://localhost:8080/api/user/'+localStorage.getItem('id')+'/make-seller', {
+          const response = await fetch('http://localhost:8080/api/user/'+sessionStorage.getItem('id')+'/make-seller', {
             method: 'PUT', // Assuming the endpoint uses PUT method
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + localStorage.getItem('token'),
+              'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
           });
     

@@ -36,7 +36,7 @@ function MyAccount() {
   });
   const fileInputRef = useRef(null)
   const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false);
-  const userId = localStorage.getItem("id");
+  const userId = sessionStorage.getItem("id");
 
   useEffect(() => {
     axios.get('http://localhost:8080/api/user/getUserbyId', {
@@ -44,7 +44,7 @@ function MyAccount() {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
       },
     })
       .then(response => {
@@ -98,7 +98,7 @@ function MyAccount() {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+          'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
         },
       });
       alert("Changes saved!");
@@ -123,7 +123,7 @@ function MyAccount() {
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
           },
         });
         alert("Password changed successfully!");

@@ -37,13 +37,13 @@ export default function UploadProduct() {
     const[isSeller, setIsSeller] = useState();
 
     useEffect(() => {
-        setId(localStorage.getItem('id'));
+        setId(sessionStorage.getItem('id'));
         axios.get('http://localhost:8080/api/user/getUserbyId', {
-            params: { id: localStorage.getItem('id') },
+            params: { id: sessionStorage.getItem('id') },
             withCredentials: true,
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + localStorage.getItem('token'),
+              'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
           })
             .then(response => {
@@ -63,7 +63,7 @@ export default function UploadProduct() {
         productDescription: '',
         image: null,
         productTimeCreated: new Date().toISOString(),
-        sellerid: { seller_id: localStorage.getItem('id') },
+        sellerid: { seller_id: sessionStorage.getItem('id') },
     });
     const [image, setImage] = useState(null);
 
@@ -112,7 +112,7 @@ export default function UploadProduct() {
                     withCredentials: true,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                     },
                 }
             );
@@ -123,7 +123,7 @@ export default function UploadProduct() {
                     withCredentials: true,
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                     },
                 }
             );

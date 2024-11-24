@@ -10,11 +10,11 @@ export default function SellerHistory() {
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/seller-history/seller', {
-            params: { sellerId: localStorage.getItem('id') },
+            params: { sellerId: sessionStorage.getItem('id') },
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(response => {
             setSellerHistory(response.data);
@@ -28,7 +28,7 @@ export default function SellerHistory() {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(() => {
             setSellerHistory(prevHistory => prevHistory.filter(item => item.id !== id));

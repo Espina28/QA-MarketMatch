@@ -26,7 +26,7 @@ export default function MyProducts() {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [deleteProductId, setDeleteProductId] = useState(null);
 
-    const sellerId = localStorage.getItem('id');
+    const sellerId = sessionStorage.getItem('id');
 
     useEffect(() => {
         axios
@@ -34,7 +34,7 @@ export default function MyProducts() {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             })
             .then((response) => {
@@ -88,7 +88,7 @@ export default function MyProducts() {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             })
             .then((response) => {
@@ -121,7 +121,7 @@ export default function MyProducts() {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             })
             .then((response) => {

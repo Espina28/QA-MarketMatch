@@ -18,11 +18,11 @@ export default function Transactions() {
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/seller/transactions', {
-            params: { id: localStorage.getItem('id') },
+            params: { id: sessionStorage.getItem('id') },
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(response => {
             setTransactions(response.data);
@@ -44,9 +44,9 @@ export default function Transactions() {
     const completeTransaction = () => {
         // First, create the BuyerHistory and SellerHistory entries
         const transactionToTransfer = transactions.find(t => t.buyId === selectedTransaction);
-        const userid = localStorage.getItem('id');
+        const userid = sessionStorage.getItem('id');
         // console.log(userid);
-         console.log(transactionToTransfer);
+         //console.log(transactionToTransfer);
         
         if (!transactionToTransfer) {
             console.error('Transaction not found.');
@@ -79,21 +79,21 @@ export default function Transactions() {
         axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
             withCredentials: true,
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(() => {
             // Then create Seller History
             axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
                 withCredentials: true,
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }).then(() => {
                 // After successfully transferring to history, delete from 'buy' collection
                 axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
                     withCredentials: true,
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                     },
                 }).then(() => {
                     setTransactions(transactions.filter(t => t.buyId !== selectedTransaction));
@@ -113,7 +113,7 @@ export default function Transactions() {
     const cancelTransaction = () => {
         // Same process for canceling a transaction
         const transactionToTransfer = transactions.find(t => t.buyId === selectedTransaction);
-        const userid = localStorage.getItem('id');
+        const userid = sessionStorage.getItem('id');
         console.log(userid);
         console.log(transactionToTransfer);
         if (!transactionToTransfer) {
@@ -148,21 +148,21 @@ export default function Transactions() {
         axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
             withCredentials: true,
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(() => {
             // Then create Seller History
             axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
                 withCredentials: true,
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }).then(() => {
                 // After successfully transferring to history, delete from 'buy' collection
                 axios.delete(`http://localhost:8080/api/buy/delete/${selectedTransaction}`, {
                     withCredentials: true,
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                     },
                 }).then(() => {
                     setTransactions(transactions.filter(t => t.buyId !== selectedTransaction));

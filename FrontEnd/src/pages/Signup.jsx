@@ -3,7 +3,28 @@ import '../../public/css/signup.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { IconButton, Dialog, DialogContent, CircularProgress, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#800000', // Maroon
+    },
+    secondary: {
+      main: '#FFD700', // Gold
+    },
+  },
+  typography: {
+    fontFamily: '"Segoe UI", "Roboto", "Arial", sans-serif',
+    h6: {
+      fontWeight: 700,
+    },
+    body1: {
+      fontWeight: 500,
+    },
+  },
+});
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -17,6 +38,9 @@ const Signup = () => {
     password: '',
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +58,7 @@ const Signup = () => {
     e.preventDefault();
 
     if (isFormComplete()) {
+      setIsLoading(true);
       try {
         const response = await fetch('http://localhost:8080/api/user/postUser', {
           method: 'POST',
@@ -102,31 +127,36 @@ const Signup = () => {
             email: '',
             password: '',
           });
-          localStorage.removeItem('signupData');
+          sessionStorage.removeItem('signupData');
 
-          alert('Signup successful!');
-          navigate('/login');
+          setIsSuccess(true);
+          setTimeout(() => {
+            setIsSuccess(false);
+            navigate('/login');
+          }, 2000);
         } else {
-          alert('Failed to sign up. Please try again.');
+          throw new Error('Failed to sign up');
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        setErrorMessage('An error occurred. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
     } else {
-      alert('Please fill in all fields before proceeding.');
+      setErrorMessage('Please fill in all fields before proceeding.');
     }
   };
 
   useEffect(() => {
-    const savedData = localStorage.getItem('signupData');
+    const savedData = sessionStorage.getItem('signupData');
     if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('signupData', JSON.stringify(formData));
+    sessionStorage.setItem('signupData', JSON.stringify(formData));
   }, [formData]);
 
   const togglePasswordVisibility = () => {
@@ -199,6 +229,11 @@ const Signup = () => {
               {isPasswordVisible ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </div>
+          {errorMessage && (
+            <div className="error-message" style={{ color: '#FFD700', backgroundColor: '#800000', padding: '10px', borderRadius: '4px', marginBottom: '10px', textAlign: 'center' }}>
+              {errorMessage}
+            </div>
+          )}
           <button type="submit" className="signup-button">
             SIGN UP
           </button>
@@ -218,8 +253,49 @@ const Signup = () => {
           <button className="login-button">LOGIN</button>
         </Link>
       </div>
+
+      <ThemeProvider theme={theme}>
+        {/* Loading Dialog */}
+        <Dialog 
+          open={isLoading} 
+          disableEscapeKeyDown 
+          PaperProps={{
+            style: { backgroundColor: '#800000', border: '2px solid #FFD700' },
+          }}
+        >
+          <DialogContent>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+              <CircularProgress style={{ color: 'white' }} />
+              <Typography variant="body1" style={{ marginTop: '1rem', color: 'white' }}>
+                Creating your account...
+              </Typography>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Success Dialog */}
+        <Dialog 
+          open={isSuccess} 
+          disableEscapeKeyDown
+          PaperProps={{
+            style: { backgroundColor: '#800000', border: '2px solid #FFD700' },
+          }}
+        >
+          <DialogContent>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+              <Typography variant="h6" style={{ color: 'white' }}>
+                You are now registered!
+              </Typography>
+              <Typography variant="body1" style={{ marginTop: '1rem', color: 'white' }}>
+                Redirecting to login page...
+              </Typography>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </ThemeProvider>
     </div>
   );
 };
 
 export default Signup;
+

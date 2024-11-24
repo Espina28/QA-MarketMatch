@@ -26,7 +26,7 @@ export default function ProductLayout() {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         })
         .then(response => {
@@ -44,7 +44,7 @@ export default function ProductLayout() {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         })
         .then(response => {
@@ -57,12 +57,12 @@ export default function ProductLayout() {
 
     const handleAddToCart = () => {
         if (products) {
-            const cartId = localStorage.getItem("id");
+            const cartId = sessionStorage.getItem("id");
             axios.post(`http://localhost:8080/api/cart/addProduct/${cartId}/${productId}`, {}, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             })
             .then(response => {
@@ -84,7 +84,7 @@ export default function ProductLayout() {
                 orderDate: new Date().toISOString(), 
                 total: parseFloat(products.productPrice),
                 buyer: {
-                    buyerId: localStorage.getItem("id"), 
+                    buyerId: sessionStorage.getItem("id"), 
                 },
                 product: {
                     productId: productId, 
@@ -95,7 +95,7 @@ export default function ProductLayout() {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             })
             .then(response => {

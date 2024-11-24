@@ -10,11 +10,11 @@ export default function BuyerHistory() {
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/buyer-history/buyer', {
-            params: { buyerId: localStorage.getItem('id') },
+            params: { buyerId: sessionStorage.getItem('id') },
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(response => {
             setBuyerHistory(response.data);
@@ -28,7 +28,7 @@ export default function BuyerHistory() {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(() => {
             setBuyerHistory(prevHistory => prevHistory.filter(item => item.id !== id));
