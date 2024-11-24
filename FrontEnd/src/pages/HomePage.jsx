@@ -21,14 +21,14 @@ const HomePage = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const currentUserId = localStorage.getItem('id');
+    const currentUserId = sessionStorage.getItem('id');
   
     axios
       .get('http://localhost:8080/api/user/getAllProducts', {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
+          Authorization: 'Bearer ' + sessionStorage.getItem('token'),
         },
       })
       .then((response) => {
