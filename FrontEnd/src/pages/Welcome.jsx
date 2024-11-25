@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import NavbarWelcome from '../components/NavbarWelcome';
 
 const Welcome = () => {
   return (
@@ -140,15 +141,18 @@ const Welcome = () => {
           }
         `}
       </style>
-      <div className="content">
+      <div className="content"> 
+        <NavbarWelcome/>
         <img src="landing.png" alt="Leap" className="banner-image" />
-        <div className="btn">
+            
+        {/* <div className="btn">
           <Link to="/signup" className="sign-in-btn">SIGN UP</Link>
           <Link to="/login" className="log-in-btn">LOG IN</Link>
-        </div>
-
+        </div> */}
+      
 
       </div>
+   
     </div>
   );
 };
