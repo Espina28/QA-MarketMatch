@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
   TextField, Button, Typography, Container, Box, Modal, IconButton,
-  Grid, Paper, Avatar, Divider
+  Grid, Paper, Avatar, Divider, CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
@@ -37,8 +37,12 @@ function MyAccount() {
   const fileInputRef = useRef(null)
   const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false);
   const userId = sessionStorage.getItem("id");
+  const [loading, setLoading] = useState(true);
+  const [sideBarLoaded, setSideBarLoaded] = useState(false);
+  const [mainLoaded, setMainLoaded] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios.get('http://localhost:8080/api/user/getUserbyId', {
       params: { id: userId },
       withCredentials: true,
@@ -51,14 +55,17 @@ function MyAccount() {
         setUserData(response.data);
         setOriginalUserData(response.data);
         // console.log(response.data);
+        setMainLoaded(true);
+        setLoading(false);
         if (response.data.image) {
           setProfileImage(`data:image/jpeg;base64,${response.data.image}`);
         }
       })
       .catch(error => {
         console.error('Error fetching user data!', error);
+        setLoading(false);  
       });
-  }, [userId]);
+  }, [userId,sideBarLoaded]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -70,6 +77,11 @@ function MyAccount() {
     };
     reader.readAsDataURL(file);
   };
+
+  const handleSideBarLoad = () => {
+    setSideBarLoaded(true);
+  };
+
 
   const validatePassword = (password) => {
     setPasswordValid({
@@ -162,7 +174,7 @@ function MyAccount() {
       <Box sx={{ flexGrow: 1, display: 'flex', padding: 4, marginTop: '.01rem' }} className="padding-color-outer">
         <Grid container spacing={4}>
           <Grid item xs={12} md={4} lg={3}>
-            <SideBar state={{ userData: location.state ? location.state.userData : null }} />
+          <SideBar onLoad={handleSideBarLoad} />
           </Grid>
           <Grid item xs={12} md={8} lg={9}>
             <Paper elevation={3} sx={{ padding: 4 }}>
@@ -333,6 +345,16 @@ function MyAccount() {
           <Button variant="contained" color="primary" onClick={() => setPhoneNumberWarningOpen(false)} sx={{ marginTop: 2 }}>
             OK
           </Button>
+        </Box>
+      </Modal>
+
+      {/* Loading Modal */}
+      <Modal open={loading}>
+        <Box sx={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          backgroundColor: 'maroon', padding: 2, borderRadius: 2, border: '4px solid gold',
+        }}>
+          <CircularProgress color="inherit" sx={{ color: 'white' }} />
         </Box>
       </Modal>
 

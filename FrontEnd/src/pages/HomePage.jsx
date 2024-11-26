@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import { Container, Grid, Box, Typography, Paper, TextField, IconButton, Button, Card, CardMedia, CardContent, CardActions } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Paper,
+  TextField,
+  IconButton,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  CircularProgress,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -17,12 +31,12 @@ const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleCount, setVisibleCount] = useState(8);
-  const [userId, setUserId] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const currentUserId = sessionStorage.getItem('id');
-  
+
     axios
       .get('http://localhost:8080/api/user/getAllProducts', {
         withCredentials: true,
@@ -37,9 +51,11 @@ const HomePage = () => {
         );
         setProducts(filteredProducts);
         setDisplayedProducts(filteredProducts.slice(0, visibleCount));
+        setLoading(false); // Stop loading after fetching products
       })
       .catch((error) => {
         console.error('There was an error fetching the products!', error);
+        setLoading(false); // Stop loading even if there's an error
       });
   }, [visibleCount]);
 
@@ -126,67 +142,102 @@ const HomePage = () => {
         </Paper>
       </Container>
 
-      {/* Product Grid */}
+      {/* Loading Icon or Product Grid */}
       <Container maxWidth="xl" sx={{ mt: 5 }}>
-        <Grid container spacing={5}>
-          {displayedProducts.map((product, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <Link
-                to={`/product-detail/${product.productId}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <Card
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    // backgroundColor: '#FFD700',  Gold background color for product card
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                    },
-                    boxShadow: 3,
-                    borderRadius: 2,
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={
-                      product.image
-                        ? `data:image/jpeg;base64,${product.image}`
-                        : '/images/placeholder.png'
-                    }
-                    alt={product.productName || 'Product Image'}
-                    sx={{
-                      objectFit: 'contain',
-                    
-                    }}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                      {product.productName || 'Unnamed Product'}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {product.productDescription || 'No description available'}
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ justifyContent: 'space-between', padding: '8px 16px' }}>
-                    <Typography variant="h6" sx={{ color: 'primary.main' }}>
-                      ${product.productPrice}
-                    </Typography>
-                  </CardActions>
-                </Card>
-              </Link>
-            </Grid>
-          ))}
-        </Grid>
-        {visibleCount < products.length && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-            <Button variant="contained" onClick={loadMoreProducts}>
-              See More
-            </Button>
+        {loading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '300px',
+            }}
+          >
+            <CircularProgress
+              sx={{
+                color: '#FFD700', // Gold loading icon color
+              }}
+              size={60}
+            />
           </Box>
+        ) : (
+          <>
+            <Grid container>
+              {displayedProducts.map((product, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index} marginRight={-10} marginTop={2}>
+                  <Link
+                    to={`/product-detail/${product.productId}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Card
+                      sx={{
+                        height: '100%',
+                        maxWidth: 250,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        transition: 'transform 0.3s ease-in-out',
+                        '&:hover': {
+                          transform: 'scale(1.05)',
+                        },
+                        boxShadow: 3,
+                        borderRadius: 1,
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={
+                          product.image
+                            ? `data:image/jpeg;base64,${product.image}`
+                            : '/images/placeholder.png'
+                        }
+                        alt={product.productName || 'Product Image'}
+                        sx={{
+                          
+                        }}
+                      />
+                      <CardContent sx={{ flexGrow: 1 }}>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 'bold', mb: 1 }}
+                        >
+                          {product.productName || 'Unnamed Product'}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                        >
+                          {product.productDescription ||
+                            'No description available'}
+                        </Typography>
+                      </CardContent>
+                      <CardActions
+                        sx={{
+                          justifyContent: 'space-between',
+                          padding: '8px 16px',
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: '#800000' }}
+                        >
+                          P{product.productPrice}
+                        </Typography>
+                      </CardActions>
+                    </Card>
+                  </Link>
+                </Grid>
+              ))}
+            </Grid>
+            {visibleCount < products.length && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Button variant="contained" onClick={loadMoreProducts}>
+                  See More
+                </Button>
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </div>

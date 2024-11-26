@@ -3,7 +3,8 @@ import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import SideBar from '../components/SideBar';
 import Grid from '@mui/material/Grid2';
-import { IconButton, FormControlLabel, Switch } from '@mui/material';
+import { IconButton, FormControlLabel, Switch,Modal,CircularProgress,Dialog, 
+    DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
@@ -35,9 +36,15 @@ const UnderlinedText = styled(Typography)({
 export default function UploadProduct() {
     const [id, setId] = useState(null);
     const[isSeller, setIsSeller] = useState();
-
+    const [sideBarLoaded, setSideBarLoaded] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
     useEffect(() => {
         setId(sessionStorage.getItem('id'));
+        setLoading(true);
         axios.get('http://localhost:8080/api/user/getUserbyId', {
             params: { id: sessionStorage.getItem('id') },
             withCredentials: true,
@@ -54,6 +61,11 @@ export default function UploadProduct() {
               console.error('Error fetching user data!', error);
             });
     }, []);
+
+    const handleSideBarLoad = () => {
+        setSideBarLoaded(true);
+        setLoading(false);
+      };
 
     const [product, setProduct] = useState({
         productName: '',
@@ -94,6 +106,11 @@ export default function UploadProduct() {
         }
     };
 
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
+
     const handleSwitchChange = (event) => {
         const status = event.target.checked ? 'Available' : 'No Stock';
         setProduct({
@@ -103,34 +120,45 @@ export default function UploadProduct() {
     };
 
     const handleSave = async () => {
-        console.log('Payload:', product);
+        if (!product.productName || !product.productPrice) {
+            setDialogTitle('Error');
+            setDialogMessage('Please fill in all required fields!');
+            setDialogOpen(true);
+            return;
+        }
+        setIsSaving(true);
         try {
-            await axios.post(
-                'http://localhost:8080/api/user/postProduct',
-                product,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
-                    },
-                }
-            );
-            await axios.post(
-                `http://localhost:8080/api/seller/addProduct/${id}`,
-                product,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
-                    },
-                }
-            );
-            alert('Product saved successfully!');
+            await axios.post('http://localhost:8080/api/user/postProduct', product, {
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionStorage.getItem('token')}` },
+            });
+
+            await axios.post(`http://localhost:8080/api/seller/addProduct/${sessionStorage.getItem('id')}`, product, {
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionStorage.getItem('token')}` },
+            });
+
+            setDialogTitle('Success');
+            setDialogMessage('Product saved successfully!');
+            setDialogOpen(true);
+            setProduct({
+                productName: '',
+                productPrice: '',
+                productStock: '',
+                productStatus: 'Available',
+                productDescription: '',
+                image: null,
+                productTimeCreated: new Date().toISOString(),
+                sellerid: { seller_id: sessionStorage.getItem('id') },
+            });
+            setImage(null);
         } catch (error) {
             console.error(error);
-            alert('Error saving product!');
+            setDialogTitle('Error');
+            setDialogMessage('Error saving product!');
+            setDialogOpen(true);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -141,11 +169,7 @@ export default function UploadProduct() {
             </Grid>
             <Grid container direction={'row'} spacing={6} sx={{ height: '101.5%' }} className="padding-color-outer">
                 <Grid md={4} sx={{ maxWidth: '100%', border: '2px solid black' }}>
-                    <SideBar 
-                        state={{ 
-                            userData: location.state ? location.state.userData : null
-                        }} 
-                    />
+                <SideBar onLoad={handleSideBarLoad} />
                 </Grid>
                 <Grid md={8} container direction={'column'} sx={{ backgroundColor: 'white', padding: 4 }}>
                     <Box textAlign="center" mb={3}>
@@ -158,7 +182,7 @@ export default function UploadProduct() {
                             <Grid container direction="row" spacing={2}>
                                 <Grid container direction="column" spacing={2} sx={{ width: '500px' }}>
                                     <Grid>
-                                        <TextField fullWidth label="Product Name" name="productName" variant="outlined" className="customTextField" onChange={handleChange} />
+                                        <TextField fullWidth label="Product Name" name="productName" variant="outlined" className="customTextField" onChange={handleChange} value={product.productName} />
                                     </Grid>
                                     <Grid>
                                         <TextField 
@@ -168,6 +192,7 @@ export default function UploadProduct() {
                                             variant="outlined" 
                                             className="customTextField" 
                                             onChange={handleChange}
+                                            value={product.productPrice}
                                             type="number"
                                             inputProps={{ min: 0, step: 0.01 }}
                                         />
@@ -180,6 +205,7 @@ export default function UploadProduct() {
                                             variant="outlined" 
                                             className="customTextField" 
                                             onChange={handleChange}
+                                            value={product.productStock} 
                                             type="number"
                                             inputProps={{ min: 0, step: 1 }}
                                         />
@@ -241,7 +267,7 @@ export default function UploadProduct() {
                             </Grid>
                             <Grid sx={{ width: '900px', height: '80px' }}>
                                 <Grid>
-                                    <TextField fullWidth label="Product Description" name="productDescription" variant="outlined" multiline rows={4} className="customTextField" onChange={handleChange} />
+                                    <TextField fullWidth label="Product Description" name="productDescription" variant="outlined" multiline rows={4} className="customTextField" onChange={handleChange} value={product.productDescription}/>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -256,6 +282,59 @@ export default function UploadProduct() {
                     </Grid>
                 </Grid>
             </Grid>
+            {/* Loading Modal */}
+            <Modal open={loading}>
+                <Box sx={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                backgroundColor: 'maroon', padding: 2, borderRadius: 2, border: '4px solid gold',
+                }}>
+                <CircularProgress color="inherit" sx={{ color: 'white' }} />
+                </Box>
+            </Modal>
+            {/* Loading Modal */}
+            <Modal open={isSaving}>
+                <Box sx={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                backgroundColor: 'maroon', padding: 2, borderRadius: 2, border: '4px solid gold',
+                }}>
+                <CircularProgress color="inherit" sx={{ color: 'white' }} />
+                </Box>
+            </Modal>
+            {/* Success/Error Dialog */}
+            <Dialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                PaperProps={{
+                    sx: {
+                        backgroundColor: 'maroon', // Background color
+                        border: '4px solid gold', // Border styling
+                        borderRadius: 2, // Rounded corners
+                        color: 'white', // Text color
+                        textAlign: 'center', // Center the content
+                    },
+                }}
+            >
+                <DialogTitle sx={{ color: 'gold' }}>{dialogTitle}</DialogTitle> {/* Gold title */}
+                <DialogContent sx={{ color: 'white', fontSize: '1rem' }}>
+                    {dialogMessage}
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => setDialogOpen(false)}
+                        sx={{
+                            color: 'gold', // Button text color
+                            border: '1px solid gold', // Button border
+                            '&:hover': {
+                                backgroundColor: 'gold',
+                                color: 'maroon',
+                            },
+                        }}
+                    >
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Container>
     );
 }

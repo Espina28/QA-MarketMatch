@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 
-export default function SideBar() {
+export default function SideBar({ onLoad }) {
     const [userData, setUserData] = useState({
         firstname: "",
         lastname: "",
@@ -33,11 +33,12 @@ export default function SideBar() {
         .then(response => {
             setUserData(response.data);
             setIsSeller(response.data.seller); // Assuming the seller status is in response.data.seller
+            onLoad();
         })
         .catch(error => {
             console.error('There was an error fetching the user data!', error);
         });
-    }, []);
+    },[onLoad]);
 
     return (
         <Grid container justifyContent={'center'} sx={{ background: 'white', paddingTop: '4rem', paddingRight: '2rem', paddingLeft: '2rem', height: '100%' }}>
