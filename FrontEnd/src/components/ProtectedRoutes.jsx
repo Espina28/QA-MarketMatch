@@ -7,7 +7,7 @@ const ProtectedRoutes = ({ children }) => {
   const { isAuthenticated, token, logout } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   const decodedToken = jwtDecode(token);
@@ -16,7 +16,7 @@ const ProtectedRoutes = ({ children }) => {
 
   if (currentTime > expirationTime) {
     logout();
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   return children;
