@@ -44,7 +44,7 @@ public class ProductEntity {
     private List<CartEntity> cart;
 
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id")
     private  SellerEntity sellerid;
 
