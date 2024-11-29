@@ -74,10 +74,9 @@ const HomePage = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#800000' }}> {/* Set maroon background for homepage */}
+    <div style={{ backgroundColor: '#800000' }}>
       <Navbar />
 
-      {/* Carousel Section for Branding Images */}
       <Box sx={{ backgroundColor: '#f5f5f5', paddingTop: 2 }}>
         <Container maxWidth="xl">
           <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
@@ -120,7 +119,7 @@ const HomePage = () => {
             sx={{
               flex: 1,
               '& .MuiOutlinedInput-root': {
-                borderRadius: 50, // Rounded corners for input field
+                borderRadius: 50, 
               },
             }}
           />
@@ -128,11 +127,11 @@ const HomePage = () => {
             type="button"
             aria-label="search"
             sx={{
-              backgroundColor: '#800000', // Maroon background color
-              color: '#FFD700', // Gold icon color
+              backgroundColor: '#800000', 
+              color: '#FFD700',
               borderRadius: '50%',
               '&:hover': {
-                backgroundColor: '#660000', // Darker maroon on hover
+                backgroundColor: '#660000',
               },
               padding: 1,
             }}
@@ -155,7 +154,7 @@ const HomePage = () => {
           >
             <CircularProgress
               sx={{
-                color: '#FFD700', // Gold loading icon color
+                color: '#FFD700',
               }}
               size={60}
             />
