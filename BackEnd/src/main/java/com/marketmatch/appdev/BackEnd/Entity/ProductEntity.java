@@ -27,8 +27,6 @@ public class ProductEntity {
     private int productId;
 
     private String productName;
-
-    @Column(name = "product_description", columnDefinition = "LONGTEXT")
     private String productDescription;
     private String productPrice;
     private String productStock;

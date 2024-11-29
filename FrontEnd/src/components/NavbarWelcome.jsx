@@ -445,6 +445,7 @@ const styles = {
     },
     logo: {
         height: '60px',
+        marginLeft: '-600px',
         cursor: 'pointer',
     },
     buttonContainer: {
@@ -500,7 +501,7 @@ const styles = {
     icon: {
         cursor: 'pointer',
         position: 'absolute', 
-        left:270,        
+        left: 270,        
         top: '50%',           
         transform: 'translateY(-50%)', 
     },
