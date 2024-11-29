@@ -1,7 +1,7 @@
 package com.marketmatch.appdev.BackEnd.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.marketmatch.appdev.BackEnd.DTO.Transaction;
 import com.marketmatch.appdev.BackEnd.Entity.BuyEntity;
 import com.marketmatch.appdev.BackEnd.Entity.BuyerEntity;
 import com.marketmatch.appdev.BackEnd.Entity.ProductEntity;
@@ -71,7 +71,7 @@ public class BuyService {
         return buy_repo.save(payload);
     }
 
-    public List<BuyEntity> getPurchased(int id){
+    public List<Transaction> getPurchased(int id){
         return buy_repo.findBuyerItems(id);
     }
 

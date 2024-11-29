@@ -24,7 +24,7 @@ public class BuyController {
     }
 
     @GetMapping("/purchase")
-    public List<BuyEntity> getAllPurchase(@RequestParam int id){
+    public List<Transaction> getAllPurchase(@RequestParam int id){
         return buy_serv.getPurchased(id);
     }
 

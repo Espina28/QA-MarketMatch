@@ -27,6 +27,7 @@ public class ProductEntity {
     private int productId;
 
     private String productName;
+    @Column(name = "product_description", columnDefinition = "LongText")
     private String productDescription;
     private String productPrice;
     private String productStock;
@@ -121,7 +122,6 @@ public class ProductEntity {
     public void setSellerid(SellerEntity sellerid) {
         this.sellerid = sellerid;
     }
-
     
 
     // public List<BuyEntity> getBought() {

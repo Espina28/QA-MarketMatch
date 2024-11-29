@@ -18,6 +18,7 @@ export default function BuyerHistory() {
             },
         }).then(response => {
             setBuyerHistory(response.data);
+            console.log(response.data);
         }).catch(error => {
             console.error('Error fetching buyer history:', error);
         });
@@ -98,8 +99,20 @@ function HistoryItem({ history, deleteHistory }) {
                     <Typography variant="h6" gutterBottom>{history.productName}</Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
+                            <Typography variant="body2" color="text.secondary">Price:</Typography>
+                            <Typography variant="body1">P {history.price}</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
                             <Typography variant="body2" color="text.secondary">Quantity:</Typography>
                             <Typography variant="body1">{history.quantity} pcs</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                        {history.status === 'Cancelled' && (
+                            <>
+                                <Typography variant="body2" color="text.secondary">Canceled by:</Typography>
+                                <Typography variant="body1">{history.canceledBy}</Typography>
+                            </>
+                        )}
                         </Grid>
                         <Grid item xs={6}>
                             <Typography variant="body2" color="text.secondary">Total:</Typography>

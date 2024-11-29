@@ -46,6 +46,7 @@ public class SellerService {
     }
 
     public List<Transaction> getTransactions(int sellerid) {
+            System.out.println(sellerid);
             return seller_repo.getTransactions(sellerid);
 
     }

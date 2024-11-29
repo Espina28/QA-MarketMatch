@@ -31,6 +31,7 @@ export default function Orders() {
         })
             .then((response) => {
                 setProducts(response.data);
+                console.log(response.data);
             })
             .catch((error) => {
                 console.error('Error fetching products:', error);
@@ -55,7 +56,7 @@ export default function Orders() {
     
         const buyerHistoryData = {
             buyer: { buyerId: userId },
-            product: { productId: orderToTransfer.product.productId },
+            product: { productId: orderToTransfer.productId },
             quantity: orderToTransfer.quantity,
             totalPrice: orderToTransfer.total,
             transactionDate: new Date().toISOString(),
@@ -64,31 +65,30 @@ export default function Orders() {
         };
     
         const sellerHistoryData = {
-            seller: { seller_id: orderToTransfer.seller.seller_id },
-            product: { productId: orderToTransfer.product.productId },
+            seller: { seller_id: orderToTransfer.sellerId},
+            product: { productId: orderToTransfer.productId },
             quantity: orderToTransfer.quantity,
             totalPrice: orderToTransfer.total,
             transactionDate: new Date().toISOString(),
             status: 'Cancelled',
             canceledBy: 'Buyer',
         };
-        console.log(buyerHistoryData);
-        console.log(sellerHistoryData);
-        // Create Buyer History
+    
+        // First create Buyer History
         axios.post('http://localhost:8080/api/buyer-history/create', buyerHistoryData, {
             withCredentials: true,
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
             },
         }).then(() => {
-            // Create Seller History
+            // Then create Seller History
             axios.post('http://localhost:8080/api/seller-history/create', sellerHistoryData, {
                 withCredentials: true,
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
                 },
             }).then(() => {
-                // Delete the order
+                // After successfully transferring to history, delete from 'buy' collection
                 axios.delete(`http://localhost:8080/api/buy/delete/${selectedOrder}`, {
                     withCredentials: true,
                     headers: {
@@ -108,6 +108,7 @@ export default function Orders() {
             console.error('Error creating buyer history:', error);
         });
     };
+
     return (
         <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Navbar />
@@ -159,10 +160,10 @@ function OrderCard({ product, onCancel }) {
     return (
         <Paper elevation={2} sx={{ p: 2, mb: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center' }}>
             <Box sx={{ width: { xs: '100%', sm: '200px' }, mb: { xs: 2, sm: 0 }, mr: { sm: 3 } }}>
-                {product.product.image ? (
+                {product.image ? (
                     <img
                         style={{ width: '100%', height: 'auto', objectFit: 'cover', borderRadius: '4px' }}
-                        src={`data:image/jpeg;base64,${product.product.image}`}
+                        src={`data:image/jpeg;base64,${product.image}`}
                         alt="product"
                     />
                 ) : (
@@ -175,12 +176,11 @@ function OrderCard({ product, onCancel }) {
             </Box>
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <Box>
-                    <Typography variant="h6" gutterBottom>{product.product.productName}</Typography>
-                    <Typography variant="body2" gutterBottom>{product.product.productDescription}</Typography>
-                    <Typography variant="h6" gutterBottom>Quantity: 2x</Typography>
+                    <Typography variant="h6" gutterBottom>{product.productName}</Typography>
+                    <Typography variant="h6" gutterBottom>Quantity: {product.quantity}x</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                    <Typography variant="body2">Order Date: 12/12/2020</Typography>
+                    <Typography variant="body2">Total: ${product.total}</Typography> {/* Display total price */}
                     <Button
                         variant="contained"
                         startIcon={<DeleteIcon />}

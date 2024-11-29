@@ -34,6 +34,7 @@ public class SellerController {
 
     @GetMapping("/transactions")
     public List<Transaction> getTransactions(@RequestParam int id){
+        System.out.println(id);
         return seller_serv.getTransactions(id) ;
     }
 

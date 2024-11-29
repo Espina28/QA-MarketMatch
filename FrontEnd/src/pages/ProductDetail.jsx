@@ -13,12 +13,18 @@ import CardMedia from '@mui/material/CardMedia';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css'; // Custom CSS
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 
 export default function ProductLayout() {
     const [products, setProducts] = useState({});
     const [relatedProducts, setRelatedProducts] = useState([]);
     const { productId } = useParams();
     const navigate = useNavigate();
+
+    // New state for dialog
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState("");
 
     useEffect(() => {
         // Fetch the current product details
@@ -67,13 +73,18 @@ export default function ProductLayout() {
             })
             .then(response => {
                 console.log(response.data);
-                alert("Product added to cart successfully!");
+                setDialogMessage("Product added to cart successfully!");
+                setDialogOpen(true);
             })
             .catch(error => {
                 console.error("Error adding product to cart", error);
+                setDialogMessage("Failed to add product to cart. Please try again.");
+                setDialogOpen(true);
             });
         } else {
             console.log("Products data is not yet available. Please try again.");
+            setDialogMessage("Products data is not yet available. Please try again.");
+            setDialogOpen(true);
         }
     };
 
@@ -100,14 +111,18 @@ export default function ProductLayout() {
             })
             .then(response => {
                 console.log("Purchase successful:", response.data);
-                alert("Purchase successful!");
+                setDialogMessage("Purchase successful!");
+                setDialogOpen(true);
             })
             .catch(error => {
                 console.error("Error during purchase:", error);
-                alert("Failed to complete the purchase. Please try again.");
+                setDialogMessage("Failed to complete the purchase. Please try again.");
+                setDialogOpen(true);
             });
         } else {
             console.log("Product data is not available yet. Please wait.");
+            setDialogMessage("Product data is not available yet. Please wait.");
+            setDialogOpen(true);
         }
     };
 
@@ -268,6 +283,40 @@ export default function ProductLayout() {
                     </Box>
                 </Grid>
             </Grid>
+
+            {/* New Dialog component */}
+            <Dialog 
+                open={dialogOpen} 
+                onClose={() => setDialogOpen(false)}
+                PaperProps={{
+                    style: { 
+                        backgroundColor: '#800000',
+                        border: '2px solid #FFD700',
+                        borderRadius: '8px',
+                    },
+                }}
+            >
+                <DialogContent>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+                        <Typography variant="body1" style={{ color: '#FFD700', textAlign: 'center' }}>
+                            {dialogMessage}
+                        </Typography>
+                        <Button 
+                            onClick={() => setDialogOpen(false)} 
+                            style={{ 
+                                color: '#800000', 
+                                backgroundColor: '#FFD700', 
+                                marginTop: '1rem',
+                                fontWeight: 'bold',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                            }}
+                        >
+                            Close
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </Container>
     );
 }

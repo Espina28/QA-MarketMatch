@@ -24,7 +24,7 @@ public interface SellerRepo extends JpaRepository<SellerEntity, Integer> {
 
 
 @Query("SELECT new com.marketmatch.appdev.BackEnd.DTO.Transaction(buy.buyId, user.Firstname, user.Lastname, " +
-        "prod.productName, buy.quantity, buy.total, prod.image,prod.productId, buyer.buyerId) " +
+        "prod.productName, buy.quantity, buy.total, prod.image,prod.productId, buyer.buyerId, seller.seller_id) " +
         "FROM ProductEntity prod " +
         "JOIN prod.sellerid seller " +
         "JOIN prod.bought buy " +

@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Typography, Box, Button, Select, MenuItem, Paper } from '@mui/material';
+import { Container, Grid, Typography, Box, Button, Select, MenuItem, Paper, Dialog, DialogContent, CircularProgress } from '@mui/material';
 import SideBar from '../components/SideBar';
-import '../App.css';
-import axios from 'axios';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [totalCartPrice, setTotalCartPrice] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState("");
+    const [dialogSeverity, setDialogSeverity] = useState("success");
     const cartid = sessionStorage.getItem("id");
 
     useEffect(() => {
-        axios.get('http://localhost:8080/api/cart/getCart/' + cartid, {
+        axios.get(`http://localhost:8080/api/cart/getCart/${cartid}`, {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
             },
         })
         .then(response => {
             setCartItems(response.data.products);
+            setIsLoading(false);
         })
         .catch(error => {
             console.error('There was an error fetching the cart!', error);
+            setIsLoading(false);
+            setDialogMessage("Failed to load cart. Please try again.");
+            setDialogSeverity("error");
+            setDialogOpen(true);
         });
     }, [cartid]);
 
@@ -44,19 +52,24 @@ const Cart = () => {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
                 },
             })
             .then(response => {
-                console.log("Purchase successful:", response.data);
-                alert("Purchase successful!");
+                setDialogMessage("Purchase successful!");
+                setDialogSeverity("success");
+                setDialogOpen(true);
             })
             .catch(error => {
                 console.error("Error during purchase:", error);
-                alert("Failed to complete the purchase. Please try again.");
+                setDialogMessage("Failed to complete the purchase. Please try again.");
+                setDialogSeverity("error");
+                setDialogOpen(true);
             });
         } else {
-            console.log("Product data is not available yet. Please wait.");
+            setDialogMessage("Product data is not available yet. Please wait.");
+            setDialogSeverity("error");
+            setDialogOpen(true);
         }
     };
 
@@ -103,7 +116,7 @@ const Cart = () => {
             <Box sx={{ flexGrow: 1, display: 'flex', padding: 4 }} className="padding-color-outer">
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={3} lg={2.5}>
-                        <SideBar />
+                        <SideBar isLoading={isLoading} />
                     </Grid>
                     <Grid item xs={12} md={9} lg={9.5}>
                         <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -111,7 +124,11 @@ const Cart = () => {
                                 MY CART
                             </Typography>
                             <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2, maxHeight: 'calc(100vh - 250px)' }}>
-                                {cartItems.length > 0 ? (
+                                {isLoading ? (
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                        <CircularProgress sx={{ color: '#FFD700' }} />
+                                    </Box>
+                                ) : cartItems.length > 0 ? (
                                     cartItems.map((product) => (
                                         <CartItem 
                                             key={product.productId} 
@@ -137,6 +154,42 @@ const Cart = () => {
                     </Grid>
                 </Grid>
             </Box>
+
+            <Dialog 
+                open={dialogOpen} 
+                onClose={() => setDialogOpen(false)}
+                PaperProps={{
+                    style: { 
+                        backgroundColor: '#800000',
+                        border: '2px solid #FFD700',
+                        borderRadius: '8px',
+                    },
+                }}
+            >
+                <DialogContent>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+                        <Typography variant="h6" style={{ color: '#FFD700', marginBottom: '1rem' }}>
+                            {dialogSeverity === "error" ? "Error" : "Success"}
+                        </Typography>
+                        <Typography variant="body1" style={{ color: '#FFD700', textAlign: 'center' }}>
+                            {dialogMessage}
+                        </Typography>
+                        <Button 
+                            onClick={() => setDialogOpen(false)} 
+                            style={{ 
+                                color: '#800000', 
+                                backgroundColor: '#FFD700', 
+                                marginTop: '1rem',
+                                fontWeight: 'bold',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                            }}
+                        >
+                            Close
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </Container>
     );
 };
@@ -183,18 +236,27 @@ const CartItem = ({ product, onRemoveFromCart, onQuantityChange, onBuy }) => {
                 <Grid item xs={12} sm={2}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Total: ${totalPrice}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                    <Button variant="contained" onClick={onBuy} sx={{ backgroundColor: 'black', color: 'white', '&:hover': { backgroundColor: '#333' } }}>
-                        BUY NOW
+                <Grid item xs={12} sm={2}>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        fullWidth
+                        onClick={() => onRemoveFromCart(product.productId)}
+                    >
+                        Remove
                     </Button>
-                    <Button variant="outlined" color="error" onClick={() => onRemoveFromCart(product.productId)}>
-                        REMOVE
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        onClick={onBuy}
+                    >
+                        Buy
                     </Button>
                 </Grid>
             </Grid>
-            <Typography variant="caption" sx={{ position: 'absolute', top: 8, right: 8, color: 'text.secondary' }}>
-                {product.dateAdded}
-            </Typography>
         </Paper>
     );
 };

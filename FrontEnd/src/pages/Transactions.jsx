@@ -17,6 +17,7 @@ export default function Transactions() {
     const [selectedTransaction, setSelectedTransaction] = useState(null);
 
     useEffect(() => {
+        console.log(sessionStorage.getItem('id'));
         axios.get('http://localhost:8080/api/seller/transactions', {
             params: { id: sessionStorage.getItem('id') },
             withCredentials: true,
@@ -26,6 +27,7 @@ export default function Transactions() {
             },
         }).then(response => {
             setTransactions(response.data);
+            console.log(response.data);
         }).catch(error => {
             console.error('Error fetching transactions:', error);
         });
@@ -122,7 +124,7 @@ export default function Transactions() {
         }
     
         const buyerHistoryData = {
-            buyer: { buyerId: userid }, 
+            buyer: { buyerId: transactionToTransfer.buyerId }, 
             product: { productId: transactionToTransfer.productId }, 
             quantity: transactionToTransfer.quantity,
             totalPrice: transactionToTransfer.total,
