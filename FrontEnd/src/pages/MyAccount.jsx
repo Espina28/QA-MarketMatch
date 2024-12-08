@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
   TextField, Button, Typography, Container, Box, Modal, IconButton,
-  Grid, Paper, Avatar, Divider, CircularProgress
+  Grid, Paper, Avatar, Divider, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../components/SideBar';
@@ -34,12 +34,16 @@ function MyAccount() {
     capital: false,
     specialChar: false,
   });
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef(null);
   const [phoneNumberWarningOpen, setPhoneNumberWarningOpen] = useState(false);
   const userId = sessionStorage.getItem("id");
   const [loading, setLoading] = useState(true);
   const [sideBarLoaded, setSideBarLoaded] = useState(false);
   const [mainLoaded, setMainLoaded] = useState(false);
+
+  // Dialog States
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -54,7 +58,6 @@ function MyAccount() {
       .then(response => {
         setUserData(response.data);
         setOriginalUserData(response.data);
-        // console.log(response.data);
         setMainLoaded(true);
         setLoading(false);
         if (response.data.image) {
@@ -65,7 +68,7 @@ function MyAccount() {
         console.error('Error fetching user data!', error);
         setLoading(false);  
       });
-  }, [userId,sideBarLoaded]);
+  }, [userId, sideBarLoaded]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -81,7 +84,6 @@ function MyAccount() {
   const handleSideBarLoad = () => {
     setSideBarLoaded(true);
   };
-
 
   const validatePassword = (password) => {
     setPasswordValid({
@@ -113,7 +115,8 @@ function MyAccount() {
           'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
         },
       });
-      alert("Changes saved!");
+      setDialogMessage("Changes saved!");
+      setDialogOpen(true);  // Open the dialog after save
       window.location.reload();
     } catch (error) {
       console.error("Error updating user data", error);
@@ -122,12 +125,14 @@ function MyAccount() {
 
   const handlePasswordChange = async () => {
     if (!passwordValid.length || !passwordValid.capital || !passwordValid.specialChar) {
-      alert("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
+      setDialogMessage("Password must be at least 8 characters long, contain at least one capital letter, and one special character.");
+      setDialogOpen(true);  // Show dialog if password is invalid
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setDialogMessage("Passwords do not match!");
+      setDialogOpen(true);  // Show dialog if passwords don't match
     } else {
       try {
         await axios.put('http://localhost:8080/api/user/updatePassword', null, {
@@ -138,7 +143,8 @@ function MyAccount() {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
           },
         });
-        alert("Password changed successfully!");
+        setDialogMessage("Password changed successfully!");
+        setDialogOpen(true);  // Show dialog for successful password change
         setPasswordModalOpen(false);
       } catch (error) {
         console.error("Error changing password", error);
@@ -167,6 +173,11 @@ function MyAccount() {
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
 
   return (
     <Container maxWidth={false} disableGutters sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -405,6 +416,19 @@ function MyAccount() {
           <Typography variant="body2" color={passwordValid.specialChar ? 'green' : 'red'}>
             {passwordValid.specialChar ? '✅ At least 1 special character' : '❌ At least 1 special character'}
           </Typography>
+
+          {/* Consolidated Alert Dialog */}
+          <Dialog open={dialogOpen} onClose={handleDialogClose}>
+            <DialogTitle>Alert</DialogTitle>
+            <DialogContent>
+              <Typography variant="body1">{dialogMessage}</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDialogClose} color="primary">
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
 
           <Button
             variant="contained"

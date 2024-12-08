@@ -21,6 +21,6 @@ public interface ProductRepo extends JpaRepository<ProductEntity, Integer> {
     @Query("SELECT p FROM ProductEntity p WHERE p.productName LIKE %"+":productName"+"% AND p.productId != :productId")
     List<ProductEntity> findRelatedProducts(@Param("productName") String productName, @Param("productId") int productId);
 
-    @Query(value = "SELECT * FROM product_entity ORDER BY RAND() LIMIT "+":limit", nativeQuery = true)
-    List<ProductEntity> findRandomProducts(@Param("limit") int limit);
+    @Query(value = "SELECT * FROM product_entity ORDER BY RAND() LIMIT 2", nativeQuery = true)
+    List<ProductEntity> findRandomProducts();
 }

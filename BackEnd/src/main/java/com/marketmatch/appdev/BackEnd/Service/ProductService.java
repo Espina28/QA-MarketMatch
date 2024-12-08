@@ -78,7 +78,7 @@ public class ProductService {
 
         // If no related products are found, fetch random products
         if (relatedProducts == null || relatedProducts.isEmpty()) {
-            relatedProducts = prodrepo.findRandomProducts(2); // Limit to 5 random products
+            relatedProducts = prodrepo.findRandomProducts(); // Limit to 5 random products
         }
 
         return relatedProducts;
