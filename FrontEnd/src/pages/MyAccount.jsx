@@ -70,6 +70,8 @@ function MyAccount() {
       });
   }, [userId, sideBarLoaded]);
 
+  
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -162,8 +164,16 @@ function MyAccount() {
 
   const togglePasswordModal = () => {
     setPasswordModalOpen(!passwordModalOpen);
-    setPassword("");
-    setConfirmPassword("");
+    if (!passwordModalOpen) {
+
+      setPassword("");
+      setConfirmPassword("");
+      setPasswordValid({
+        length: false,
+        capital: false,
+        specialChar: false,
+      });
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -294,13 +304,16 @@ function MyAccount() {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <TextField
+                    <TextField
                         fullWidth
                         label="Update Phone"
                         variant="outlined"
                         value={userData.phonenumber || ""}
                         onChange={(e) => setUserData({ ...userData, phonenumber: e.target.value })}
                         inputProps={{ maxLength: 11 }}
+                        onInput={(e) => {
+                          e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                        }}
                       />
                     </Grid>
                   </Grid>
