@@ -56,6 +56,7 @@ const Cart = () => {
                 },
             })
             .then(response => {
+                setCartItems(cartItems.filter(item => item.productId !== product.productId));
                 setDialogMessage("Purchase successful!");
                 setDialogSeverity("success");
                 setDialogOpen(true);

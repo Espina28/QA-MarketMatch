@@ -83,14 +83,14 @@ export default function SideBar({ onLoad }) {
                             <Typography>My Transactions</Typography>
                         </Box>
                     </Link>
-                    <Link to="/cart" style={{ textDecoration: 'none', color: 'black' }}>
+                    {/* <Link to="/cart" style={{ textDecoration: 'none', color: 'black' }}>
                         <Box display="flex" alignItems="center">
                             <IconButton color="inherit" sx={{ mr: 1 }}>
                                 <ShoppingCartIcon sx={{ fontSize: 25, color: 'grey' }} />
                             </IconButton>
                             <Typography>My Cart</Typography>
                         </Box>
-                    </Link>
+                    </Link> */}
 
                     {/* Order Management Section - Only visible if the user is a seller */}
                     {isSeller && (
