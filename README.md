@@ -47,7 +47,7 @@ convenience and security for buyers.
 🚧 Project Status
 **Status: Complete**
 
-This project is Now Complete!:sparkles::sparkles:
+This project is Now Complete! 
 
 ---
 
