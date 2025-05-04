@@ -40,6 +40,9 @@ function MyAccount() {
   const [loading, setLoading] = useState(true);
   const [sideBarLoaded, setSideBarLoaded] = useState(false);
   const [mainLoaded, setMainLoaded] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   // Dialog States
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -70,7 +73,29 @@ function MyAccount() {
       });
   }, [userId, sideBarLoaded]);
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Invalid email format.";
+    }
+    if (!email.endsWith('@cit.edu')) {
+      return "Email must end with @cit.edu";
+    }
+    return "";
+  };
+
   
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setUserData({ ...userData, email });
+
+    const error = validateEmail(email);
+    setEmailError(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -102,7 +127,15 @@ function MyAccount() {
   };
 
   const handleSave = async (e) => {
+
     e.preventDefault();
+    const error = validateEmail(userData.email);
+    setEmailError(error);
+
+    if (error) {
+      setIsModalOpen(true); // Optional: show modal if not already shown
+      return; // Stop execution if there's an error
+    }
 
     if (userData.phonenumber.length !== 11) {
       setPhoneNumberWarningOpen(true);
@@ -286,13 +319,47 @@ function MyAccount() {
                       />
                     </Grid>
                     <Grid item xs={12}>
+                    {/* <Typography sx={{ width: 120, color: 'red' }}>Error</Typography> */}
                       <TextField
                         fullWidth
                         label="Update Email"
                         variant="outlined"
                         value={userData.email || ""}
-                        onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                        // onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                        onChange={handleEmailChange}
+                        error={!!emailError}
+                        helperText={emailError || " "}
                       />
+                       <Modal
+                        open={isModalOpen}
+                        onClose={handleCloseModal}
+                        aria-labelledby="email-error-title"
+                        aria-describedby="email-error-description"
+                      >
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                            borderRadius: 2,
+                            width: 300,
+                          }}
+                        >
+                          <Typography id="email-error-title" variant="h6" color="error">
+                            Invalid Email
+                          </Typography>
+                          <Typography id="email-error-description" sx={{ mt: 2 }}>
+                            {emailError}
+                          </Typography>
+                          <Button onClick={handleCloseModal} sx={{ mt: 3 }} variant="contained">
+                            OK
+                          </Button>
+                        </Box>
+                      </Modal>
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
